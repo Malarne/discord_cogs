@@ -32,7 +32,7 @@ class Roles:
                 alias.append(nomRole)
             for i in ctx.guild.roles:
                 if i.name.lower() == nomRole.lower():
-                    roles[nomRole.lower()] = alias
+                    roles[nomRole] = alias
                     await ctx.send("Le role a bien été créé !")
                     return 0
             grade = await ctx.guild.create_role(name=nomRole)
@@ -57,22 +57,19 @@ class Roles:
     async def role(self, ctx, *, role):
         """Commande principale pour s'attribuer un role."""
         async with self.data.guild(ctx.guild).roles() as roles:
-            try:
-                for i in roles:
-                    grade = discord.utils.get(ctx.guild.roles, name=i)
-                    if grade.name != role:
-                        pass
-                    elif grade in ctx.author.roles:
-                        await ctx.author.remove_roles(grade)
-                        await ctx.send("Vous n'avez plus le rôle {} !".format(i))
-                        return 0
-                    else:
-                        await ctx.author.add_roles(grade)
-                        await ctx.send("Vous avez été ajouté au rôle {} avec succès !".format(i))
-                        return 0
-                await ctx.send("Ce rôle n'existe pas !")
-            except:
-                await ctx.send("Ce rôle n'existe pas !")
+            for i in ctx.guild.roles:
+                try:
+                    if role in roles[i.name] or role.lower() == i.name.lower():
+                        if i in ctx.author.roles:
+                            await ctx.author.remove_roles(i)
+                            await ctx.send("Vous avez bien été enlevé du rôle {} !".format(i.name))
+                            return
+                        else:
+                            await ctx.author.add_roles(i)
+                            await ctx.send("Vous avez bien été ajouté au rôle {} !".format(i.name))
+                            return
+                except:
+                    pass
 
     @role.command(name="delete")
     async def _delete(self, ctx, role, deltext : bool = False, delvoc : bool = False):
@@ -80,7 +77,7 @@ class Roles:
         async with self.data.guild(ctx.guild).roles() as roles:
             if role in roles:
                 del roles[role]
-                await ctx.guild.delete_role(discord.utils.get(ctx.guild, name=role))
+                await discord.utils.get(ctx.guild, name=role).delete()
                 if deltext:
                     channel = discord.utils.get(self.bot.get_all_channels(), name=role)
                     await channel.delete()
@@ -98,29 +95,31 @@ class Roles:
     async def _color(self, ctx, *, role):
         """Commande principale pour s'attribuer une couleur."""
         async with self.data.guild(ctx.guild).colors() as colors:
-            try:
-                for i in colors:
-                    grade = discord.utils.get(guild.roles, name=i)
-                    if grade in ctx.author.roles:
-                        await ctx.author.remove_roles(grade)
-                        await ctx.send("Vous n'avez plus la couleur {}".format(role))
-                    if role.lower() == "aucune":
-                        ctx.send("Vous n'avez plus de couleur")
-                        return
-                    if role.lower() in colors.i:
-                        await ctx.author.add_roles(grade)
-                        await ctx.send("Vous avez maintenant la couleur {} !".format(role))
-            except:
-                await ctx.send("La commande a malheureusement rencontrée un bug inattendue. Signalez le à Malarne vite !")
+##            try:
+            for i in colors:
+                grade = discord.utils.get(ctx.guild.roles, name=i)
+                if grade in ctx.author.roles:
+                    await ctx.author.remove_roles(grade)
+                    await ctx.send("Vous n'avez plus la couleur {}".format(role.name))
+                    return
+                if role.lower() == "aucune":
+                    ctx.send("Vous n'avez plus de couleur")
+                    return
+                if role.lower() in colors[i]:
+                    await ctx.author.add_roles(grade)
+                    await ctx.send("Vous avez maintenant la couleur {} !".format(role.name))
+                    return
+##            except:
+##                await ctx.send("La commande a malheureusement rencontrée un bug inattendue. Signalez le à Malarne vite !")
 
     @_color.command(name="add")
-    async def _color_add(self, ctx, color : discord.Colour, *, alias : str = None):
+    async def _color_add(self, ctx, color : int, *, alias : str = None):
         """Commande d'ajout de couleur attribuables."""
         if await mod.is_mod_or_superior(self.bot, obj=ctx.author):
             await ctx.send("Vous n'avez pas l'autorisation de faire sa !")
             return
         async with self.data.guild(ctx.guild).colors() as colors:
-            if color in colors:
+            if alias.split(" ")[0] in colors:
                 await ctx.send("Cette couleur est déjà enregistrée !")
                 return
             def checkrole(ctx, role):
@@ -135,9 +134,10 @@ class Roles:
             else:
                 lalias = alias.split(" ")
                 colorname = alias.split(" ")[0].lower()
+            dcolor = discord.Colour(color)
             if checkrole(ctx, colorname):
-                grade = await ctx.guild.create_role(name=colorname, colour=color)
-                await grade.edit(position=(len(ctx.guild.roles)-5-len(colors)))
+                grade = await ctx.guild.create_role(name=colorname, colour=dcolor)
+                await grade.edit(position=(len(ctx.guild.roles)-21-len(colors)))
             else:
                 grade = discord.utils.get(ctx.guild.roles, name=colorname)
             await ctx.send("Couleur ajoutée avec succès.")
@@ -194,4 +194,22 @@ class Roles:
                 desc = desc + i + "\n"
             msg.description = desc
             await ctx.send(embed=msg)
+
+    async def autonotif(self, member):
+        guild = self.bot.get_guild("387551444510834688")
+        grades = list(discord.utils.get(guild.roles, name="NotifLive"), discord.utils.get(guild.roles, name="NotifVideo"))
+        await member.add_roles(grades)
+
+    @commands.command()
+    async def assign(self, ctx, role):
+        if await mod.is_mod_or_superior(self.bot, obj=ctx.author):
+            await ctx.send("Vous n'avez pas l'autorisation de faire sa !")
+            return
+        else:
+            grade = discord.utils.get(ctx.guild.roles, name=role)
+            for i in ctx.guild.members:
+                await i.add_roles(grade)
+                await asyncio.sleep(0.5)
+                print("a")
+            await ctx.send("Done")
 
