@@ -127,7 +127,7 @@ class Permissions:
             if command in bl:
                 await ctx.send("Command is already in global blacklist !")
                 return
-            async with self.data.channel(ctx.channel).commands_blocked() as bl:
+            async with self.data.guild(ctx.guild).commands_blocked() as bl:
                 bl.append(command)
                 await ctx.send("Permission set")
                 return
@@ -176,12 +176,11 @@ class Permissions:
         else:
             bl = await self.data.channel(ctx.channel).commands_blocked()
             if command in bl:
-                for i in range(len(bl)):
-                    if bl[i] == command:
+                for i in bl:
+                    if i == command:
                         bl.pop(i)
-                        await self.data.role(role).commands_blocked.set(bl)
-                        return
-                await self.data.channel(ctx.channel).commands_blocked.set(bl)
+                        await self.data.channel(ctx.channel).commands_blocked.set(bl)
+                        break
             async with self.data.channel(ctx.channel).commands_allowed() as wl:
                 wl.append(command)
                 await ctx.send("Permission set")
@@ -200,7 +199,7 @@ class Permissions:
                 for i in range(len(wl)):
                     if wl[i] == command:
                         wl.pop(i)
-                        await self.data.channel(ctx.channel).commands_allowed.set(bl)
+                        await self.data.channel(ctx.channel).commands_allowed.set(wl)
                         return
             async with self.data.channel(ctx.channel).commands_blocked() as bl:
                 bl.append(command)
