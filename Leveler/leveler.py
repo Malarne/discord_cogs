@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+
 from redbot.core import checks, Config
 import discord
 from redbot.core import commands
 from redbot.core.utils import mod
+from redbot.core.data_manager import cog_data_path
 import asyncio
 import datetime
 from .userprofile import UserProfile
@@ -12,7 +15,7 @@ import urllib
 import aiohttp
 from random import randint
 
-class Leveler:
+class Leveler(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
@@ -99,9 +102,10 @@ class Leveler:
         async with aiohttp.ClientSession() as session:
             async with session.get(user.avatar_url_as(format="png", size=1024)) as f:
                 rand = randint(0, 99999)
-                with open(f"/home/admin/venv/temp_{rand}.png", "wb") as r:
+                path = cog_data_path(self)
+                with open(f"{path}\\temp_{rand}.png", "wb") as r:
                     r.write(await f.content.read())
-        avatar = Image.open(f"/home/admin/venv/temp_{rand}.png")
+        avatar = Image.open(f"{path}\\temp_{rand}.png")
         avatar_size = 128, 128
         avatar.thumbnail(avatar_size)
         avatar_w, avatar_h = avatar.size
@@ -136,18 +140,21 @@ class Leveler:
                 ln = 7
                 elo = roles[ln - 1]
             draw.text((20, 90), f"Elo: {elo}", fill='black', font=font)
-        img.save('/home/admin/venv/temp.jpg', "PNG")
-        await ctx.send(file=discord.File("/home/admin/venv/temp.jpg"))
-        os.system("rm /home/admin/venv/temp.jpg")
-        os.system(f"rm /home/admin/venv/temp_{rand}.png")
+        img.save(f'{path}\\temp.jpg', "PNG")
+        await ctx.send(file=discord.File(f"{path}\\temp.jpg"))
+        try:
+            os.remove(f"{path}\\temp.jpg")
+            os.remove(f"{path}\\temp_{rand}.png")
+        except:
+            pass
 
     async def on_message(self, message):
         if type(message.channel) != discord.channel.TextChannel:
             return
-        elif message.channel.id not in await self.profiles.data.guild(message.author.guild).channels():
+        elif message.channel.id not in await self.profiles._get_guild_channels(message.author.guild):
             return
         elif await self.profiles._is_registered(message.author):
-            if message.content.startswith(self.bot.get_prefix(message)):
+            if message.content[0] in await self.bot.get_prefix(message):
                 return
             else:
                 mots = len(message.content.split(" "))
@@ -158,16 +165,16 @@ class Leveler:
                 await self.profiles._today_addone(message.author)
                 await self.profiles._give_exp(message.author, xp)
                 lvl = await self.profiles._get_level(message.author)
-                roles = await self.profiles.data.guild(message.guild).roles()
+                roles = await self.profiles._get_guild_roles(message.guild)
                 ln = lvl//10
                 if ln == 0:
                     return
                 elif ln >= len(roles):
-                    ln = len(roles)
-                grade = discord.utils.get(message.guild.roles, name=roles[ln-1])
+                    ln = len(roles) -1
+                grade = discord.utils.get(message.guild.roles, id=roles[ln-1])
                 if not grade in message.author.roles:
                     for i in roles:
-                        role = discord.utils.get(message.guild.roles, name=i)
+                        role = discord.utils.get(message.guild.roles, id=i)
                         await message.author.remove_roles(role)
                     await message.author.add_roles(grade)
 
@@ -249,7 +256,7 @@ class Leveler:
         if channel:
             if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
                 await self.profiles._add_guild_channel(ctx.guild, channel.id)
-                await ctx.send("Role ajouté")
+                await ctx.send("Channel ajouté")
             else:
                 await ctx.send("Channel déjà enregistré")
         else:
