@@ -69,7 +69,7 @@ class Leveler(commands.Cog):
                 self.restart = False
             await asyncio.sleep(30)
 
-    @commands.command()
+    @commands.command(hidden=True)
     @checks.is_owner()
     async def testreset(self, ctx):
         self.restart = False
@@ -90,6 +90,7 @@ class Leveler(commands.Cog):
 
     @commands.command()
     async def profile(self, ctx, user : discord.Member = None):
+        """Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."""
         if user is None:
             user = ctx.author
         img = Image.new('RGBA', (800, 200))
@@ -180,6 +181,7 @@ class Leveler(commands.Cog):
 
     @commands.command()
     async def register(self, ctx):
+        """Vous permets de commencer a gagner de l'expérience !"""
         if await self.profiles._is_registered(ctx.author):
             await ctx.send("Vous êtes déjà enregistré !")
             return
@@ -190,6 +192,7 @@ class Leveler(commands.Cog):
 
     @commands.command()
     async def toplevel(self, ctx):
+        """Affiche le classement des meilleures blablateurs !"""
         ld = await self.profiles._get_leaderboard(ctx.guild)
         emb = discord.Embed(title="Le classement des PGM !")
         for i in range(len(ld)):
@@ -200,19 +203,27 @@ class Leveler(commands.Cog):
         await ctx.send(embed=emb)
 
     @commands.group()
+    @checks.mod_or_permissions(manage_messages=True)
     async def levelerset(self, ctx):
+        """Commandes de configuration."""
         pass
 
     @levelerset.group()
+    @checks.mod_or_permissions(manage_messages=True)
     async def channel(self, ctx):
+        """Configuration des channels permettant de gagner de l'expérience."""
         pass
 
     @levelerset.group()
+    @checks.mod_or_permissions(manage_messages=True)
     async def roles(self, ctx):
+        """Configuration des roles obtenables grâce à l'expérience."""
         pass
 
     @roles.command()
+    @checks.mod_or_permissions(manage_messages=True)
     async def add(self, ctx, role : discord.Role):
+        """Ajoute un role a la liste des roles obtenables grâce à l'expérience."""
         if role:
             await self.profiles._add_guild_role(ctx.guild, role.id)
             await ctx.send("Role configuré")
@@ -220,7 +231,9 @@ class Leveler(commands.Cog):
             await ctx.send("Role inconnu")
 
     @roles.command()
+    @checks.mod_or_permissions(manage_messages=True)
     async def remove(self, ctx, role : discord.Role):
+        """Supprime un role de la liste des roles obtenables grâce à l'expérience."""
         if role:
             if role.id in await self.profiles._get_guild_roles(ctx.guild):
                 await self.profiles._remove_guild_role(ctx.guild, role.id)
@@ -231,7 +244,9 @@ class Leveler(commands.Cog):
             await ctx.send("Role inconnu")
 
     @roles.command()
+    @checks.mod_or_permissions(manage_messages=True)
     async def move(self, ctx, role : discord.Role, position : int):
+        """Permet de déplacer un role, modifiant l'expérience necessaire pour l'obtenir."""
         if role:
             if role.id in await self.profiles._get_guild_roles(ctx.guild):
                 await self.profiles._move_guild_role(ctx.guild, role.id, position-1)
@@ -242,7 +257,9 @@ class Leveler(commands.Cog):
             await ctx.send("Role inconnu")
 
     @roles.command()
+    @checks.mod_or_permissions(manage_messages=True)
     async def show(self, ctx):
+        """Affiche la liste des roles dans l'ordre auquel ils sont obtenables."""
         emb = discord.Embed(title="Liste des roles configurés pour le leveler de ce serveur.", description="Garanti 100% presque pas bugué.")
         roles = await self.profiles._get_guild_roles(ctx.guild)
         counter = 1
@@ -252,7 +269,9 @@ class Leveler(commands.Cog):
         await ctx.send(embed=emb)
 
     @channel.command(name="add")
+    @checks.mod_or_permissions(manage_messages=True)
     async def _add(self, ctx, channel : discord.TextChannel):
+        """Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel là."""
         if channel:
             if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
                 await self.profiles._add_guild_channel(ctx.guild, channel.id)
@@ -263,7 +282,9 @@ class Leveler(commands.Cog):
             await ctx.send("Channel inconnu")
 
     @channel.command(name="remove")
+    @checks.mod_or_permissions(manage_messages=True)
     async def _remove(self, ctx, channel : discord.TextChannel):
+        """Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expérience."""
         if channel:
             if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
                 await ctx.send("Ce channel n'est pas dans la liste configurée.")
@@ -274,7 +295,9 @@ class Leveler(commands.Cog):
             await ctx.send("Channel inconnu")
 
     @channel.command(name="show")
+    @checks.mod_or_permissions(manage_messages=True)
     async def _show(self, ctx):
+        """Affiche la liste des channels configurés pour donner de l'expérience."""
         emb = discord.Embed(title="Liste des channels autorisés a faire gagner de l'experience sur ce serveur.", description="A une vache prés, c'pas une science exacte")
         channels = await self.profiles._get_guild_channels(ctx.guild)
         emb.add_field(name="Channels:", value="\n".join([discord.utils.get(ctx.guild.text_channels, id=x).mention for x in channels]))
