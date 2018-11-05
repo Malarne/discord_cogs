@@ -23,6 +23,7 @@ class Leveler(commands.Cog):
         self.profiles = UserProfile()
         self.loop = self.bot.loop.create_task(self.start())
         self.restart = True
+        self.__path__ = __path__
 
 
     __version__ = "1.0.0"
