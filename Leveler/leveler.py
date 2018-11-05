@@ -8,6 +8,7 @@ from redbot.core.data_manager import cog_data_path
 import asyncio
 import datetime
 from .userprofile import UserProfile
+from . import __path__
 from PIL import Image, ImageDraw, ImageFont
 from math import floor, ceil
 import os
@@ -15,7 +16,7 @@ import urllib
 import aiohttp
 from random import randint
 
-class Leveler(commands.Cog):
+class Leveler:
 
     def __init__(self, bot):
         self.bot = bot
@@ -94,7 +95,7 @@ class Leveler(commands.Cog):
         if user is None:
             user = ctx.author
         img = Image.new('RGBA', (800, 200))
-        font = ImageFont.truetype("/home/admin/venv/arial.ttf", 32)
+        font = ImageFont.truetype(os.path.join(__path__[0], "arial.ttf"), 32)
         draw = ImageDraw.Draw(img)
         usercolor = user.color.to_rgb()
         draw.ellipse([(-400, -100), (1200, 600)], fill=usercolor, outline=usercolor)
