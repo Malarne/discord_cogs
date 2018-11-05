@@ -1,6 +1,5 @@
 import discord
-from discord.ext import commands
-from redbot.core import checks, Config
+from redbot.core import checks, Config, commands
 # Sys
 import asyncio
 import aiohttp
@@ -29,7 +28,7 @@ DEFAULT = {"nsfw_channels": ["133251234164375552"], "invert" : False, "nsfw_msg"
 #example: "/butts/vote/6202/minus/" - negative vote for butts with id 6202; vote for noise: "/noise/vote/{id=0}/{operation=plus;[plus,minus]}/",
 #example: "/noise/vote/57/minus/" - negative vote for noise with id 57;
 
-class OboobsC:
+class OboobsC(commands.Cog):
     """The oboobs/obutts.ru NSFW pictures of nature cog.
     https://github.com/Canule/Mash-Cogs
     """
@@ -77,7 +76,7 @@ class OboobsC:
         except Exception as e:
              await ctx.send("Error getting results.\n{}".format(e))
              return
-        if ctx.channel.is_nsfw:
+        if ctx.channel.is_nsfw():
             emb = discord.Embed(title="Boobs")
             emb.set_image(url=boob)
             await ctx.send(embed=emb)
@@ -95,7 +94,7 @@ class OboobsC:
         except Exception as e:
             await ctx.send("Error getting results.\n{}".format(e))
             return
-        if ctx.channel.is_nsfw:
+        if ctx.channel.is_nsfw():
             emb = discord.Embed(title="Ass")
             emb.set_image(url=ass)
             await ctx.send(embed=emb)
