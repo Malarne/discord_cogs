@@ -12,6 +12,7 @@ from . import __path__
 from PIL import Image, ImageDraw, ImageFont
 from math import floor, ceil
 import os
+from collections import namedtuple
 import urllib
 import aiohttp
 from random import randint
@@ -63,7 +64,7 @@ class Leveler(commands.Cog):
                         member = i.get_member(j)
                         if member is None:
                             member = namedtuple("Member", "id guild")
-                            await self.config.member(member(j, i.id)).clear()
+                            await self.profiles.data.member(member(j, i.id)).clear()
                         else:
                             await self.profiles.data.member(member).today.set(0)
                 self.restart = True
