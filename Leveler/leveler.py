@@ -68,7 +68,7 @@ class Leveler(commands.Cog):
                         else:
                             await self.profiles.data.member(member).today.set(0)
                 self.restart = True
-            if datetime.date.today().strftime('%H:%M') in ["05:00", "05:01", "05:02", "05:03", "05:04", "05:05"]:
+            if datetime.datetime.now().strftime('%H:%M') in ["05:00", "05:01", "05:02", "05:03", "05:04", "05:05"]:
                 self.restart = False
             await asyncio.sleep(30)
 
