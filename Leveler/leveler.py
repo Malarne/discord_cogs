@@ -16,7 +16,7 @@ import urllib
 import aiohttp
 from random import randint
 
-class Leveler:
+class Leveler(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
