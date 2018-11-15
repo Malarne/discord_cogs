@@ -93,5 +93,5 @@ msgstr "List of channels allowed to gain experience on this server"
 
 #: Leveler/leveler.py:339
 msgid "A une vache prés, c'pas une science exacte"
-msgstr "Has a cow near, it's not an exact science"
+msgstr "More or less, it's not an exact science"
 
