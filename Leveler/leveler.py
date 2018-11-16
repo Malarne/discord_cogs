@@ -304,7 +304,9 @@ class Leveler(commands.Cog):
     @checks.mod_or_permissions(manage_messages=True)
     async def show(self, ctx):
         """Affiche la liste des roles dans l'ordre auquel ils sont obtenables."""
-        emb = discord.Embed(title=_("Liste des roles configurés pour le leveler de ce serveur."), description=_("Garanti 100% presque pas bugué."))
+        emb = discord.Embed()
+        emb.title = _("Liste des roles configurés pour le leveler de ce serveur.")
+        emb.description= _("Garanti 100% presque pas bugué.")
         roles = await self.profiles._get_guild_roles(ctx.guild)
         counter = 1
         for x in roles:
@@ -336,7 +338,9 @@ class Leveler(commands.Cog):
     @checks.mod_or_permissions(manage_messages=True)
     async def _show(self, ctx):
         """Affiche la liste des channels configurés pour donner de l'expérience."""
-        emb = discord.Embed(title=_("Liste des channels autorisés a faire gagner de l'experience sur ce serveur."), description=_("A une vache prés, c'pas une science exacte"))
+        emb = discord.Embed()
+        emb.title = _("Liste des channels autorisés a faire gagner de l'experience sur ce serveur.")
+        emb.description = _("A une vache prés, c'pas une science exacte")
         channels = await self.profiles._get_guild_channels(ctx.guild)
-        emb.add_field(name="Channels:", value="\n".join([discord.utils.get(ctx.guild.text_channels, id=x).mention for x in channels]))
+        emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
         await ctx.send(embed=emb)
