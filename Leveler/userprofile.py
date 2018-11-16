@@ -77,7 +77,7 @@ class UserProfile:
 
     async def _remove_guild_role(self, guild, role):
         async with self.data.guild(guild).roles() as rolelist:
-            rolelist.pop(role)
+            rolelist.remove(role)
 
     async def _get_guild_roles(self, guild):
         return await self.data.guild(guild).roles()
@@ -88,7 +88,7 @@ class UserProfile:
 
     async def _remove_guild_channel(self, guild, channel):
         async with self.data.guild(guild).channels() as chanlist:
-            chanlist.pop(channel)
+            chanlist.remove(channel)
 
     async def _get_guild_channels(self, guild):
         return await self.data.guild(guild).channels()
