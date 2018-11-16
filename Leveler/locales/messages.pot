@@ -1,0 +1,162 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2018-11-16 22:02+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: redgettext 2.1\n"
+
+
+#: leveler.py:88
+msgid "Reset dans max 30 secondes"
+msgstr ""
+
+#: leveler.py:151 leveler.py:255
+msgid "Niveau"
+msgstr ""
+
+#: leveler.py:157
+msgid "Elo"
+msgstr ""
+
+#: leveler.py:168
+#, docstring
+msgid "Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."
+msgstr ""
+
+#: leveler.py:192
+msgid "Nouveau"
+msgstr ""
+
+#: leveler.py:238
+#, docstring
+msgid "Vous permets de commencer a gagner de l'expérience !"
+msgstr ""
+
+#: leveler.py:240
+msgid "Vous êtes déjà enregistré !"
+msgstr ""
+
+#: leveler.py:244
+msgid "Vous avez été enregistré avec succès !"
+msgstr ""
+
+#: leveler.py:249
+#, docstring
+msgid "Affiche le classement des meilleures blablateurs !"
+msgstr ""
+
+#: leveler.py:251
+msgid "Le classement des PGM !"
+msgstr ""
+
+#: leveler.py:255
+msgid "Messages Today!"
+msgstr ""
+
+#: leveler.py:262
+#, docstring
+msgid "Commandes de configuration."
+msgstr ""
+
+#: leveler.py:268
+#, docstring
+msgid "Configuration des channels permettant de gagner de l'expérience."
+msgstr ""
+
+#: leveler.py:274
+#, docstring
+msgid "Configuration des roles obtenables grâce à l'expérience."
+msgstr ""
+
+#: leveler.py:280
+#, docstring
+msgid "Ajoute un role a la liste des roles obtenables grâce à l'expérience."
+msgstr ""
+
+#: leveler.py:282
+msgid "Role configuré"
+msgstr ""
+
+#: leveler.py:287
+#, docstring
+msgid "Supprime un role de la liste des roles obtenables grâce à l'expérience."
+msgstr ""
+
+#: leveler.py:290
+msgid "Role supprimé"
+msgstr ""
+
+#: leveler.py:292 leveler.py:302
+msgid "Role inconnu dans la config"
+msgstr ""
+
+#: leveler.py:297
+#, docstring
+msgid "Permet de déplacer un role, modifiant l'expérience necessaire pour l'obtenir."
+msgstr ""
+
+#: leveler.py:300
+msgid "Role déplacé"
+msgstr ""
+
+#: leveler.py:307
+#, docstring
+msgid "Affiche la liste des roles dans l'ordre auquel ils sont obtenables."
+msgstr ""
+
+#: leveler.py:308
+msgid "Liste des roles configurés pour le leveler de ce serveur."
+msgstr ""
+
+#: leveler.py:308
+msgid "Garanti 100% presque pas bugué."
+msgstr ""
+
+#: leveler.py:319
+#, docstring
+msgid "Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel là."
+msgstr ""
+
+#: leveler.py:322
+msgid "Channel ajouté"
+msgstr ""
+
+#: leveler.py:324
+msgid "Channel déjà enregistré"
+msgstr ""
+
+#: leveler.py:329
+#, docstring
+msgid "Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expérience."
+msgstr ""
+
+#: leveler.py:331
+msgid "Ce channel n'est pas dans la liste configurée."
+msgstr ""
+
+#: leveler.py:334
+msgid "Channel supprimé"
+msgstr ""
+
+#: leveler.py:339
+#, docstring
+msgid "Affiche la liste des channels configurés pour donner de l'expérience."
+msgstr ""
+
+#: leveler.py:340
+msgid "Liste des channels autorisés a faire gagner de l'experience sur ce serveur."
+msgstr ""
+
+#: leveler.py:340
+msgid "A une vache prés, c'pas une science exacte"
+msgstr ""
+

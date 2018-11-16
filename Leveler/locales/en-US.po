@@ -23,6 +23,10 @@ msgstr "Resets in 30 seconds max"
 msgid "Niveau"
 msgstr "Level"
 
+#: leveler.py:157
+msgid "Elo"
+msgstr "Ranking"
+
 #: leveler.py:167
 #, docstring
 msgid "Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."
