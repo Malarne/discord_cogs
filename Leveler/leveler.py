@@ -16,7 +16,16 @@ from collections import namedtuple
 import urllib
 import aiohttp
 from random import randint
+from redbot.core.i18n import Translator, cog_i18n
+from io import BytesIO
+import functools
 
+
+
+_ = Translator("Leveler", __file__)
+
+
+@cog_i18n(_)
 class Leveler(commands.Cog):
 
     def __init__(self, bot):
@@ -76,7 +85,7 @@ class Leveler(commands.Cog):
     @checks.is_owner()
     async def testreset(self, ctx):
         self.restart = False
-        await ctx.send("Reset dans max 30 secondes", delete_after=30)
+        await ctx.send(_("Reset dans max 30 secondes"), delete_after=30)
 
     async def makebar(self, prc):
         emp = "□"
@@ -91,11 +100,13 @@ class Leveler(commands.Cog):
             temp -= 1
         return res
 
-    @commands.command()
-    async def profile(self, ctx, user : discord.Member = None):
-        """Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."""
-        if user is None:
-            user = ctx.author
+    async def get_avatar(self, user):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(user.avatar_url_as(format="png", size=1024)) as f:
+                data = await f.read()
+                return BytesIO(data)
+
+    def make_basic_profile(self, avatar_data, user):
         img = Image.new('RGBA', (800, 200))
         font = ImageFont.truetype(os.path.join(__path__[0], "arial.ttf"), 32)
         draw = ImageDraw.Draw(img)
@@ -103,20 +114,70 @@ class Leveler(commands.Cog):
         draw.ellipse([(-400, -100), (1200, 600)], fill=usercolor, outline=usercolor)
         draw.ellipse([(250, -50), (550, 250)], fill='white', outline='white')
         img_w, img_h = img.size
-        async with aiohttp.ClientSession() as session:
-            async with session.get(user.avatar_url_as(format="png", size=1024)) as f:
-                rand = randint(0, 99999)
-                path = cog_data_path(self)
-                with open(f"{path}\\temp_{rand}.png", "wb") as r:
-                    r.write(await f.content.read())
-        avatar = Image.open(f"{path}\\temp_{rand}.png")
+        
+        avatar = Image.open(avatar_data)
         avatar_size = 128, 128
         avatar.thumbnail(avatar_size)
         avatar_w, avatar_h = avatar.size
         offset = ((img_w - avatar_w) // 2, ((img_h - avatar_h) // 2) -30)
         img.paste(avatar, offset)
-        if await self.profiles._is_registered(user):
-            draw.rectangle([(50, 160), (750, 180)], fill=None, outline='black')
+        temp = BytesIO()
+        img.save(temp, format="PNG")
+        temp.name = "temp.png"
+        return temp
+
+    def make_full_profile(self, avatar_data, user, xp, nxp, lvl, minone, elo):
+        img = Image.new('RGBA', (800, 200))
+        font = ImageFont.truetype(os.path.join(__path__[0], "arial.ttf"), 32)
+        draw = ImageDraw.Draw(img)
+        usercolor = user.color.to_rgb()
+        draw.ellipse([(-400, -100), (1200, 600)], fill=usercolor, outline=usercolor)
+        draw.ellipse([(250, -50), (550, 250)], fill='white', outline='white')
+        img_w, img_h = img.size
+        
+        avatar = Image.open(avatar_data)
+        avatar_size = 128, 128
+        avatar.thumbnail(avatar_size)
+        avatar_w, avatar_h = avatar.size
+        offset = ((img_w - avatar_w) // 2, ((img_h - avatar_h) // 2) -30)
+        img.paste(avatar, offset)
+        draw.rectangle([(50, 160), (750, 180)], fill=None, outline='black')
+        lxp = xp - minone
+        lnxp = nxp - minone
+        prc = floor(xp / (nxp / 100))
+        lprc = floor(lxp / (lnxp / 100))
+        b_offset = 800 - (lprc*7)
+        draw.rectangle([(50, 160), (800 - b_offset, 180)], fill='black', outline=None)
+        draw.text((20, 20), _("Niveau")+f": {lvl}", fill='black', font=font)
+        sp = ""
+        for i in range(len(str(xp))+2):
+            sp += " "
+        draw.text((600, 10), f"XP: ({lprc}%)\n{lxp} / {lnxp} ", fill='black', font=font)
+        draw.text((570, 90), f"{sp}Total:\n{xp} / {nxp} ", fill='black', font=font)
+        draw.text((20, 90), f"Elo: {elo}", fill='black', font=font)
+        temp = BytesIO()
+        img.save(temp, format="PNG")
+        temp.name = "temp.png"
+        return temp
+
+
+
+    @commands.command()
+    async def profile(self, ctx, user : discord.Member = None):
+        """Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."""
+        if user is None:
+            user = ctx.author
+
+        avatar = await self.get_avatar(user)
+        
+        if not await self.profiles._is_registered(user):
+            task = functools.partial(self.make_basic_profile, avatar_data=avatar, user=user)
+            task = self.bot.loop.run_in_executor(None, task)
+            try:
+                img = await asyncio.wait_for(task, timeout=60)
+            except asyncio.TimeoutError:
+                return
+        else:
             xp = await self.profiles._get_exp(user)
             nxp = await self.profiles._get_level_exp(user)
             lvl = await self.profiles._get_level(user)
@@ -124,33 +185,22 @@ class Leveler(commands.Cog):
                 minone = await self.profiles._get_xp_for_level(lvl -1)
             else:
                 minone = 0
-            lxp = xp - minone
-            lnxp = nxp - minone
-            prc = floor(xp / (nxp / 100))
-            lprc = floor(lxp / (lnxp / 100))
-            b_offset = 800 - (lprc*7)
-            draw.rectangle([(50, 160), (800 - b_offset, 180)], fill='black', outline=None)
-            draw.text((20, 20), f"Niveau: {lvl}", fill='black', font=font)
-            sp = ""
-            for _ in range(len(str(xp))+2):
-                sp += " "
-            draw.text((600, 10), f"XP: ({lprc}%)\n{lxp} / {lnxp} ", fill='black', font=font)
-            draw.text((570, 90), f"{sp}Total:\n{xp} / {nxp} ", fill='black', font=font)
             roles = await self.profiles._get_guild_roles(ctx.guild)
             ln = lvl // 10
             if ln == 0:
-                elo = "Nouveau"
+                elo = _("Nouveau")
             elif ln >= 7:
                 ln = 7
                 elo = roles[ln - 1]
-            draw.text((20, 90), f"Elo: {elo}", fill='black', font=font)
-        img.save(f'{path}\\temp.jpg', "PNG")
-        await ctx.send(file=discord.File(f"{path}\\temp.jpg"))
-        try:
-            os.remove(f"{path}\\temp.jpg")
-            os.remove(f"{path}\\temp_{rand}.png")
-        except:
-            pass
+            task = functools.partial(self.make_full_profile, avatar_data=avatar, user=user, xp=xp, nxp=nxp, lvl=lvl, minone=minone, elo=elo)
+            task = self.bot.loop.run_in_executor(None, task)
+            try:
+                img = await asyncio.wait_for(task, timeout=60)
+            except asyncio.TimeoutError:
+                return
+            
+        img.seek(0)
+        await ctx.send(file=discord.File(img))
 
     async def on_message(self, message):
         if type(message.channel) != discord.channel.TextChannel:
@@ -186,22 +236,22 @@ class Leveler(commands.Cog):
     async def register(self, ctx):
         """Vous permets de commencer a gagner de l'expérience !"""
         if await self.profiles._is_registered(ctx.author):
-            await ctx.send("Vous êtes déjà enregistré !")
+            await ctx.send(_("Vous êtes déjà enregistré !"))
             return
         else:
             await self.profiles._register_user(ctx.author)
-            await ctx.send("Vous avez été enregistré avec succès !")
+            await ctx.send(_("Vous avez été enregistré avec succès !"))
             return
 
     @commands.command()
     async def toplevel(self, ctx):
         """Affiche le classement des meilleures blablateurs !"""
         ld = await self.profiles._get_leaderboard(ctx.guild)
-        emb = discord.Embed(title="Le classement des PGM !")
+        emb = discord.Embed(title=_("Le classement des PGM !"))
         for i in range(len(ld)):
             cur = ld[i]
             user = ctx.guild.get_member(cur["id"])
-            txt = "Niveau {} | {} XP | {} Messages aujourd'hui !".format(cur["lvl"], cur["xp"], cur["today"])
+            txt = _("Niveau")+" {} | {} XP | {} ".format(cur["lvl"], cur["xp"], cur["today"]) +_("Messages Today!")
             emb.add_field(name="{}".format(user.display_name), value=txt)
         await ctx.send(embed=emb)
 
@@ -227,43 +277,34 @@ class Leveler(commands.Cog):
     @checks.mod_or_permissions(manage_messages=True)
     async def add(self, ctx, role : discord.Role):
         """Ajoute un role a la liste des roles obtenables grâce à l'expérience."""
-        if role:
-            await self.profiles._add_guild_role(ctx.guild, role.id)
-            await ctx.send("Role configuré")
-        else:
-            await ctx.send("Role inconnu")
+        await self.profiles._add_guild_role(ctx.guild, role.id)
+        await ctx.send(_("Role configuré"))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     async def remove(self, ctx, role : discord.Role):
         """Supprime un role de la liste des roles obtenables grâce à l'expérience."""
-        if role:
-            if role.id in await self.profiles._get_guild_roles(ctx.guild):
-                await self.profiles._remove_guild_role(ctx.guild, role.id)
-                await ctx.send("Role supprimé")
-            else:
-                await ctx.send("Role inconnu dans la config")
+        if role.id in await self.profiles._get_guild_roles(ctx.guild):
+            await self.profiles._remove_guild_role(ctx.guild, role.id)
+            await ctx.send(_("Role supprimé"))
         else:
-            await ctx.send("Role inconnu")
+            await ctx.send(_("Role inconnu dans la config"))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     async def move(self, ctx, role : discord.Role, position : int):
         """Permet de déplacer un role, modifiant l'expérience necessaire pour l'obtenir."""
-        if role:
-            if role.id in await self.profiles._get_guild_roles(ctx.guild):
-                await self.profiles._move_guild_role(ctx.guild, role.id, position-1)
-                await ctx.send("Role déplacé")
-            else:
-                await ctx.send("Role inconnu dans la config")
+        if role.id in await self.profiles._get_guild_roles(ctx.guild):
+            await self.profiles._move_guild_role(ctx.guild, role.id, position-1)
+            await ctx.send(_("Role déplacé"))
         else:
-            await ctx.send("Role inconnu")
+            await ctx.send(_("Role inconnu dans la config"))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     async def show(self, ctx):
         """Affiche la liste des roles dans l'ordre auquel ils sont obtenables."""
-        emb = discord.Embed(title="Liste des roles configurés pour le leveler de ce serveur.", description="Garanti 100% presque pas bugué.")
+        emb = discord.Embed(title=_("Liste des roles configurés pour le leveler de ce serveur."), description=_("Garanti 100% presque pas bugué."))
         roles = await self.profiles._get_guild_roles(ctx.guild)
         counter = 1
         for x in roles:
@@ -275,33 +316,27 @@ class Leveler(commands.Cog):
     @checks.mod_or_permissions(manage_messages=True)
     async def _add(self, ctx, channel : discord.TextChannel):
         """Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel là."""
-        if channel:
-            if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
-                await self.profiles._add_guild_channel(ctx.guild, channel.id)
-                await ctx.send("Channel ajouté")
-            else:
-                await ctx.send("Channel déjà enregistré")
+        if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
+            await self.profiles._add_guild_channel(ctx.guild, channel.id)
+            await ctx.send(_("Channel ajouté"))
         else:
-            await ctx.send("Channel inconnu")
+            await ctx.send(_("Channel déjà enregistré"))
 
     @channel.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
     async def _remove(self, ctx, channel : discord.TextChannel):
         """Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expérience."""
-        if channel:
-            if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
-                await ctx.send("Ce channel n'est pas dans la liste configurée.")
-            else:
-                await self.profiles._remove_guild_channel(ctx.guild, channel)
-                await ctx.send("Channel supprimé")
+        if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
+            await ctx.send(_("Ce channel n'est pas dans la liste configurée."))
         else:
-            await ctx.send("Channel inconnu")
+            await self.profiles._remove_guild_channel(ctx.guild, channel)
+            await ctx.send(_("Channel supprimé"))
 
     @channel.command(name="show")
     @checks.mod_or_permissions(manage_messages=True)
     async def _show(self, ctx):
         """Affiche la liste des channels configurés pour donner de l'expérience."""
-        emb = discord.Embed(title="Liste des channels autorisés a faire gagner de l'experience sur ce serveur.", description="A une vache prés, c'pas une science exacte")
+        emb = discord.Embed(title=_("Liste des channels autorisés a faire gagner de l'experience sur ce serveur."), description=_("A une vache prés, c'pas une science exacte"))
         channels = await self.profiles._get_guild_channels(ctx.guild)
         emb.add_field(name="Channels:", value="\n".join([discord.utils.get(ctx.guild.text_channels, id=x).mention for x in channels]))
         await ctx.send(embed=emb)

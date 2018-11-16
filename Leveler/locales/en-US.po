@@ -1,0 +1,97 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2018-11-15 16:02-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: redgettext 2.1\n"
+
+
+#: Leveler/leveler.py:88
+msgid "Reset dans max 30 secondes"
+msgstr "Resets in max 30 seconds"
+
+#: Leveler/leveler.py:151 Leveler/leveler.py:254
+msgid "Niveau"
+msgstr "Level"
+
+#: Leveler/leveler.py:191
+msgid "Nouveau"
+msgstr "New"
+
+#: Leveler/leveler.py:239
+msgid "Vous êtes déjà enregistré !"
+msgstr "You are already Registered!"
+
+#: Leveler/leveler.py:243
+msgid "Vous avez été enregistré avec succès !"
+msgstr "You have been successfully registered!"
+
+#: Leveler/leveler.py:250
+msgid "Le classement des PGM !"
+msgstr "Ranking"
+
+#: Leveler/leveler.py:254
+msgid "Messages aujourd'hui !"
+msgstr "Messages Today!"
+
+#: Leveler/leveler.py:281
+msgid "Role configuré"
+msgstr "Role configured"
+
+#: Leveler/leveler.py:289
+msgid "Role supprimé"
+msgstr "Role Deleted"
+
+#: Leveler/leveler.py:291
+msgid "Role inconnu dans la config"
+msgstr "Unknown role in config"
+
+#: Leveler/leveler.py:299
+msgid "Role déplacé"
+msgstr "Role moved"
+
+#: Leveler/leveler.py:301
+msgid "Role inconnu dans la config"
+msgstr "Unknown role in config"
+
+#: Leveler/leveler.py:307
+msgid "Liste des roles configurés pour le leveler de ce serveur."
+msgstr "List of roles configured for the leveler of this server."
+
+#: Leveler/leveler.py:307
+msgid "Garanti 100% presque pas bugué."
+msgstr "Guaranteed 100% almost no bugs."
+
+#: Leveler/leveler.py:321
+msgid "Channel ajouté"
+msgstr "Channel added"
+
+#: Leveler/leveler.py:323
+msgid "Channel déjà enregistré"
+msgstr "Channel already registered"
+
+#: Leveler/leveler.py:330
+msgid "Ce channel n'est pas dans la liste configurée."
+msgstr "This channel is not in the configured list."
+
+#: Leveler/leveler.py:333
+msgid "Channel supprimé"
+msgstr "Channel deleted"
+
+#: Leveler/leveler.py:339
+msgid "Liste des channels autorisés a faire gagner de l'experience sur ce serveur."
+msgstr "List of channels allowed to gain experience on this server"
+
+#: Leveler/leveler.py:339
+msgid "A une vache prés, c'pas une science exacte"
+msgstr "More or less, it's not an exact science"
+
