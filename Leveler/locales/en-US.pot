@@ -1,0 +1,158 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2018-11-16 18:58+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: redgettext 2.1\n"
+
+
+#: leveler.py:88
+msgid "Reset dans max 30 secondes"
+msgstr "Resets in 30 seconds max"
+
+#: leveler.py:151 leveler.py:254
+msgid "Niveau"
+msgstr "Level"
+
+#: leveler.py:167
+#, docstring
+msgid "Affiche la progression sur le Leveler. Defaut a soi-m�me s'il n'y a pas de tag apr�s la commande."
+msgstr "Show your leveler progress. Default to yourself."
+
+#: leveler.py:191
+msgid "Nouveau"
+msgstr "New"
+
+#: leveler.py:237
+#, docstring
+msgid "Vous permets de commencer a gagner de l'exp�rience !"
+msgstr "Allow you to start earning experience."
+
+#: leveler.py:239
+msgid "Vous �tes d�j� enregistr� !"
+msgstr "You are already registered."
+
+#: leveler.py:243
+msgid "Vous avez �t� enregistr� avec succ�s !"
+msgstr "You have been successfully registered."
+
+#: leveler.py:248
+#, docstring
+msgid "Affiche le classement des meilleures blablateurs !"
+msgstr "Show the server leaderboard."
+
+#: leveler.py:250
+msgid "Le classement des PGM !"
+msgstr "Ranking"
+
+#: leveler.py:254
+msgid "Messages Today!"
+msgstr "Messages Today !"
+
+#: leveler.py:261
+#, docstring
+msgid "Commandes de configuration."
+msgstr "Configuration commands"
+
+#: leveler.py:267
+#, docstring
+msgid "Configuration des channels permettant de gagner de l'exp�rience."
+msgstr "Configuration of channels allowing earning experience."
+
+#: leveler.py:273
+#, docstring
+msgid "Configuration des roles obtenables gr�ce � l'exp�rience."
+msgstr "Configuration of roles obtainable from experience."
+
+#: leveler.py:279
+#, docstring
+msgid "Ajoute un role a la liste des roles obtenables gr�ce � l'exp�rience."
+msgstr "Add a role to the list of roles you can get with experience."
+
+#: leveler.py:281
+msgid "Role configur�"
+msgstr "Role configured."
+
+#: leveler.py:286
+#, docstring
+msgid "Supprime un role de la liste des roles obtenables gr�ce � l'exp�rience."
+msgstr "Remove a role from the list."
+
+#: leveler.py:289
+msgid "Role supprim�"
+msgstr "Role deleted."
+
+#: leveler.py:291 leveler.py:301
+msgid "Role inconnu dans la config"
+msgstr "Unknown role in the config"
+
+#: leveler.py:296
+#, docstring
+msgid "Permet de d�placer un role, modifiant l'exp�rience necessaire pour l'obtenir."
+msgstr "Allow you to move a role."
+
+#: leveler.py:299
+msgid "Role d�plac�"
+msgstr "Role moved."
+
+#: leveler.py:306
+#, docstring
+msgid "Affiche la liste des roles dans l'ordre auquel ils sont obtenables."
+msgstr "Show the list of roles in the order which you get them from experience."
+
+#: leveler.py:307
+msgid "Liste des roles configur�s pour le leveler de ce serveur."
+msgstr "List of roles configured for this server."
+
+#: leveler.py:307
+msgid "Garanti 100% presque pas bugu�."
+msgstr "Guaranteed 100% almost no bugs."
+
+#: leveler.py:318
+#, docstring
+msgid "Ajoute un channel, permettant aux utilisateurs de gagner de l'exp�rience lorsqu'ils parlent dans ce channel l�."
+msgstr "Add a role, allowing users to get it with experience."
+
+#: leveler.py:321
+msgid "Channel ajout�"
+msgstr "Channel added."
+
+#: leveler.py:323
+msgid "Channel d�j� enregistr�"
+msgstr "Channel already saved."
+
+#: leveler.py:328
+#, docstring
+msgid "Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'exp�rience."
+msgstr "Remove a channel, users in there won't earn experience anymore."
+
+#: leveler.py:330
+msgid "Ce channel n'est pas dans la liste configur�e."
+msgstr "Channel not in the config list."
+
+#: leveler.py:333
+msgid "Channel supprim�"
+msgstr "Channel removed."
+
+#: leveler.py:338
+#, docstring
+msgid "Affiche la liste des channels configur�s pour donner de l'exp�rience."
+msgstr "Show the list of channels configured to allow earning experience."
+
+#: leveler.py:339
+msgid "Liste des channels autoris�s a faire gagner de l'experience sur ce serveur."
+msgstr "List of channels configured to allow earning experience on this server."
+
+#: leveler.py:339
+msgid "A une vache pr�s, c'pas une science exacte"
+msgstr "More or less, it's not an exact science"
+
