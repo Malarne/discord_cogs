@@ -24,8 +24,8 @@ msgid "Niveau"
 msgstr "Level"
 
 #: leveler.py:157
-msgid "Elo:"
-msgstr "Rank:"
+msgid "Elo"
+msgstr "Ranking"
 
 #: leveler.py:167
 #, docstring

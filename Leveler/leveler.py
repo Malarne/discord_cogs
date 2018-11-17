@@ -154,7 +154,8 @@ class Leveler(commands.Cog):
             sp += " "
         draw.text((600, 10), f"XP: ({lprc}%)\n{lxp} / {lnxp} ", fill='black', font=font)
         draw.text((570, 90), f"{sp}Total:\n{xp} / {nxp} ", fill='black', font=font)
-        draw.text((20, 90), _("Elo:") + f" {elo}", fill='black', font=font)
+        rank = _("Elo")
+        draw.text((20, 90), f"{rank}: {elo}", fill='black', font=font)
         temp = BytesIO()
         img.save(temp, format="PNG")
         temp.name = "temp.png"
