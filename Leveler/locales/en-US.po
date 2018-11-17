@@ -23,6 +23,10 @@ msgstr "Resets in 30 seconds max"
 msgid "Niveau"
 msgstr "Level"
 
+#: leveler.py:157
+msgid "Elo:"
+msgstr "Rank:"
+
 #: leveler.py:167
 #, docstring
 msgid "Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."
@@ -72,6 +76,11 @@ msgstr "Configuration of channels allowing earning experience."
 #, docstring
 msgid "Configuration des roles obtenables grâce à l'expérience."
 msgstr "Configuration of roles obtainable from experience."
+
+#: leveler.py:282
+#, docstring
+msgid "Définir un niveau de membres, principalement pour les tests"
+msgstr "Set a members level, mainly for testing"
 
 #: leveler.py:279
 #, docstring

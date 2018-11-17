@@ -154,7 +154,7 @@ class Leveler(commands.Cog):
             sp += " "
         draw.text((600, 10), f"XP: ({lprc}%)\n{lxp} / {lnxp} ", fill='black', font=font)
         draw.text((570, 90), f"{sp}Total:\n{xp} / {nxp} ", fill='black', font=font)
-        draw.text((20, 90), f"Elo: {elo}", fill='black', font=font)
+        draw.text((20, 90), _("Elo:") + f" {elo}", fill='black', font=font)
         temp = BytesIO()
         img.save(temp, format="PNG")
         temp.name = "temp.png"
@@ -189,9 +189,12 @@ class Leveler(commands.Cog):
             ln = lvl // 10
             if ln == 0:
                 elo = _("Nouveau")
-            elif ln >= 7:
-                ln = 7
-                elo = roles[ln - 1]
+            elif ln >= len(roles):
+                elo = roles[len(roles)-1]
+                elo = ctx.guild.get_role(elo).name
+            else:
+                elo = roles[ln-1]
+                elo = ctx.guild.get_role(elo).name
             task = functools.partial(self.make_full_profile, avatar_data=avatar, user=user, xp=xp, nxp=nxp, lvl=lvl, minone=minone, elo=elo)
             task = self.bot.loop.run_in_executor(None, task)
             try:
@@ -272,6 +275,14 @@ class Leveler(commands.Cog):
     async def roles(self, ctx):
         """Configuration des roles obtenables grâce à l'expérience."""
         pass
+
+    @levelerset.command()
+    @checks.is_owner()
+    async def setlevel(self, ctx, level:int, member:discord.Member=None):
+        """Définir un niveau de membres, principalement pour les tests"""
+        if member is None:
+            member = ctx.message.author
+        await self.profiles._set_level(member, level)
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
