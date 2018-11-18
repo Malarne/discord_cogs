@@ -25,6 +25,9 @@ class UserProfile:
         await self.data.member(member).exp.set(current + exp)
         await self._check_exp(member)
 
+    async def _set_level(self, member, level):
+        await self.data.member(member).level.set(level)
+
     async def _is_registered(self, member):
         async with self.data.guild(member.guild).database() as db:
             return member.id in db
