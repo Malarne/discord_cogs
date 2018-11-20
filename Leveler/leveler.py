@@ -196,7 +196,8 @@ class Leveler(commands.Cog):
             else:
                 elo = roles[ln-1]
                 elo = ctx.guild.get_role(elo).name
-            task = functools.partial(self.make_full_profile, avatar_data=avatar, user=user, xp=xp, nxp=nxp, lvl=lvl, minone=minone, elo=elo)
+            task = functools.partial(self.make_full_profile, avatar_data=avatar, 
+                                     user=user, xp=xp, nxp=nxp, lvl=lvl, minone=minone, elo=elo)
             task = self.bot.loop.run_in_executor(None, task)
             try:
                 img = await asyncio.wait_for(task, timeout=60)
@@ -207,34 +208,55 @@ class Leveler(commands.Cog):
         await ctx.send(file=discord.File(img))
 
     async def on_message(self, message):
+        if type(message.author) != discord.Member:
+            # throws an error when webhooks talk, this fixes it
+            return
         if type(message.channel) != discord.channel.TextChannel:
             return
         elif message.channel.id not in await self.profiles._get_guild_channels(message.author.guild):
             return
+
+        if not await self.profiles._is_registered(message.author):
+            if await self.profiles._get_auto_register(message.guild):
+                await self.profiles._register_user(message.author)
+                return
+
         elif await self.profiles._is_registered(message.author):
             if message.content[0] in await self.bot.get_prefix(message):
                 return
-            else:
-                mots = len(message.content.split(" "))
-                if mots <= 10:
-                    xp = 1
-                elif mots > 10:
-                    xp = 2
-                await self.profiles._today_addone(message.author)
-                await self.profiles._give_exp(message.author, xp)
-                lvl = await self.profiles._get_level(message.author)
-                roles = await self.profiles._get_guild_roles(message.guild)
-                ln = lvl//10
-                if ln == 0:
-                    return
-                elif ln >= len(roles):
-                    ln = len(roles) -1
-                grade = discord.utils.get(message.guild.roles, id=roles[ln-1])
-                if not grade in message.author.roles:
-                    for i in roles:
-                        role = discord.utils.get(message.guild.roles, id=i)
-                        await message.author.remove_roles(role)
-                    await message.author.add_roles(grade)
+            timenow = datetime.datetime.now().timestamp()
+            lastmessage = await self.profiles._get_user_lastmessage(message.author)
+            cooldown = await self.profiles._get_cooldown(message.guild)
+            if timenow - lastmessage < cooldown:
+                # check if we've passed the cooldown
+                # return None if messages are sent too soon
+                return
+            mots = len(message.content.split(" "))
+            if mots <= 10:
+                xp = 1
+            elif mots > 10:
+                xp = 2
+            await self.profiles._today_addone(message.author)
+            await self.profiles._give_exp(message.author, xp)
+            await self.profiles._set_user_lastmessage(message.author, timenow)
+            lvl = await self.profiles._get_level(message.author)
+            roles = await self.profiles._get_guild_roles(message.guild)
+            ln = lvl//10
+            if ln == 0:
+                return
+            elif ln >= len(roles):
+                ln = len(roles) -1
+            grade = message.guild.get_role(roles[ln-1])
+            if grade is None:
+                return
+            if not grade in message.author.roles:
+                for i in roles:
+                    role = message.guild.get_role(i)
+                    if role is None:
+                        continue
+                    await message.author.remove_roles(role)
+                await message.author.add_roles(grade)
+            
 
     @commands.command()
     async def register(self, ctx):
@@ -276,14 +298,6 @@ class Leveler(commands.Cog):
     async def roles(self, ctx):
         """Configuration des roles obtenables grâce à l'expérience."""
         pass
-
-    @levelerset.command()
-    @checks.is_owner()
-    async def setlevel(self, ctx, level:int, member:discord.Member=None):
-        """Définir un niveau de membres, principalement pour les tests"""
-        if member is None:
-            member = ctx.message.author
-        await self.profiles._set_level(member, level)
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
@@ -328,8 +342,10 @@ class Leveler(commands.Cog):
 
     @channel.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
-    async def _add(self, ctx, channel : discord.TextChannel):
+    async def _add(self, ctx, channel : discord.TextChannel = None):
         """Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel là."""
+        if channel is None:
+            channel = ctx.channel
         if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
             await self.profiles._add_guild_channel(ctx.guild, channel.id)
             await ctx.send(_("Channel ajouté"))
@@ -338,8 +354,10 @@ class Leveler(commands.Cog):
 
     @channel.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
-    async def _remove(self, ctx, channel : discord.TextChannel):
+    async def _remove(self, ctx, channel : discord.TextChannel = None):
         """Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expérience."""
+        if channel is None:
+            channel = ctx.channel
         if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
             await ctx.send(_("Ce channel n'est pas dans la liste configurée."))
         else:
@@ -356,3 +374,38 @@ class Leveler(commands.Cog):
         channels = await self.profiles._get_guild_channels(ctx.guild)
         emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
         await ctx.send(embed=emb)
+
+    @levelerset.command()
+    async def autoregister(self, ctx):
+        """Bascule l'enregistrement automatique des utilisateurs"""
+        if await self.profiles._get_auto_register(ctx.guild):
+            await self.profiles._set_auto_register(ctx.guild, False)
+            await ctx.send(_("Enregistrement automatique activé"))
+        else:
+            await self.profles._set_auto_register(ctx.guild, True)
+            await ctx.send(_("Enregistrement automatique désactivé"))
+
+    @levelerset.command()
+    async def cooldown(self, ctx, cooldown: float):
+        """Définir le temps de recharge pour le gain xp, la valeur par défaut est 60 secondes"""
+        await self.profiles._set_cooldown(ctx.guild, cooldown)
+        await ctx.send(_("Le temps de recharge est réglé sur: ") + str(cooldown))
+
+    @levelerset.command()
+    @checks.is_owner()
+    async def setlevel(self, ctx, level:int, member:discord.Member=None):
+        """Définir un niveau de membres, principalement pour les tests"""
+        if member is None:
+            member = ctx.message.author
+        await self.profiles._set_level(member, level)
+        await ctx.send(member.name + _(" niveau réglé à ") + str(level))
+
+    @levelerset.command()
+    @checks.is_owner()
+    async def setxp(self, ctx, xp:int, member:discord.Member=None):
+        """définir un membre xp, principalement pour les tests"""
+        if member is None:
+            member = ctx.message.author
+        await self.profiles._set_xp(member, xp)
+        await ctx.send(member.name +_(" xp mis à ") + str(xp))
+
