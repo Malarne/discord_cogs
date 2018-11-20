@@ -361,7 +361,7 @@ class Leveler(commands.Cog):
         if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
             await ctx.send(_("Ce channel n'est pas dans la liste configurée."))
         else:
-            await self.profiles._remove_guild_channel(ctx.guild, channel)
+            await self.profiles._remove_guild_channel(ctx.guild, channel.id)
             await ctx.send(_("Channel supprimé"))
 
     @channel.command(name="show")
