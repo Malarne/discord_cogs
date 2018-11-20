@@ -382,7 +382,7 @@ class Leveler(commands.Cog):
             await self.profiles._set_auto_register(ctx.guild, False)
             await ctx.send(_("Enregistrement automatique activé"))
         else:
-            await self.profles._set_auto_register(ctx.guild, True)
+            await self.profiles._set_auto_register(ctx.guild, True)
             await ctx.send(_("Enregistrement automatique désactivé"))
 
     @levelerset.command()
@@ -406,6 +406,6 @@ class Leveler(commands.Cog):
         """définir un membre xp, principalement pour les tests"""
         if member is None:
             member = ctx.message.author
-        await self.profiles._set_xp(member, xp)
+        await self.profiles._set_exp(member, xp)
         await ctx.send(member.name +_(" xp mis à ") + str(xp))
 
