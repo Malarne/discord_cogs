@@ -19,6 +19,22 @@ msgstr ""
 msgid "Reset dans max 30 secondes"
 msgstr "Resets in 30 seconds max"
 
+#: leveler.py:155
+msgid "Niveau:"
+msgstr "Level:"
+
+#: leveler.py:156
+msgid "Classement:"
+msgstr "Leaderboard:"
+
+#: leveler.py:157
+msgid "Elo:"
+msgstr "Rank:"
+
+#: leveler.py:158
+msgid "Le progrès:"
+msgstr "Progress:"
+
 #: leveler.py:151 leveler.py:278
 msgid "Niveau"
 msgstr "Level"
@@ -76,6 +92,29 @@ msgstr "Configuration of channels allowing earning experience."
 #, docstring
 msgid "Configuration des roles obtenables grâce à l'expérience."
 msgstr "Configuration of roles obtainable from experience."
+
+#: leveler.py:344
+#, docstring
+msgid "Définir divers paramètres de profil"
+msgstr "Set various profile settings"
+
+#: leveler.py:349
+#, docstring
+msgid "Définir l'image de fond du profil"
+msgstr "Set profile background image"
+
+#: leveler.py:351
+msgid "Profil de fond défini sur: "
+msgstr "Profile background set to:"
+
+#: leveler.py:355
+#, docstring
+msgid "Définir la description du profil"
+msgstr "Set profile description"
+
+#: leveler.py:357
+msgid "Description du profil définie sur: "
+msgstr "Profile description set to:"
 
 #: leveler.py:305
 #, docstring
