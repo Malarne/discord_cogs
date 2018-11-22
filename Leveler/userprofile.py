@@ -10,12 +10,17 @@ class UserProfile:
         default_guild = {
             "channels": [],
             "roles": [],
-            "database": []
+            "database": [],
+            "autoregister": False,
+            "cooldown": 60.0
         }
         default_member = {
             "exp": 0,
             "level": 1,
-            "today": 0
+            "today": 0,
+            "lastmessage":0.0,
+            "background": None,
+            "description": ""
         }
         self.data.register_member(**default_member)
         self.data.register_guild(**default_guild)
@@ -24,6 +29,13 @@ class UserProfile:
         current = await self.data.member(member).exp()
         await self.data.member(member).exp.set(current + exp)
         await self._check_exp(member)
+
+    async def _set_exp(self, member, exp):
+        await self.data.member(member).exp.set(exp)
+        await self._check_exp(member)
+
+    async def _set_level(self, member, level):
+        await self.data.member(member).level.set(level)
 
     async def _is_registered(self, member):
         async with self.data.guild(member.guild).database() as db:
@@ -36,6 +48,12 @@ class UserProfile:
         async with self.data.guild(member.guild).database() as db:
             db.append(member.id)
         await self.data.member(member).exp.set(0)
+
+    async def _set_user_lastmessage(self, member, lastmessage:float):
+        await self.data.member(member).lastmessage.set(lastmessage)
+
+    async def _get_user_lastmessage(self, member):
+        return await self.data.member(member).lastmessage()
 
     async def _check_exp(self, member):
         lvl = await self.data.member(member).level()
@@ -111,6 +129,35 @@ class UserProfile:
 
     async def _today_addone(self, member):
         await self.data.member(member).today.set(await self._get_today(member) + 1)
+
+    async def _set_auto_register(self, guild, autoregister:bool):
+        await self.data.guild(guild).autoregister.set(autoregister)
+
+    async def _get_auto_register(self, guild):
+        return await self.data.guild(guild).autoregister()
+
+    async def _set_cooldown(self, guild, cooldown:float):
+        await self.data.guild(guild).cooldown.set(cooldown)
+
+    async def _get_cooldown(self, guild):
+        return await self.data.guild(guild).cooldown()
+
+    async def _set_background(self, member, background):
+        await self.data.member(member).background.set(background)
+
+    async def _get_background(self, member):
+        return await self.data.member(member).background()
+
+    async def _set_description(self, member, description:str):
+        await self.data.member(member).description.set(description)
+
+    async def _get_description(self, member):
+        return await self.data.member(member).description()
+
+    async def _get_leaderboard_pos(self, guild, member):
+        datas = await self.data.all_members(guild)
+        infos = sorted(datas, key=lambda x: datas[x]["exp"], reverse=True)
+        return (infos.index(member.id)+1)
 
     async def _get_leaderboard(self, guild):
         datas = await self.data.all_members(guild)
