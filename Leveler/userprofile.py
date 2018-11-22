@@ -18,7 +18,9 @@ class UserProfile:
             "exp": 0,
             "level": 1,
             "today": 0,
-            "lastmessage":0.0
+            "lastmessage":0.0,
+            "background": None,
+            "description": ""
         }
         self.data.register_member(**default_member)
         self.data.register_guild(**default_guild)
@@ -139,6 +141,23 @@ class UserProfile:
 
     async def _get_cooldown(self, guild):
         return await self.data.guild(guild).cooldown()
+
+    async def _set_background(self, member, background):
+        await self.data.member(member).background.set(background)
+
+    async def _get_background(self, member):
+        return await self.data.member(member).background()
+
+    async def _set_description(self, member, description:str):
+        await self.data.member(member).description.set(description)
+
+    async def _get_description(self, member):
+        return await self.data.member(member).description()
+
+    async def _get_leaderboard_pos(self, guild, member):
+        datas = await self.data.all_members(guild)
+        infos = sorted(datas, key=lambda x: datas[x]["exp"], reverse=True)
+        return (infos.index(member.id)+1)
 
     async def _get_leaderboard(self, guild):
         datas = await self.data.all_members(guild)

@@ -19,6 +19,7 @@ from random import randint
 from redbot.core.i18n import Translator, cog_i18n
 from io import BytesIO
 import functools
+import textwrap
 
 
 
@@ -87,122 +88,161 @@ class Leveler(commands.Cog):
         self.restart = False
         await ctx.send(_("Reset dans max 30 secondes"), delete_after=30)
 
-    async def makebar(self, prc):
-        emp = "□"
-        full = "■"
-        res = ""
-        temp = 40
-        for i in range(ceil(prc/2.5)):
-            res += full
-            temp -= 1
-        while temp != 0:
-            res += emp
-            temp -= 1
-        return res
-
     async def get_avatar(self, user):
         async with aiohttp.ClientSession() as session:
             async with session.get(user.avatar_url_as(format="png", size=1024)) as f:
                 data = await f.read()
                 return BytesIO(data)
 
-    def make_basic_profile(self, avatar_data, user):
-        img = Image.new('RGBA', (800, 200))
-        font = ImageFont.truetype(os.path.join(__path__[0], "arial.ttf"), 32)
-        draw = ImageDraw.Draw(img)
-        usercolor = user.color.to_rgb()
-        draw.ellipse([(-400, -100), (1200, 600)], fill=usercolor, outline=usercolor)
-        draw.ellipse([(250, -50), (550, 250)], fill='white', outline='white')
-        img_w, img_h = img.size
-        
-        avatar = Image.open(avatar_data)
-        avatar_size = 128, 128
-        avatar.thumbnail(avatar_size)
-        avatar_w, avatar_h = avatar.size
-        offset = ((img_w - avatar_w) // 2, ((img_h - avatar_h) // 2) -30)
-        img.paste(avatar, offset)
-        temp = BytesIO()
-        img.save(temp, format="PNG")
-        temp.name = "temp.png"
-        return temp
+    async def get_background(self, url):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as f:
+                data = await f.read()
+                return Image.open(BytesIO(data))
 
-    def make_full_profile(self, avatar_data, user, xp, nxp, lvl, minone, elo):
-        img = Image.new('RGBA', (800, 200))
-        font = ImageFont.truetype(os.path.join(__path__[0], "arial.ttf"), 32)
+    def add_corners(self, im, rad):
+        # https://stackoverflow.com/questions/11287402/how-to-round-corner-a-logo-without-white-backgroundtransparent-on-it-using-pi
+        circle = Image.new('L', (rad * 2, rad * 2), 0)
+        draw = ImageDraw.Draw(circle)
+        draw.ellipse((0, 0, rad * 2, rad * 2), fill=255)
+        alpha = Image.new('L', im.size, 255)
+        w, h = im.size
+        alpha.paste(circle.crop((0, 0, rad, rad)), (0, 0))
+        alpha.paste(circle.crop((0, rad, rad, rad * 2)), (0, h - rad))
+        alpha.paste(circle.crop((rad, 0, rad * 2, rad)), (w - rad, 0))
+        alpha.paste(circle.crop((rad, rad, rad * 2, rad * 2)), (w - rad, h - rad))
+        im.putalpha(alpha)
+        return im
+
+    def make_full_profile(self, avatar_data, user, xp, nxp, lvl, minone, elo, ldb, desc, bg=None):
+        img = Image.new("RGBA", (340, 390), (17, 17, 17, 255))
+        if bg is not None:
+            bg_width, bg_height = bg.size
+            ratio = bg_height/390
+            bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
+            bg = bg.convert("RGBA")
+            bg.putalpha(128)
+            offset = 0
+            if bg_width > 390:
+                offset = int(-(bg_width/4))
+            img.paste(bg, (offset,0), bg)
+        img = self.add_corners(img, 10)
         draw = ImageDraw.Draw(img)
-        usercolor = user.color.to_rgb()
-        draw.ellipse([(-400, -100), (1200, 600)], fill=usercolor, outline=usercolor)
-        draw.ellipse([(250, -50), (550, 250)], fill='white', outline='white')
-        img_w, img_h = img.size
-        
+        usercolor = (255, 255, 0)  # user.color.to_rgb()
+        aviholder = self.add_corners(Image.new("RGBA", (140, 140), (255, 255, 255, 255)), 10)
+        nameplate = self.add_corners(Image.new("RGBA", (180, 55), (0, 0, 0, 255)), 10)
+        xptot = self.add_corners(Image.new("RGBA", (310, 20), (215, 215, 215, 255)), 10)
+        img.paste(aviholder, (9, 10), aviholder)
+        img.paste(nameplate, (153, 11), nameplate)
+        img.paste(xptot, (15, 340), xptot)
+
+        font1 = ImageFont.truetype(os.path.join(__path__[0],"cambria.ttc"), 18)
+        font2 = ImageFont.truetype(os.path.join(__path__[0],"cambria.ttc"), 22)
+        font3 = ImageFont.truetype(os.path.join(__path__[0],"cambria.ttc"), 32)
+
         avatar = Image.open(avatar_data)
         avatar_size = 128, 128
         avatar.thumbnail(avatar_size)
-        avatar_w, avatar_h = avatar.size
-        offset = ((img_w - avatar_w) // 2, ((img_h - avatar_h) // 2) -30)
-        img.paste(avatar, offset)
-        draw.rectangle([(50, 160), (750, 180)], fill=None, outline='black')
+        img.paste(avatar, (15, 16))
         lxp = xp - minone
         lnxp = nxp - minone
         prc = floor(xp / (nxp / 100))
-        lprc = floor(lxp / (lnxp / 100))
-        b_offset = 800 - (lprc*7)
-        draw.rectangle([(50, 160), (800 - b_offset, 180)], fill='black', outline=None)
-        draw.text((20, 20), _("Niveau")+f": {lvl}", fill='black', font=font)
-        sp = ""
-        for i in range(len(str(xp))+2):
-            sp += " "
-        draw.text((600, 10), f"XP: ({lprc}%)\n{lxp} / {lnxp} ", fill='black', font=font)
-        draw.text((570, 90), f"{sp}Total:\n{xp} / {nxp} ", fill='black', font=font)
-        rank = _("Elo")
-        draw.text((20, 90), f"{rank}: {elo}", fill='black', font=font)
+        lprc = ceil(lxp / (lnxp / 100))
+        b_offset = floor(lprc * 3.1)
+        xpbar = self.add_corners(Image.new("RGBA", (b_offset, 20), usercolor), 10)
+        img.paste(xpbar, (13, 340), xpbar)
+
+        lvl_str = _("Niveau:")
+        ldb_str = _("Classement:")
+        rank_str = _("Elo:")
+        prog_str = _("Le progrès:")
+
+        draw.text((11, 180), lvl_str, fill='white', font=font3)
+        draw.text((11, 220), ldb_str, fill='white', font=font3)
+        draw.text((11, 260), rank_str, fill='white', font=font3)
+        nick = user.display_name
+        if font2.getsize(nick)[0] > 150:
+            print(font2.getsize(nick))
+            nick = nick[:15] + "..."
+            print(font2.getsize(nick))
+
+        draw.text((154, 316), f"{lprc}%", fill=usercolor, font=font1)
+        draw.text((100, 360), (prog_str + f" {xp}/{nxp}"), fill=usercolor, font=font1)
+        draw.text(((font3.getsize(lvl_str)[0]+20), 180), f"{lvl}", fill=usercolor, font=font3)
+        draw.text(((font3.getsize(ldb_str)[0]+20), 220), f"{ldb}", fill=usercolor, font=font3)
+        draw.text(((font3.getsize(rank_str)[0]+20), 260), f"{elo}", fill=usercolor, font=font3)
+
+        draw.text((162, 14), f"{nick}", fill=usercolor, font=font2)
+        draw.text((162, 40), f"{user.name}#{user.discriminator}", fill=usercolor, font=font1)
+        margin = 162
+        offset = 70
+        count = 0
+        for line in textwrap.wrap(desc, width=20):
+            count += 1
+            if count == 6:
+                draw.text((margin, offset), f"{line}...", fill=usercolor, font=font1)
+                break
+            draw.text((margin, offset), f"{line}", fill=usercolor, font=font1)
+            offset += font1.getsize(line)[1]
         temp = BytesIO()
         img.save(temp, format="PNG")
-        temp.name = "temp.png"
+        temp.name = "profile.png"
         return temp
 
-
+    async def profile_data(self, user):
+        """Async get user profile data to pass to image creator"""
+        avatar = await self.get_avatar(user)
+        try:
+            bg = await self.get_background(await self.profiles._get_background(user))
+        except:
+            bg = None
+        data = {"avatar_data":avatar, 
+                "user":user,
+                "xp":0, 
+                "nxp":100, 
+                "lvl":1, 
+                "minone":0,
+                "elo":_("Nouveau"),
+                "ldb":0,
+                "desc":"",
+                "bg":bg}
+        if not await self.profiles._is_registered(user):
+            return data            
+        else:
+            data["xp"] = await self.profiles._get_exp(user)
+            data["nxp"] = await self.profiles._get_level_exp(user)
+            data["lvl"] = await self.profiles._get_level(user)
+            data["ldb"] = await self.profiles._get_leaderboard_pos(user.guild, user)
+            data["desc"] = await self.profiles._get_description(user)
+            if data["lvl"] != 1:
+                data["minone"] = await self.profiles._get_xp_for_level(lvl -1)
+            else:
+                data["minone"] = 0
+            roles = await self.profiles._get_guild_roles(user.guild)
+            ln = data["lvl"] // 10
+            if ln == 0:
+                data["elo"] = _("Nouveau")
+            elif ln >= len(roles):
+                data["elo"] = roles[len(roles)-1]
+                data["elo"] = user.guild.get_role(elo).name
+            else:
+                data["elo"] = roles[ln-1]
+                data["elo"] = user.guild.get_role(elo).name
+        return data
 
     @commands.command()
     async def profile(self, ctx, user : discord.Member = None):
         """Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."""
         if user is None:
             user = ctx.author
-
-        avatar = await self.get_avatar(user)
+        data = await self.profile_data(user)
         
-        if not await self.profiles._is_registered(user):
-            task = functools.partial(self.make_basic_profile, avatar_data=avatar, user=user)
-            task = self.bot.loop.run_in_executor(None, task)
-            try:
-                img = await asyncio.wait_for(task, timeout=60)
-            except asyncio.TimeoutError:
-                return
-        else:
-            xp = await self.profiles._get_exp(user)
-            nxp = await self.profiles._get_level_exp(user)
-            lvl = await self.profiles._get_level(user)
-            if lvl != 1:
-                minone = await self.profiles._get_xp_for_level(lvl -1)
-            else:
-                minone = 0
-            roles = await self.profiles._get_guild_roles(ctx.guild)
-            ln = lvl // 10
-            if ln == 0:
-                elo = _("Nouveau")
-            elif ln >= len(roles):
-                elo = roles[len(roles)-1]
-                elo = ctx.guild.get_role(elo).name
-            else:
-                elo = roles[ln-1]
-                elo = ctx.guild.get_role(elo).name
-            task = functools.partial(self.make_full_profile, avatar_data=avatar, 
-                                     user=user, xp=xp, nxp=nxp, lvl=lvl, minone=minone, elo=elo)
-            task = self.bot.loop.run_in_executor(None, task)
-            try:
-                img = await asyncio.wait_for(task, timeout=60)
-            except asyncio.TimeoutError:
-                return
+        task = functools.partial(self.make_full_profile, **data)
+        task = self.bot.loop.run_in_executor(None, task)
+        try:
+            img = await asyncio.wait_for(task, timeout=60)
+        except asyncio.TimeoutError:
+            return
             
         img.seek(0)
         await ctx.send(file=discord.File(img))
@@ -215,6 +255,8 @@ class Leveler(commands.Cog):
             return
         elif message.channel.id not in await self.profiles._get_guild_channels(message.author.guild):
             return
+        if message.author.bot:
+            return
 
         if not await self.profiles._is_registered(message.author):
             if await self.profiles._get_auto_register(message.guild):
@@ -222,8 +264,9 @@ class Leveler(commands.Cog):
                 return
 
         elif await self.profiles._is_registered(message.author):
-            if message.content[0] in await self.bot.get_prefix(message):
-                return
+            if message.content is not None:
+                if message.content[0] in await self.bot.get_prefix(message):
+                    return
             timenow = datetime.datetime.now().timestamp()
             lastmessage = await self.profiles._get_user_lastmessage(message.author)
             cooldown = await self.profiles._get_cooldown(message.guild)
@@ -298,6 +341,23 @@ class Leveler(commands.Cog):
     async def roles(self, ctx):
         """Configuration des roles obtenables grâce à l'expérience."""
         pass
+
+    @commands.group()
+    async def profileset(self, ctx):
+        """Définir divers paramètres de profil"""
+        pass
+
+    @profileset.command()
+    async def background(self, ctx, *, link:str=None):
+        """Définir l'image de fond du profil"""
+        await self.profiles._set_background(ctx.author, link)
+        await ctx.send(_("Profil de fond défini sur: ") + str(link))
+
+    @profileset.command()
+    async def description(self, ctx, *, description:str=None):
+        """Définir la description du profil"""
+        await self.profiles._set_description(ctx.author, description)
+        await ctx.send(_("Description du profil définie sur: ") + str(description))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
@@ -380,10 +440,10 @@ class Leveler(commands.Cog):
         """Bascule l'enregistrement automatique des utilisateurs"""
         if await self.profiles._get_auto_register(ctx.guild):
             await self.profiles._set_auto_register(ctx.guild, False)
-            await ctx.send(_("Enregistrement automatique activé"))
+            await ctx.send(_("Enregistrement automatique désactivé"))
         else:
             await self.profiles._set_auto_register(ctx.guild, True)
-            await ctx.send(_("Enregistrement automatique désactivé"))
+            await ctx.send(_("Enregistrement automatique activé"))
 
     @levelerset.command()
     async def cooldown(self, ctx, cooldown: float):
