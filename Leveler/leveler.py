@@ -128,7 +128,7 @@ class Leveler(commands.Cog):
             img.paste(bg, (offset,0), bg)
         img = self.add_corners(img, 10)
         draw = ImageDraw.Draw(img)
-        usercolor = (255, 255, 0)  # user.color.to_rgb()
+        usercolor = user.color.to_rgb() if user.color.to_rgb() != (0,0,0) else (255,255,255)
         aviholder = self.add_corners(Image.new("RGBA", (140, 140), (255, 255, 255, 255)), 10)
         nameplate = self.add_corners(Image.new("RGBA", (180, 55), (0, 0, 0, 255)), 10)
         xptot = self.add_corners(Image.new("RGBA", (310, 20), (215, 215, 215, 255)), 10)
