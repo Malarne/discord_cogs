@@ -123,8 +123,8 @@ class Leveler(commands.Cog):
             bg = bg.convert("RGBA")
             bg.putalpha(128)
             offset = 0
-            if bg_width > 390:
-                offset = int(-(bg_width/4))
+            if bg.size[0] > 340:
+                offset = int((-(bg.size[0]-340)/2))
             img.paste(bg, (offset,0), bg)
         img = self.add_corners(img, 10)
         draw = ImageDraw.Draw(img)
