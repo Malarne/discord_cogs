@@ -120,12 +120,18 @@ class Leveler(commands.Cog):
             bg_width, bg_height = bg.size
             ratio = bg_height/390
             bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
+            if bg.size[0] <340:
+                ratio = bg_width/340
+                bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
             bg = bg.convert("RGBA")
             bg.putalpha(128)
             offset = 0
-            if bg.size[0] > 340:
-                offset = int((-(bg.size[0]-340)/2))
-            img.paste(bg, (offset,0), bg)
+            if bg.size[0] >= 340:
+                offset = (int((-(bg.size[0]-340)/2)), 0)
+            if bg.size[0] <340:
+                offset = (0, int((-(bg.size[1]-390)/2)))
+            
+            img.paste(bg, offset, bg)
         img = self.add_corners(img, 10)
         draw = ImageDraw.Draw(img)
         usercolor = user.color.to_rgb() if user.color.to_rgb() != (0,0,0) else (255,255,255)
