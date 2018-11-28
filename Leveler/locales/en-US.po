@@ -234,4 +234,3 @@ msgstr "Set a users xp, mainly for testing"
 #: leveler.py:410
 msgid " xp mis à "
 msgstr " xp set to "
-

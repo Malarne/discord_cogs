@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 from redbot.core import checks, Config
 import discord
@@ -215,7 +215,7 @@ class Leveler(commands.Cog):
         else:
             data["xp"] = await self.profiles._get_exp(user)
             data["nxp"] = await self.profiles._get_level_exp(user)
-            data["lvl"] = await self.profiles._get_level(user)
+            data["lvl"] = lvl = await self.profiles._get_level(user)
             data["ldb"] = await self.profiles._get_leaderboard_pos(user.guild, user)
             data["desc"] = await self.profiles._get_description(user)
             if data["lvl"] != 1:
