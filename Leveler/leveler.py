@@ -228,10 +228,10 @@ class Leveler(commands.Cog):
                 data["elo"] = _("Nouveau")
             elif ln >= len(roles):
                 data["elo"] = roles[len(roles)-1]
-                data["elo"] = user.guild.get_role(elo).name
+                data["elo"] = user.guild.get_role(data["elo"]).name
             else:
                 data["elo"] = roles[ln-1]
-                data["elo"] = user.guild.get_role(elo).name
+                data["elo"] = user.guild.get_role(data["elo"]).name
         return data
 
     @commands.command()
@@ -293,7 +293,9 @@ class Leveler(commands.Cog):
                 return
             elif ln >= len(roles):
                 ln = len(roles) -1
-            grade = message.guild.get_role(roles[ln-1])
+            if roles is None or roles == []:
+                return
+            grade = message.guild.get_role(roles[ln])
             if grade is None:
                 return
             if not grade in message.author.roles:
