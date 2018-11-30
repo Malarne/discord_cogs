@@ -120,12 +120,18 @@ class Leveler(commands.Cog):
             bg_width, bg_height = bg.size
             ratio = bg_height/390
             bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
+            if bg.size[0] <340:
+                ratio = bg_width/340
+                bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
             bg = bg.convert("RGBA")
             bg.putalpha(128)
             offset = 0
-            if bg.size[0] > 340:
-                offset = int((-(bg.size[0]-340)/2))
-            img.paste(bg, (offset,0), bg)
+            if bg.size[0] >= 340:
+                offset = (int((-(bg.size[0]-340)/2)), 0)
+            if bg.size[0] <340:
+                offset = (0, int((-(bg.size[1]-390)/2)))
+            
+            img.paste(bg, offset, bg)
         img = self.add_corners(img, 10)
         draw = ImageDraw.Draw(img)
         usercolor = user.color.to_rgb() if user.color.to_rgb() != (0,0,0) else (255,255,255)
@@ -162,9 +168,7 @@ class Leveler(commands.Cog):
         draw.text((11, 260), rank_str, fill='white', font=font3)
         nick = user.display_name
         if font2.getsize(nick)[0] > 150:
-            print(font2.getsize(nick))
             nick = nick[:15] + "..."
-            print(font2.getsize(nick))
 
         draw.text((154, 316), f"{lprc}%", fill=usercolor, font=font1)
         draw.text((100, 360), (prog_str + f" {xp}/{nxp}"), fill=usercolor, font=font1)
@@ -223,11 +227,11 @@ class Leveler(commands.Cog):
             if ln == 0:
                 data["elo"] = _("Nouveau")
             elif ln >= len(roles):
-                elo = roles[len(roles)-1]
-                data["elo"] = user.guild.get_role(elo).name
+                data["elo"] = roles[len(roles)-1]
+                data["elo"] = user.guild.get_role(data["elo"]).name
             else:
-                elo = roles[ln-1]
-                data["elo"] = user.guild.get_role(elo).name
+                data["elo"] = roles[ln-1]
+                data["elo"] = user.guild.get_role(data["elo"]).name
         return data
 
     @commands.command()
@@ -264,7 +268,7 @@ class Leveler(commands.Cog):
                 return
 
         elif await self.profiles._is_registered(message.author):
-            if message.content is not None:
+            if len(message.content) != 0:
                 if message.content[0] in await self.bot.get_prefix(message):
                     return
             timenow = datetime.datetime.now().timestamp()
@@ -289,7 +293,9 @@ class Leveler(commands.Cog):
                 return
             elif ln >= len(roles):
                 ln = len(roles) -1
-            grade = message.guild.get_role(roles[ln-1])
+            if roles is None or roles == []:
+                return
+            grade = message.guild.get_role(roles[ln])
             if grade is None:
                 return
             if not grade in message.author.roles:
