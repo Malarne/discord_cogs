@@ -259,7 +259,9 @@ class Leveler(commands.Cog):
             return
         if type(message.channel) != discord.channel.TextChannel:
             return
-        elif message.channel.id not in await self.profiles._get_guild_channels(message.author.guild):
+        elif await self.profiles.data.guild(message.guild).whitelist() and message.channel.id not in await self.profiles._get_guild_channels(message.author.guild):
+            return
+        elif await self.profiles.data.guild(message.guild).blacklist() and message.channel.id in await self.profiles._get_guild_blchannels(message.author.guild):
             return
         if message.author.bot:
             return
@@ -345,6 +347,18 @@ class Leveler(commands.Cog):
         """Configuration des channels permettant de gagner de l'expérience."""
         pass
 
+    @channel.group()
+    @checks.mod_or_permissions(manage_messages=True)
+    async def whitelist(self, ctx):
+        """Configuration des channels whitelistés"""
+        pass
+
+    @channel.group()
+    @checks.mod_or_permissions(manage_messages=True)
+    async def blacklist(self, ctx):
+        """Configuration des channels blacklistés"""
+        pass    
+
     @levelerset.group()
     @checks.mod_or_permissions(manage_messages=True)
     async def roles(self, ctx):
@@ -409,7 +423,7 @@ class Leveler(commands.Cog):
             counter += 1
         await ctx.send(embed=emb)
 
-    @channel.command(name="add")
+    @whitelist.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
     async def _add(self, ctx, channel : discord.TextChannel = None):
         """Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel là."""
@@ -421,7 +435,13 @@ class Leveler(commands.Cog):
         else:
             await ctx.send(_("Channel déjà enregistré"))
 
-    @channel.command(name="remove")
+    @whitelist.command(name="toggle")
+    @checks.mod_or_permissions(manage_messages=True)
+    async def toggle(self, ctx):
+        new = await self.profiles._toggle_whitelist(ctx.guild)
+        await ctx.send(f"La whitelist est désormais {'activée.' if new else 'désactivée.'}")
+
+    @whitelist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
     async def _remove(self, ctx, channel : discord.TextChannel = None):
         """Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expérience."""
@@ -433,7 +453,7 @@ class Leveler(commands.Cog):
             await self.profiles._remove_guild_channel(ctx.guild, channel.id)
             await ctx.send(_("Channel supprimé"))
 
-    @channel.command(name="show")
+    @whitelist.command(name="show")
     @checks.mod_or_permissions(manage_messages=True)
     async def _show(self, ctx):
         """Affiche la liste des channels configurés pour donner de l'expérience."""
@@ -441,6 +461,48 @@ class Leveler(commands.Cog):
         emb.title = _("Liste des channels autorisés a faire gagner de l'experience sur ce serveur.")
         emb.description = _("A une vache prés, c'pas une science exacte")
         channels = await self.profiles._get_guild_channels(ctx.guild)
+        emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
+        await ctx.send(embed=emb)
+
+
+    @blacklist.command(name="add")
+    @checks.mod_or_permissions(manage_messages=True)
+    async def __add(self, ctx, channel : discord.TextChannel = None):
+        """Ajoute un channel à ignorer dans le gain d'xp."""
+        if channel is None:
+            channel = ctx.channel
+        if channel.id not in await self.profiles._get_guild_blchannels(ctx.guild):
+            await self.profiles._add_guild_blacklist(ctx.guild, channel.id)
+            await ctx.send(_("Channel ignoré"))
+        else:
+            await ctx.send(_("Channel déjà ignoré"))
+
+    @blacklist.command(name="toggle")
+    @checks.mod_or_permissions(manage_messages=True)
+    async def _toggle(self, ctx):
+        new = await self.profiles._toggle_blacklist(ctx.guild)
+        await ctx.send(f"La blacklist est désormais {'activée.' if new else 'désactivée.'}")
+
+    @blacklist.command(name="remove")
+    @checks.mod_or_permissions(manage_messages=True)
+    async def __remove(self, ctx, channel : discord.TextChannel = None):
+        """Supprime un channel, les utilisateurs qui y parleront gagneront ainsi de l'expérience."""
+        if channel is None:
+            channel = ctx.channel
+        if channel.id not in await self.profiles._get_guild_blchannels(ctx.guild):
+            await ctx.send(_("Ce channel n'est pas dans la liste configurée."))
+        else:
+            await self.profiles._remove_guild_blacklist(ctx.guild, channel.id)
+            await ctx.send(_("Channel supprimé"))
+
+    @blacklist.command(name="show")
+    @checks.mod_or_permissions(manage_messages=True)
+    async def __show(self, ctx):
+        """Affiche la liste des channels configurés pour être ignorés."""
+        emb = discord.Embed()
+        emb.title = _("Liste des channels non autorisés a faire gagner de l'experience sur ce serveur.")
+        emb.description = _("A une vache prés, c'pas une science exacte")
+        channels = await self.profiles._get_guild_blchannels(ctx.guild)
         emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
         await ctx.send(embed=emb)
 
