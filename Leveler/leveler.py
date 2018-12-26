@@ -73,14 +73,20 @@ class Leveler(commands.Cog):
                     for j in profils.keys():
                         member = i.get_member(j)
                         if member is None:
-                            member = namedtuple("Member", "id guild")
-                            await self.profiles.data.member(member(j, i.id)).clear()
+                            await self._reset_member(i, j)
                         else:
                             await self.profiles.data.member(member).today.set(0)
                 self.restart = True
             if datetime.datetime.now().strftime('%H:%M') in ["05:00", "05:01", "05:02", "05:03", "05:04", "05:05"]:
                 self.restart = False
             await asyncio.sleep(30)
+
+    async def _reset_member(self, guild, memberid):
+        try:
+            base = self.profiles.data._get_base_group(self.profiles.data.MEMBER)
+            await base.clear_raw(str(guild.id), memberid)
+        except:
+            pass
 
     @commands.command(hidden=True)
     @checks.is_owner()
@@ -120,21 +126,15 @@ class Leveler(commands.Cog):
             bg_width, bg_height = bg.size
             ratio = bg_height/390
             bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
-            if bg.size[0] <340:
-                ratio = bg_width/340
-                bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
             bg = bg.convert("RGBA")
             bg.putalpha(128)
             offset = 0
-            if bg.size[0] >= 340:
-                offset = (int((-(bg.size[0]-340)/2)), 0)
-            if bg.size[0] <340:
-                offset = (0, int((-(bg.size[1]-390)/2)))
-            
-            img.paste(bg, offset, bg)
+            if bg_width > 390:
+                offset = int(-(bg_width/4))
+            img.paste(bg, (offset,0), bg)
         img = self.add_corners(img, 10)
         draw = ImageDraw.Draw(img)
-        usercolor = user.color.to_rgb() if user.color.to_rgb() != (0,0,0) else (255,255,255)
+        usercolor = (255, 255, 0)  # user.color.to_rgb()
         aviholder = self.add_corners(Image.new("RGBA", (140, 140), (255, 255, 255, 255)), 10)
         nameplate = self.add_corners(Image.new("RGBA", (180, 55), (0, 0, 0, 255)), 10)
         xptot = self.add_corners(Image.new("RGBA", (310, 20), (215, 215, 215, 255)), 10)
@@ -168,7 +168,9 @@ class Leveler(commands.Cog):
         draw.text((11, 260), rank_str, fill='white', font=font3)
         nick = user.display_name
         if font2.getsize(nick)[0] > 150:
+            print(font2.getsize(nick))
             nick = nick[:15] + "..."
+            print(font2.getsize(nick))
 
         draw.text((154, 316), f"{lprc}%", fill=usercolor, font=font1)
         draw.text((100, 360), (prog_str + f" {xp}/{nxp}"), fill=usercolor, font=font1)
@@ -227,11 +229,11 @@ class Leveler(commands.Cog):
             if ln == 0:
                 data["elo"] = _("Nouveau")
             elif ln >= len(roles):
-                data["elo"] = roles[len(roles)-1]
-                data["elo"] = user.guild.get_role(data["elo"]).name
+                elo = roles[len(roles)-1]
+                data["elo"] = user.guild.get_role(elo).name
             else:
-                data["elo"] = roles[ln-1]
-                data["elo"] = user.guild.get_role(data["elo"]).name
+                elo = roles[ln-1]
+                data["elo"] = user.guild.get_role(elo).name
         return data
 
     @commands.command()
@@ -268,7 +270,7 @@ class Leveler(commands.Cog):
                 return
 
         elif await self.profiles._is_registered(message.author):
-            if len(message.content) != 0:
+            if message.content is not None:
                 if message.content[0] in await self.bot.get_prefix(message):
                     return
             timenow = datetime.datetime.now().timestamp()
@@ -293,9 +295,7 @@ class Leveler(commands.Cog):
                 return
             elif ln >= len(roles):
                 ln = len(roles) -1
-            if roles is None or roles == []:
-                return
-            grade = message.guild.get_role(roles[ln])
+            grade = message.guild.get_role(roles[ln-1])
             if grade is None:
                 return
             if not grade in message.author.roles:
@@ -326,8 +326,11 @@ class Leveler(commands.Cog):
         for i in range(len(ld)):
             cur = ld[i]
             user = ctx.guild.get_member(cur["id"])
-            txt = _("Niveau")+" {} | {} XP | {} ".format(cur["lvl"], cur["xp"], cur["today"]) +_("Messages Today!")
-            emb.add_field(name="{}".format(user.display_name), value=txt)
+            if user is None:
+                await self._reset_member(ctx.guild, cur["id"])
+            else:
+                txt = _("Niveau")+" {} | {} XP | {} ".format(cur["lvl"], cur["xp"], cur["today"]) +_("Messages Today!")
+                emb.add_field(name="{}".format(user.display_name), value=txt)
         await ctx.send(embed=emb)
 
     @commands.group()
