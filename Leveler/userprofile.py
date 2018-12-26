@@ -8,11 +8,14 @@ class UserProfile:
     def __init__(self):
         self.data = Config.get_conf(self, identifier=1099710897114110101)
         default_guild = {
-            "channels": [],
+            "wlchannels": [],
+            "blchannels": [],
             "roles": [],
             "database": [],
             "autoregister": False,
-            "cooldown": 60.0
+            "cooldown": 60.0,
+            "whitelist": True,
+            "blacklist": False
         }
         default_member = {
             "exp": 0,
@@ -101,15 +104,44 @@ class UserProfile:
         return await self.data.guild(guild).roles()
 
     async def _add_guild_channel(self, guild, channel):
-        async with self.data.guild(guild).channels() as chanlist:
+        async with self.data.guild(guild).wlchannels() as chanlist:
             chanlist.append(channel)
 
     async def _remove_guild_channel(self, guild, channel):
-        async with self.data.guild(guild).channels() as chanlist:
+        async with self.data.guild(guild).wlchannels() as chanlist:
             chanlist.remove(channel)
 
     async def _get_guild_channels(self, guild):
-        return await self.data.guild(guild).channels()
+        return await self.data.guild(guild).wlchannels()
+
+    async def _add_guild_blacklist(self, guild, channel):
+        async with self.data.guild(guild).blchannels() as chanlist:
+            chanlist.append(channel)
+
+    async def _remove_guild_blacklist(self, guild, channel):
+        async with self.data.guild(guild).blchannels() as chanlist:
+            chanlist.remove(channel)
+
+    async def _get_guild_blchannels(self, guild):
+        return await self.data.guild(guild).blchannels()
+
+    async def _toggle_whitelist(self, guild):
+        async with self.data.guild(guild).whitelist() as wl:
+            if wl:
+                wl = False
+                return wl
+            else:
+                wl = True
+                return wl
+
+    async def _toggle_blacklist(self, guild):
+        async with self.data.guild(guild).blacklist() as bl:
+            if bl:
+                bl = False
+                return bl
+            else:
+                bl = True
+                return bl
 
     async def _get_exp(self, member):
         return await self.data.member(member).exp()
