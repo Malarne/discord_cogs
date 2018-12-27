@@ -137,7 +137,7 @@ class Leveler(commands.Cog):
             if bg.size[0] <340:
                 offset = (0, int((-(bg.size[1]-390)/2)))
         
-        img.paste(bg, offset, bg)
+            img.paste(bg, offset, bg)
         img = self.add_corners(img, 10)
         draw = ImageDraw.Draw(img)
         usercolor = (255, 255, 0)  # user.color.to_rgb()
