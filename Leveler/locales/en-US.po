@@ -81,7 +81,7 @@ msgstr "Configuration commands"
 
 #: leveler.py:347
 #, docstring
-msgid "Configuration des channels permettant de gagner de l'expêrience."
+msgid "Configuration des channels permettant de gagner de l'expérience."
 msgstr "Configure channels whitelist/blacklist."
 
 #: leveler.py:353
@@ -96,12 +96,12 @@ msgstr "Blacklist configuration."
 
 #: leveler.py:365
 #, docstring
-msgid "Configuration des roles obtenables grace é l'expêrience."
+msgid "Configuration des roles obtenables grâce à l'expérience."
 msgstr "Configuration of roles obtainable from experience."
 
 #: leveler.py:370
 #, docstring
-msgid "Définir divers paramêtres de profil"
+msgid "Définir divers paramètres de profil"
 msgstr "Change settings of your profile."
 
 #: leveler.py:375
@@ -133,12 +133,12 @@ msgstr "Role configured."
 
 #: leveler.py:395
 #, docstring
-msgid "Supprime un role de la liste des roles obtenables grêce à l'expérience."
-msgstr ""
+msgid "Supprime un role de la liste des roles obtenables grâce à l'expérience."
+msgstr "Remove a role from the whitelist."
 
 #: leveler.py:398
 msgid "Role supprimé"
-msgstr ""
+msgstr "Role deleted."
 
 #: leveler.py:400 leveler.py:410
 msgid "Role inconnu dans la config"
@@ -150,7 +150,7 @@ msgid "Permet de déplacer un role, modifiant l'expérience necessaire pour l'ob
 msgstr "Allow you to move a role."
 
 #: leveler.py:408
-msgid "Role déplacê"
+msgid "Role déplacé"
 msgstr "Role moved"
 
 #: leveler.py:415
@@ -168,7 +168,7 @@ msgstr "Guaranteed 100% almost no bugs."
 
 #: leveler.py:429
 #, docstring
-msgid "Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel lê."
+msgid "Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel là."
 msgstr "Add a channel to the whitelist."
 
 #: leveler.py:434
