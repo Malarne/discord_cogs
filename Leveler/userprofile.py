@@ -126,22 +126,22 @@ class UserProfile:
         return await self.data.guild(guild).blchannels()
 
     async def _toggle_whitelist(self, guild):
-        async with self.data.guild(guild).whitelist() as wl:
-            if wl:
-                wl = False
-                return wl
-            else:
-                wl = True
-                return wl
+        wl = await self.data.guild(guild).whitelist()
+        if wl:
+            await self.data.guild(guild).whitelist.set(False)
+            return False
+        else:
+            await self.data.guild(guild).whitelist.set(True)
+            return True
 
     async def _toggle_blacklist(self, guild):
-        async with self.data.guild(guild).blacklist() as bl:
-            if bl:
-                bl = False
-                return bl
-            else:
-                bl = True
-                return bl
+        bl = await self.data.guild(guild).blacklist()
+        if bl:
+            await self.data.guild(guild).blacklist.set(False)
+            return False
+        else:
+            await self.data.guild(guild).blacklist.set(True)
+            return True
 
     async def _get_exp(self, member):
         return await self.data.member(member).exp()
