@@ -461,6 +461,8 @@ class Leveler(commands.Cog):
         emb.title = _("Liste des channels autorisés a faire gagner de l'experience sur ce serveur.")
         emb.description = _("A une vache prés, c'pas une science exacte")
         channels = await self.profiles._get_guild_channels(ctx.guild)
+        if not len(channels):
+            return await ctx.send(_("Aucun channel configuré"))
         emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
         await ctx.send(embed=emb)
 
@@ -503,6 +505,8 @@ class Leveler(commands.Cog):
         emb.title = _("Liste des channels non autorisés a faire gagner de l'experience sur ce serveur.")
         emb.description = _("A une vache prés, c'pas une science exacte")
         channels = await self.profiles._get_guild_blchannels(ctx.guild)
+        if not len(channels):
+            return await ctx.send(_("Aucun channel configuré"))
         emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
         await ctx.send(embed=emb)
 

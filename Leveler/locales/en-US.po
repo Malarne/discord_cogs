@@ -201,74 +201,82 @@ msgstr "Show the list of channels configured to allow earning experience."
 msgid "Liste des channels autorisés a faire gagner de l'experience sur ce serveur."
 msgstr "List of channels configured to allow earning experience on this server."
 
-#: leveler.py:462 leveler.py:504
+#: leveler.py:462 leveler.py:506
 msgid "A une vache près, c'pas une science exacte"
 msgstr "More or less, it's not an exact science"
 
-#: leveler.py:471
+#: leveler.py:465 leveler.py:509
+msgid "Aucun channel configuré"
+msgstr "No channels configured"
+
+#: leveler.py:473
 #, docstring
 msgid "Ajoute un channel à ignorer dans le gain d'xp."
 msgstr "Add a channel to the blacklist."
 
-#: leveler.py:476
+#: leveler.py:478
 msgid "Channel ignoré"
 msgstr "Channel blacklisted"
 
-#: leveler.py:478
+#: leveler.py:480
 msgid "Channel déjà ignoré"
 msgstr "Channel already blacklisted"
 
-#: leveler.py:489
+#: leveler.py:491
 #, docstring
 msgid "Supprime un channel, les utilisateurs qui y parleront gagneront ainsi de l'expérience."
 msgstr "Remove a channel from the blacklist."
 
-#: leveler.py:501
+#: leveler.py:503
 #, docstring
 msgid "Affiche la liste des channels configurés pour être ignorés."
 msgstr "Show the list of blacklisted channels."
 
-#: leveler.py:503
+#: leveler.py:505
 msgid "Liste des channels non autorisés a faire gagner de l'experience sur ce serveur."
 msgstr "List of blacklisted channels on this server."
 
-#: leveler.py:511
+#: leveler.py:509
+msgid "Aucun channel configuré"
+msgstr "No channel set"
+
+#: leveler.py:515
 #, docstring
 msgid "Bascule l'enregistrement automatique des utilisateurs"
 msgstr "Toggle auto register of users"
 
-#: leveler.py:514
+#: leveler.py:518
 msgid "Enregistrement automatique dêsactivê"
 msgstr "Auto register turned off"
 
-#: leveler.py:517
+#: leveler.py:521
 msgid "Enregistrement automatique activê"
 msgstr "Auto register turned on"
 
-#: leveler.py:521
+#: leveler.py:525
 #, docstring
 msgid "Définir le temps de recharge pour le gain xp, la valeur par défaut est 60 secondes"
 msgstr "Modify the cooldown of xp gain, default to 60 seconds."
 
-#: leveler.py:523
+#: leveler.py:527
 msgid "Le temps de recharge est réglé sur: "
 msgstr "Cooldown is now:"
 
-#: leveler.py:528
+#: leveler.py:532
 #, docstring
 msgid "Définir un niveau de membres, principalement pour les tests"
 msgstr "Modify an user's level."
 
-#: leveler.py:532
+#: leveler.py:536
 msgid " niveau réglé à "
 msgstr "Level set to:"
 
-#: leveler.py:537
+#: leveler.py:541
 #, docstring
 msgid "définir un membre xp, principalement pour les tests"
 msgstr "Modify an user's xp."
 
-#: leveler.py:541
+#: leveler.py:545
 msgid " xp mis à"
 msgstr "XP set to:"
 
