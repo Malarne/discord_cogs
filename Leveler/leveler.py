@@ -183,9 +183,7 @@ class Leveler(commands.Cog):
         draw.text((10, 260), rank_str, fill='white', font=font3)
         nick = user.display_name
         if font2.getsize(nick)[0] > 150:
-            print(font2.getsize(nick))
             nick = nick[:15] + "..."
-            print(font2.getsize(nick))
 
         draw.text((154, 316), f"{lprc}%", fill=usercolor, font=font1)
         draw.text((100, 360), (prog_str + f" {xp}/{nxp}"), fill=usercolor, font=font1)
