@@ -183,9 +183,7 @@ class Leveler(commands.Cog):
         draw.text((10, 260), rank_str, fill='white', font=font3)
         nick = user.display_name
         if font2.getsize(nick)[0] > 150:
-            print(font2.getsize(nick))
             nick = nick[:15] + "..."
-            print(font2.getsize(nick))
 
         draw.text((154, 316), f"{lprc}%", fill=usercolor, font=font1)
         draw.text((100, 360), (prog_str + f" {xp}/{nxp}"), fill=usercolor, font=font1)
@@ -241,9 +239,9 @@ class Leveler(commands.Cog):
                 data["minone"] = 0
             roles = await self.profiles._get_guild_roles(user.guild)
             ln = data["lvl"] // 10
-            if ln == 0:
+            if ln == 0 or len(roles) == 0:
                 data["elo"] = _("Nouveau")
-            elif ln >= len(roles):
+            elif ln > len(roles):
                 elo = roles[len(roles)-1]
                 data["elo"] = user.guild.get_role(elo).name
             else:
@@ -274,12 +272,14 @@ class Leveler(commands.Cog):
             return
         if type(message.channel) != discord.channel.TextChannel:
             return
-        elif await self.profiles.data.guild(message.guild).whitelist() and message.channel.id not in await self.profiles._get_guild_channels(message.author.guild):
-            return
-        elif await self.profiles.data.guild(message.guild).blacklist() and message.channel.id in await self.profiles._get_guild_blchannels(message.author.guild):
-            return
         if message.author.bot:
             return
+        if await self.profiles.data.guild(message.guild).whitelist():
+            if message.channel.id not in await self.profiles._get_guild_channels(message.author.guild):
+                return
+        elif await self.profiles.data.guild(message.guild).blacklist():
+            if message.channel.id in await self.profiles._get_guild_blchannels(message.author.guild):
+                return
 
         if not await self.profiles._is_registered(message.author):
             if await self.profiles._get_auto_register(message.guild):
@@ -346,7 +346,9 @@ class Leveler(commands.Cog):
             if user is None:
                 await self._reset_member(ctx.guild, cur["id"])
             else:
-                txt = _("Niveau")+" {} | {} XP | {} ".format(cur["lvl"], cur["xp"], cur["today"]) +_("Messages Today!")
+                txt = _("Niveau")+" {} | {} XP | {} ".format(cur["lvl"], 
+                                                             cur["xp"], 
+                                                             cur["today"]) +_("Messages Today!")
                 emb.add_field(name="{}".format(user.display_name), value=txt)
         await ctx.send(embed=emb)
 
