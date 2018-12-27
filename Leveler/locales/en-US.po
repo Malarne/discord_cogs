@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2018-11-16 18:58+0100\n"
+"POT-Creation-Date: 2018-12-27 17:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,148 +15,260 @@ msgstr ""
 "Generated-By: redgettext 2.1\n"
 
 
-#: leveler.py:88
+#: leveler.py:95
 msgid "Reset dans max 30 secondes"
 msgstr "Resets in 30 seconds max"
 
-#: leveler.py:151 leveler.py:254
-msgid "Niveau"
-msgstr "Level"
+#: leveler.py:161
+msgid "Niveau:"
+msgstr "Level:"
 
-#: leveler.py:157
-msgid "Elo"
-msgstr "Ranking"
+#: leveler.py:162
+msgid "Classement:"
+msgstr "Ranking:"
 
-#: leveler.py:167
-#, docstring
-msgid "Affiche la progression sur le Leveler. Defaut a soi-mÃªme s'il n'y a pas de tag aprÃ¨s la commande."
-msgstr "Show your leveler progress. Default to yourself."
+#: leveler.py:163
+msgid "Elo:"
+msgstr "Role:"
 
-#: leveler.py:191
+#: leveler.py:164
+msgid "Le progrès:"
+msgstr "Progress"
+
+#: leveler.py:211 leveler.py:230
 msgid "Nouveau"
 msgstr "New"
 
-#: leveler.py:237
+#: leveler.py:241
 #, docstring
-msgid "Vous permets de commencer a gagner de l'expÃ©rience !"
+msgid "Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."
+msgstr "Show your leveler progress. Default to yourself."
+
+#: leveler.py:314
+#, docstring
+msgid "Vous permets de commencer a gagner de l'expérience !"
 msgstr "Allow you to start earning experience."
 
-#: leveler.py:239
-msgid "Vous Ãªtes dÃ©jÃ  enregistrÃ© !"
-msgstr "You are already registered."
+#: leveler.py:316
+msgid "Vous êtes déjà enregistré !"
+msgstr "You are already registered !"
 
-#: leveler.py:243
-msgid "Vous avez Ã©tÃ© enregistrÃ© avec succÃ¨s !"
-msgstr "You have been successfully registered."
+#: leveler.py:320
+msgid "Vous avez été enregistré avec succés !"
+msgstr "You have been successfully registered !"
 
-#: leveler.py:248
+#: leveler.py:325
 #, docstring
 msgid "Affiche le classement des meilleures blablateurs !"
 msgstr "Show the server leaderboard."
 
-#: leveler.py:250
+#: leveler.py:327
 msgid "Le classement des PGM !"
 msgstr "Ranking"
 
-#: leveler.py:254
-msgid "Messages Today!"
-msgstr "Messages Today !"
+#: leveler.py:334
+msgid "Niveau"
+msgstr "Level"
 
-#: leveler.py:261
+#: leveler.py:334
+msgid "Messages Today!"
+msgstr "Messages Today!"
+
+#: leveler.py:341
 #, docstring
 msgid "Commandes de configuration."
 msgstr "Configuration commands"
 
-#: leveler.py:267
+#: leveler.py:347
 #, docstring
-msgid "Configuration des channels permettant de gagner de l'expÃ©rience."
-msgstr "Configuration of channels allowing earning experience."
+msgid "Configuration des channels permettant de gagner de l'expêrience."
+msgstr "Configure channels whitelist/blacklist."
 
-#: leveler.py:273
+#: leveler.py:353
 #, docstring
-msgid "Configuration des roles obtenables grÃ¢ce Ã  l'expÃ©rience."
+msgid "Configuration des channels whitelistés"
+msgstr "Whitelist configuration."
+
+#: leveler.py:359
+#, docstring
+msgid "Configuration des channels blacklistés"
+msgstr "Blacklist configuration."
+
+#: leveler.py:365
+#, docstring
+msgid "Configuration des roles obtenables grace é l'expêrience."
 msgstr "Configuration of roles obtainable from experience."
 
-#: leveler.py:279
+#: leveler.py:370
 #, docstring
-msgid "Ajoute un role a la liste des roles obtenables grÃ¢ce Ã  l'expÃ©rience."
+msgid "Définir divers paramêtres de profil"
+msgstr "Change settings of your profile."
+
+#: leveler.py:375
+#, docstring
+msgid "Définir l'image de fond du profil"
+msgstr "Change background image of your profile."
+
+#: leveler.py:377
+msgid "Profil de fond défini sur: "
+msgstr "Background image is now:"
+
+#: leveler.py:381
+#, docstring
+msgid "Définir la description du profil"
+msgstr "Change your profile description."
+
+#: leveler.py:383
+msgid "Description du profil définie sur: "
+msgstr "Profile description set to:"
+
+#: leveler.py:388
+#, docstring
+msgid "Ajoute un role a la liste des roles obtenables grâce à l'expérience."
 msgstr "Add a role to the list of roles you can get with experience."
 
-#: leveler.py:281
-msgid "Role configurÃ©"
+#: leveler.py:390
+msgid "Role configuré"
 msgstr "Role configured."
 
-#: leveler.py:286
+#: leveler.py:395
 #, docstring
-msgid "Supprime un role de la liste des roles obtenables grÃ¢ce Ã  l'expÃ©rience."
+msgid "Supprime un role de la liste des roles obtenables grêce à l'expérience."
+msgstr ""
+
+#: leveler.py:398
+msgid "Role supprimé"
+msgstr ""
+
+#: leveler.py:400 leveler.py:410
+msgid "Role inconnu dans la config"
 msgstr "Remove a role from the list."
 
-#: leveler.py:289
-msgid "Role supprimÃ©"
-msgstr "Role deleted."
-
-#: leveler.py:291 leveler.py:301
-msgid "Role inconnu dans la config"
-msgstr "Unknown role in the config"
-
-#: leveler.py:296
+#: leveler.py:405
 #, docstring
-msgid "Permet de dÃ©placer un role, modifiant l'expÃ©rience necessaire pour l'obtenir."
+msgid "Permet de déplacer un role, modifiant l'expérience necessaire pour l'obtenir."
 msgstr "Allow you to move a role."
 
-#: leveler.py:299
-msgid "Role dÃ©placÃ©"
-msgstr "Role moved."
+#: leveler.py:408
+msgid "Role déplacê"
+msgstr "Role moved"
 
-#: leveler.py:306
+#: leveler.py:415
 #, docstring
 msgid "Affiche la liste des roles dans l'ordre auquel ils sont obtenables."
 msgstr "Show the list of roles in the order which you get them from experience."
 
-#: leveler.py:307
-msgid "Affiche la liste des roles dans l'ordre auquel ils sont obtenables."
+#: leveler.py:417
+msgid "Liste des roles configurés pour le leveler de ce serveur."
 msgstr "List of roles configured for this server."
 
-#: leveler.py:307
-msgid "Garanti 100% presque pas buguÃ©."
+#: leveler.py:418
+msgid "Garanti 100% presque pas bugué."
 msgstr "Guaranteed 100% almost no bugs."
 
-#: leveler.py:318
+#: leveler.py:429
 #, docstring
-msgid "Ajoute un channel, permettant aux utilisateurs de gagner de l'expÃ©rience lorsqu'ils parlent dans ce channel lÃ ."
-msgstr "Add a role, allowing users to get it with experience."
+msgid "Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel lê."
+msgstr "Add a channel to the whitelist."
 
-#: leveler.py:321
-msgid "Channel ajoutÃ©"
-msgstr "Channel added."
+#: leveler.py:434
+msgid "Channel ajouté"
+msgstr "Channel added"
 
-#: leveler.py:323
-msgid "Channel dÃ©jÃ  enregistrÃ©"
-msgstr "Channel already saved."
+#: leveler.py:436
+msgid "Channel déjà enregistré"
+msgstr "Channel already whitelisted"
 
-#: leveler.py:328
+#: leveler.py:447
 #, docstring
-msgid "Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expÃ©rience."
-msgstr "Remove a channel, users in there won't earn experience anymore."
+msgid "Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expérience."
+msgstr "Delete a channel from the whitelist."
 
-#: leveler.py:330
-msgid "Ce channel n'est pas dans la liste configurÃ©e."
-msgstr "Channel not in the config list."
+#: leveler.py:451 leveler.py:493
+msgid "Ce channel n'est pas dans la liste configurée."
+msgstr "This channel isn't whitelisted"
 
-#: leveler.py:333
-msgid "Channel supprimÃ©"
-msgstr "Channel removed."
+#: leveler.py:454 leveler.py:496
+msgid "Channel supprimé"
+msgstr "Channel deleted"
 
-#: leveler.py:338
+#: leveler.py:459
 #, docstring
-msgid "Affiche la liste des channels configurÃ©s pour donner de l'expÃ©rience."
+msgid "Affiche la liste des channels configurés pour donner de l'expérience."
 msgstr "Show the list of channels configured to allow earning experience."
 
-#: leveler.py:339
-msgid "Liste des channels autorisÃ©s a faire gagner de l'experience sur ce serveur."
+#: leveler.py:461
+msgid "Liste des channels autorisés a faire gagner de l'experience sur ce serveur."
 msgstr "List of channels configured to allow earning experience on this server."
 
-#: leveler.py:339
-msgid "A une vache prÃ©s, c'pas une science exacte"
+#: leveler.py:462 leveler.py:504
+msgid "A une vache près, c'pas une science exacte"
 msgstr "More or less, it's not an exact science"
+
+#: leveler.py:471
+#, docstring
+msgid "Ajoute un channel à ignorer dans le gain d'xp."
+msgstr "Add a channel to the blacklist."
+
+#: leveler.py:476
+msgid "Channel ignoré"
+msgstr "Channel blacklisted"
+
+#: leveler.py:478
+msgid "Channel déjà ignoré"
+msgstr "Channel already blacklisted"
+
+#: leveler.py:489
+#, docstring
+msgid "Supprime un channel, les utilisateurs qui y parleront gagneront ainsi de l'expérience."
+msgstr "Remove a channel from the blacklist."
+
+#: leveler.py:501
+#, docstring
+msgid "Affiche la liste des channels configurés pour être ignorés."
+msgstr "Show the list of blacklisted channels."
+
+#: leveler.py:503
+msgid "Liste des channels non autorisés a faire gagner de l'experience sur ce serveur."
+msgstr "List of blacklisted channels on this server."
+
+#: leveler.py:511
+#, docstring
+msgid "Bascule l'enregistrement automatique des utilisateurs"
+msgstr "Toggle auto register of users"
+
+#: leveler.py:514
+msgid "Enregistrement automatique dêsactivê"
+msgstr "Auto register turned off"
+
+#: leveler.py:517
+msgid "Enregistrement automatique activê"
+msgstr "Auto register turned on"
+
+#: leveler.py:521
+#, docstring
+msgid "Définir le temps de recharge pour le gain xp, la valeur par défaut est 60 secondes"
+msgstr "Modify the cooldown of xp gain, default to 60 seconds."
+
+#: leveler.py:523
+msgid "Le temps de recharge est réglé sur: "
+msgstr "Cooldown is now:"
+
+#: leveler.py:528
+#, docstring
+msgid "Définir un niveau de membres, principalement pour les tests"
+msgstr "Modify an user's level."
+
+#: leveler.py:532
+msgid " niveau réglé à "
+msgstr "Level set to:"
+
+#: leveler.py:537
+#, docstring
+msgid "définir un membre xp, principalement pour les tests"
+msgstr "Modify an user's xp."
+
+#: leveler.py:541
+msgid " xp mis à"
+msgstr "XP set to:"
 
