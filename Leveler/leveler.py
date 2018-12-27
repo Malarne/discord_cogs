@@ -106,17 +106,26 @@ class Leveler(commands.Cog):
                 data = await f.read()
                 return Image.open(BytesIO(data))
 
+    def round_corner(self, radius):
+        """Draw a round corner"""
+        corner = Image.new('L', (radius, radius), 0)
+        draw = ImageDraw.Draw(corner)
+        draw.pieslice((0, 0, radius * 2, radius * 2), 180, 270, fill=255)
+        return corner
+
     def add_corners(self, im, rad):
-        # https://stackoverflow.com/questions/11287402/how-to-round-corner-a-logo-without-white-backgroundtransparent-on-it-using-pi
-        circle = Image.new('L', (rad * 2, rad * 2), 0)
-        draw = ImageDraw.Draw(circle)
-        draw.ellipse((0, 0, rad * 2, rad * 2), fill=255)
+        # https://stackoverflow.com/questions/7787375/python-imaging-library-pil-drawing-rounded-rectangle-with-gradient
+        width, height = im.size
         alpha = Image.new('L', im.size, 255)
-        w, h = im.size
-        alpha.paste(circle.crop((0, 0, rad, rad)), (0, 0))
-        alpha.paste(circle.crop((0, rad, rad, rad * 2)), (0, h - rad))
-        alpha.paste(circle.crop((rad, 0, rad * 2, rad)), (w - rad, 0))
-        alpha.paste(circle.crop((rad, rad, rad * 2, rad * 2)), (w - rad, h - rad))
+        origCorner = self.round_corner(rad)
+        corner = origCorner
+        alpha.paste(corner, (0,0))
+        corner = origCorner.rotate(90)
+        alpha.paste(corner, (0, height-rad))
+        corner = origCorner.rotate(180)
+        alpha.paste(corner, (width - rad, height - rad))
+        corner = origCorner.rotate(270)
+        alpha.paste(corner, (width - rad, 0))
         im.putalpha(alpha)
         return im
 
@@ -142,10 +151,10 @@ class Leveler(commands.Cog):
         draw = ImageDraw.Draw(img)
         usercolor = (255, 255, 0)  # user.color.to_rgb()
         aviholder = self.add_corners(Image.new("RGBA", (140, 140), (255, 255, 255, 255)), 10)
-        nameplate = self.add_corners(Image.new("RGBA", (180, 55), (0, 0, 0, 255)), 10)
+        nameplate = self.add_corners(Image.new("RGBA", (180, 60), (0, 0, 0, 255)), 10)
         xptot = self.add_corners(Image.new("RGBA", (310, 20), (215, 215, 215, 255)), 10)
-        img.paste(aviholder, (9, 10), aviholder)
-        img.paste(nameplate, (153, 11), nameplate)
+        img.paste(aviholder, (10, 10), aviholder)
+        img.paste(nameplate, (155, 10), nameplate)
         img.paste(xptot, (15, 340), xptot)
 
         font1 = ImageFont.truetype(os.path.join(__path__[0],"cambria.ttc"), 18)
@@ -153,25 +162,25 @@ class Leveler(commands.Cog):
         font3 = ImageFont.truetype(os.path.join(__path__[0],"cambria.ttc"), 32)
 
         avatar = Image.open(avatar_data)
-        avatar_size = 128, 128
+        avatar_size = 130, 130
         avatar.thumbnail(avatar_size)
-        img.paste(avatar, (15, 16))
+        img.paste(avatar, (15, 15))
         lxp = xp - minone
         lnxp = nxp - minone
         prc = floor(xp / (nxp / 100))
         lprc = ceil(lxp / (lnxp / 100))
         b_offset = floor(lprc * 3.1)
         xpbar = self.add_corners(Image.new("RGBA", (b_offset, 20), usercolor), 10)
-        img.paste(xpbar, (13, 340), xpbar)
+        img.paste(xpbar, (12, 340), xpbar)
 
         lvl_str = _("Niveau:")
         ldb_str = _("Classement:")
         rank_str = _("Elo:")
         prog_str = _("Le progrès:")
 
-        draw.text((11, 180), lvl_str, fill='white', font=font3)
-        draw.text((11, 220), ldb_str, fill='white', font=font3)
-        draw.text((11, 260), rank_str, fill='white', font=font3)
+        draw.text((10, 180), lvl_str, fill='white', font=font3)
+        draw.text((10, 220), ldb_str, fill='white', font=font3)
+        draw.text((10, 260), rank_str, fill='white', font=font3)
         nick = user.display_name
         if font2.getsize(nick)[0] > 150:
             print(font2.getsize(nick))
