@@ -167,7 +167,6 @@ class Leveler(commands.Cog):
         img.paste(avatar, (15, 15))
         lxp = xp - minone
         lnxp = nxp - minone
-        prc = floor(xp / (nxp / 100))
         lprc = ceil(lxp / (lnxp / 100))
         b_offset = floor(lprc * 3.1)
         xpbar = self.add_corners(Image.new("RGBA", (b_offset, 20), usercolor), 10)
@@ -287,7 +286,7 @@ class Leveler(commands.Cog):
                 return
 
         elif await self.profiles._is_registered(message.author):
-            if message.content is not None:
+            if message.content:
                 if message.content[0] in await self.bot.get_prefix(message):
                     return
             timenow = datetime.datetime.now().timestamp()
