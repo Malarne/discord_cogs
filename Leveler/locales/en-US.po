@@ -280,3 +280,18 @@ msgstr "Modify an user's xp."
 msgid " xp mis à"
 msgstr "XP set to:"
 
+#: leveler.py:460
+msgid "La whitelist est désormais {verb}"
+msgstr "Whitelist is {verb}"
+
+#: leveler.py:505
+msgid "La blacklist est désormais {verb}"
+msgstr "Blacklist is {verb}"
+
+#: leveler.py:459 leveler.py:504
+msgid "activée."
+msgstr "activated."
+
+#: leveler.py:459 leveler.py:504
+msgid "désactivée."
+msgstr "deactivated."
