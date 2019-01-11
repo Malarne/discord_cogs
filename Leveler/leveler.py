@@ -456,7 +456,8 @@ class Leveler(commands.Cog):
     @checks.mod_or_permissions(manage_messages=True)
     async def toggle(self, ctx):
         new = await self.profiles._toggle_whitelist(ctx.guild)
-        await ctx.send(f"La whitelist est désormais {'activée.' if new else 'désactivée.'}")
+        verb = _("activée.") if new else _("désactivée.")
+        await ctx.send(_("La whitelist est désormais {verb}").format(verb=verb))
 
     @whitelist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
@@ -500,7 +501,8 @@ class Leveler(commands.Cog):
     @checks.mod_or_permissions(manage_messages=True)
     async def _toggle(self, ctx):
         new = await self.profiles._toggle_blacklist(ctx.guild)
-        await ctx.send(f"La blacklist est désormais {'activée.' if new else 'désactivée.'}")
+        verb = _("activée.") if new else _("désactivée.")
+        await ctx.send(_("La blacklist est désormais {verb}").format(verb=verb))
 
     @blacklist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
