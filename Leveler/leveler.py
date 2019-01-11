@@ -311,8 +311,9 @@ class Leveler(commands.Cog):
                 return
             elif ln >= len(roles):
                 ln = len(roles) -1
-            grade = message.guild.get_role(roles[ln-1])
-            if grade is None:
+            try:
+                grade = message.guild.get_role(roles[ln-1])
+            except:
                 return
             if not grade in message.author.roles:
                 for i in roles:
