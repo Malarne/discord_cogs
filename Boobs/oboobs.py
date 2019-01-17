@@ -37,8 +37,8 @@ class OboobsC(commands.Cog):
         self.bot = bot
         self.settings = Config.get_conf(self, identifier=69)
         default_global = {
-            "ama_ass": 0,
-            "ama_boobs": 0,
+            "ama_ass": 6198,
+            "ama_boobs": 12533,
             "last_update": 0
         }
         default_guild = {
