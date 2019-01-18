@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from redbot.core import checks, Config
 import discord
@@ -92,7 +92,7 @@ class Leveler(commands.Cog):
     @checks.is_owner()
     async def testreset(self, ctx):
         self.restart = False
-        await ctx.send(_("Reset dans max 30 secondes"), delete_after=30)
+        await ctx.send(_("Resets in 30 seconds max"), delete_after=30)
 
     async def get_avatar(self, user):
         async with aiohttp.ClientSession() as session:
@@ -172,10 +172,10 @@ class Leveler(commands.Cog):
         xpbar = self.add_corners(Image.new("RGBA", (b_offset, 20), usercolor), 10)
         img.paste(xpbar, (12, 340), xpbar)
 
-        lvl_str = _("Niveau:")
-        ldb_str = _("Classement:")
-        rank_str = _("Elo:")
-        prog_str = _("Le progrès:")
+        lvl_str = _("Level")
+        ldb_str = _("Ranking:")
+        rank_str = _("Role:")
+        prog_str = _("Progress:")
 
         draw.text((10, 180), lvl_str, fill='white', font=font3)
         draw.text((10, 220), ldb_str, fill='white', font=font3)
@@ -250,7 +250,7 @@ class Leveler(commands.Cog):
 
     @commands.command()
     async def profile(self, ctx, user : discord.Member = None):
-        """Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."""
+        """Show your leveler progress. Default to yourself."""
         if user is None:
             user = ctx.author
         data = await self.profile_data(user)
@@ -326,27 +326,27 @@ class Leveler(commands.Cog):
 
     @commands.command()
     async def register(self, ctx):
-        """Vous permets de commencer a gagner de l'expérience !"""
+        """Allow you to start earning experience !"""
         if await self.profiles._is_registered(ctx.author):
-            await ctx.send(_("Vous êtes déjà enregistré !"))
+            await ctx.send(_("You are already registered !"))
             return
         else:
             await self.profiles._register_user(ctx.author)
-            await ctx.send(_("Vous avez été enregistré avec succès !"))
+            await ctx.send(_("You have been successfully registered !"))
             return
 
     @commands.command()
     async def toplevel(self, ctx):
-        """Affiche le classement des meilleures blablateurs !"""
+        """Show the server leaderboard !"""
         ld = await self.profiles._get_leaderboard(ctx.guild)
-        emb = discord.Embed(title=_("Le classement des PGM !"))
+        emb = discord.Embed(title=_("Ranking"))
         for i in range(len(ld)):
             cur = ld[i]
             user = ctx.guild.get_member(cur["id"])
             if user is None:
                 await self._reset_member(ctx.guild, cur["id"])
             else:
-                txt = _("Niveau")+" {} | {} XP | {} ".format(cur["lvl"], 
+                txt = _("Level")+" {} | {} XP | {} ".format(cur["lvl"], 
                                                              cur["xp"], 
                                                              cur["today"]) +_("Messages Today!")
                 emb.add_field(name="{}".format(user.display_name), value=txt)
@@ -355,84 +355,84 @@ class Leveler(commands.Cog):
     @commands.group()
     @checks.mod_or_permissions(manage_messages=True)
     async def levelerset(self, ctx):
-        """Commandes de configuration."""
+        """Configuration commands."""
         pass
 
     @levelerset.group()
     @checks.mod_or_permissions(manage_messages=True)
     async def channel(self, ctx):
-        """Configuration des channels permettant de gagner de l'expérience."""
+        """Configure channels whitelist/blacklist."""
         pass
 
     @channel.group()
     @checks.mod_or_permissions(manage_messages=True)
     async def whitelist(self, ctx):
-        """Configuration des channels whitelistés"""
+        """Whitelist configuration."""
         pass
 
     @channel.group()
     @checks.mod_or_permissions(manage_messages=True)
     async def blacklist(self, ctx):
-        """Configuration des channels blacklistés"""
+        """Blacklist configuration."""
         pass    
 
     @levelerset.group()
     @checks.mod_or_permissions(manage_messages=True)
     async def roles(self, ctx):
-        """Configuration des roles obtenables grâce à l'expérience."""
+        """Configuration of roles obtainable from experience."""
         pass
 
     @commands.group()
     async def profileset(self, ctx):
-        """Définir divers paramètres de profil"""
+        """Change settings of your profile."""
         pass
 
     @profileset.command()
     async def background(self, ctx, *, link:str=None):
-        """Définir l'image de fond du profil"""
+        """Change background image of your profile."""
         await self.profiles._set_background(ctx.author, link)
-        await ctx.send(_("Profil de fond défini sur: ") + str(link))
+        await ctx.send(_("Background image is now:") + str(link))
 
     @profileset.command()
     async def description(self, ctx, *, description:str=None):
-        """Définir la description du profil"""
+        """Change your profile description"""
         await self.profiles._set_description(ctx.author, description)
-        await ctx.send(_("Description du profil définie sur: ") + str(description))
+        await ctx.send(_("Profile description set to: ") + str(description))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     async def add(self, ctx, role : discord.Role):
-        """Ajoute un role a la liste des roles obtenables grâce à l'expérience."""
+        """Add a role to the list of roles you can get with experience."""
         await self.profiles._add_guild_role(ctx.guild, role.id)
-        await ctx.send(_("Role configuré"))
+        await ctx.send(_("Role configured"))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     async def remove(self, ctx, role : discord.Role):
-        """Supprime un role de la liste des roles obtenables grâce à l'expérience."""
+        """Remove a role from the config."""
         if role.id in await self.profiles._get_guild_roles(ctx.guild):
             await self.profiles._remove_guild_role(ctx.guild, role.id)
-            await ctx.send(_("Role supprimé"))
+            await ctx.send(_("Role deleted."))
         else:
-            await ctx.send(_("Role inconnu dans la config"))
+            await ctx.send(_("Remove a role from the list."))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     async def move(self, ctx, role : discord.Role, position : int):
-        """Permet de déplacer un role, modifiant l'expérience necessaire pour l'obtenir."""
+        """Allow you to move a role."""
         if role.id in await self.profiles._get_guild_roles(ctx.guild):
             await self.profiles._move_guild_role(ctx.guild, role.id, position-1)
-            await ctx.send(_("Role déplacé"))
+            await ctx.send(_("Role moved"))
         else:
-            await ctx.send(_("Role inconnu dans la config"))
+            await ctx.send(_("Remove a role from the list"))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     async def show(self, ctx):
-        """Affiche la liste des roles dans l'ordre auquel ils sont obtenables."""
+        """Show the list of roles in the order which you get them from experience."""
         emb = discord.Embed()
-        emb.title = _("Liste des roles configurés pour le leveler de ce serveur.")
-        emb.description= _("Garanti 100% presque pas bugué.")
+        emb.title = _("List of roles configured for this server.")
+        emb.description= _("Guaranteed 100% almost no bugs.")
         roles = await self.profiles._get_guild_roles(ctx.guild)
         counter = 1
         for x in roles:
@@ -443,44 +443,44 @@ class Leveler(commands.Cog):
     @whitelist.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
     async def _add(self, ctx, channel : discord.TextChannel = None):
-        """Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel là."""
+        """Add a channel to the whitelist."""
         if channel is None:
             channel = ctx.channel
         if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
             await self.profiles._add_guild_channel(ctx.guild, channel.id)
-            await ctx.send(_("Channel ajouté"))
+            await ctx.send(_("Channel added"))
         else:
-            await ctx.send(_("Channel déjà enregistré"))
+            await ctx.send(_("Channel already whitelisted"))
 
     @whitelist.command(name="toggle")
     @checks.mod_or_permissions(manage_messages=True)
     async def toggle(self, ctx):
         new = await self.profiles._toggle_whitelist(ctx.guild)
-        verb = _("activée.") if new else _("désactivée.")
-        await ctx.send(_("La whitelist est désormais {verb}").format(verb=verb))
+        verb = _("activated.") if new else _("deactivated.")
+        await ctx.send(_("Whitelist is {verb}").format(verb=verb))
 
     @whitelist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
     async def _remove(self, ctx, channel : discord.TextChannel = None):
-        """Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expérience."""
+        """Delete a channel from the whitelist."""
         if channel is None:
             channel = ctx.channel
         if channel.id not in await self.profiles._get_guild_channels(ctx.guild):
-            await ctx.send(_("Ce channel n'est pas dans la liste configurée."))
+            await ctx.send(_("This channel isn't whitelisted."))
         else:
             await self.profiles._remove_guild_channel(ctx.guild, channel.id)
-            await ctx.send(_("Channel supprimé"))
+            await ctx.send(_("Channel deleted"))
 
     @whitelist.command(name="show")
     @checks.mod_or_permissions(manage_messages=True)
     async def _show(self, ctx):
-        """Affiche la liste des channels configurés pour donner de l'expérience."""
+        """Show the list of channels configured to allow earning experience."""
         emb = discord.Embed()
-        emb.title = _("Liste des channels autorisés a faire gagner de l'experience sur ce serveur.")
-        emb.description = _("A une vache prés, c'pas une science exacte")
+        emb.title = _("List of channels configured to allow earning experience on this server.")
+        emb.description = _("More or less, it's not an exact science")
         channels = await self.profiles._get_guild_channels(ctx.guild)
         if not len(channels):
-            return await ctx.send(_("Aucun channel configuré"))
+            return await ctx.send(_("No channels configured"))
         emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
         await ctx.send(embed=emb)
 
@@ -488,78 +488,78 @@ class Leveler(commands.Cog):
     @blacklist.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
     async def __add(self, ctx, channel : discord.TextChannel = None):
-        """Ajoute un channel à ignorer dans le gain d'xp."""
+        """Add a channel to the blacklist."""
         if channel is None:
             channel = ctx.channel
         if channel.id not in await self.profiles._get_guild_blchannels(ctx.guild):
             await self.profiles._add_guild_blacklist(ctx.guild, channel.id)
-            await ctx.send(_("Channel ignoré"))
+            await ctx.send(_("Channel blacklisted"))
         else:
-            await ctx.send(_("Channel déjà ignoré"))
+            await ctx.send(_("Channel already blacklisted"))
 
     @blacklist.command(name="toggle")
     @checks.mod_or_permissions(manage_messages=True)
     async def _toggle(self, ctx):
         new = await self.profiles._toggle_blacklist(ctx.guild)
-        verb = _("activée.") if new else _("désactivée.")
-        await ctx.send(_("La blacklist est désormais {verb}").format(verb=verb))
+        verb = _("activated.") if new else _("deactivated.")
+        await ctx.send(_("Blacklist is {verb}").format(verb=verb))
 
     @blacklist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
     async def __remove(self, ctx, channel : discord.TextChannel = None):
-        """Supprime un channel, les utilisateurs qui y parleront gagneront ainsi de l'expérience."""
+        """Remove a channel from the blacklist."""
         if channel is None:
             channel = ctx.channel
         if channel.id not in await self.profiles._get_guild_blchannels(ctx.guild):
-            await ctx.send(_("Ce channel n'est pas dans la liste configurée."))
+            await ctx.send(_("This channel isn't whitelisted."))
         else:
             await self.profiles._remove_guild_blacklist(ctx.guild, channel.id)
-            await ctx.send(_("Channel supprimé"))
+            await ctx.send(_("Channel deleted"))
 
     @blacklist.command(name="show")
     @checks.mod_or_permissions(manage_messages=True)
     async def __show(self, ctx):
-        """Affiche la liste des channels configurés pour être ignorés."""
+        """Show the list of blacklisted channels."""
         emb = discord.Embed()
-        emb.title = _("Liste des channels non autorisés a faire gagner de l'experience sur ce serveur.")
-        emb.description = _("A une vache prés, c'pas une science exacte")
+        emb.title = _("List of blacklisted channels on this server.")
+        emb.description = _("More or less, it's not an exact science")
         channels = await self.profiles._get_guild_blchannels(ctx.guild)
         if not len(channels):
-            return await ctx.send(_("Aucun channel configuré"))
+            return await ctx.send(_("No channels configured"))
         emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
         await ctx.send(embed=emb)
 
     @levelerset.command()
     async def autoregister(self, ctx):
-        """Bascule l'enregistrement automatique des utilisateurs"""
+        """Toggle auto register of users"""
         if await self.profiles._get_auto_register(ctx.guild):
             await self.profiles._set_auto_register(ctx.guild, False)
-            await ctx.send(_("Enregistrement automatique désactivé"))
+            await ctx.send(_("Auto register turned off"))
         else:
             await self.profiles._set_auto_register(ctx.guild, True)
-            await ctx.send(_("Enregistrement automatique activé"))
+            await ctx.send(_("Auto register turned on"))
 
     @levelerset.command()
     async def cooldown(self, ctx, cooldown: float):
-        """Définir le temps de recharge pour le gain xp, la valeur par défaut est 60 secondes"""
+        """Modify the cooldown of xp gain, default to 60 seconds"""
         await self.profiles._set_cooldown(ctx.guild, cooldown)
-        await ctx.send(_("Le temps de recharge est réglé sur: ") + str(cooldown))
+        await ctx.send(_("Cooldown is now: ") + str(cooldown))
 
     @levelerset.command()
     @checks.is_owner()
     async def setlevel(self, ctx, level:int, member:discord.Member=None):
-        """Définir un niveau de membres, principalement pour les tests"""
+        """Modify an user's level"""
         if member is None:
             member = ctx.message.author
         await self.profiles._set_level(member, level)
-        await ctx.send(member.name + _(" niveau réglé à ") + str(level))
+        await ctx.send(member.name + _(" Level set to ") + str(level))
 
     @levelerset.command()
     @checks.is_owner()
     async def setxp(self, ctx, xp:int, member:discord.Member=None):
-        """définir un membre xp, principalement pour les tests"""
+        """Modify an user's xp."""
         if member is None:
             member = ctx.message.author
         await self.profiles._set_exp(member, xp)
-        await ctx.send(member.name +_(" xp mis à ") + str(xp))
+        await ctx.send(member.name +_("'s XP set to ") + str(xp))
 
