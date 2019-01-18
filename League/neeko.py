@@ -60,7 +60,7 @@ class Neeko:
         for i in champ:
             if champ[i]["name"] == name:
                 return champ[i]["id"]
-        return "Champion inconnu"
+        return "Unknown character"
 
     async def get_champion_mastery(self, summoner, idchamp):
         sumid = await self.get_summoner_id(summoner)
@@ -95,7 +95,7 @@ class Neeko:
         else:
             gamemode = " ".join([js["gameMode"], js["gameType"]])
         res = {}
-        res["gamemode"] = "{} est actuellement en {}".format(summoner, gamemode)
+        res["gamemode"] = "{} is currently playing {}".format(summoner, gamemode)
         res["team1"] = {}
         res["team2"] = {}
         res["team1"]["bans"] = {}
@@ -133,10 +133,6 @@ class Neeko:
         request = self.url + "/lol/match/v3/matchlists/by-account/{}".format(sumid) + self.apistring
         js = await self.get(request)
         clean = {}
-        roles = {
-            "DUO_CARRY": "ADC",
-            "DUO_SUPPORT": "Support"
-        }
         count = 0
         for i in js["matches"]:
             tmp = {}
@@ -165,9 +161,9 @@ class Neeko:
             else:
                 tmp["resultat"] = "loose"
             userstat = tmpvar["stats"]
-            tmp["kda"] = str(userstat["kills"]) + " kills, " + str(userstat["deaths"]) + " morts et " + str(userstat["assists"]) + " assists."
-            tmp["stats"] = str(userstat["totalDamageDealt"]) + " dégats totaux infligés pour " + str(userstat["totalDamageTaken"]) + " dégats subis."
-            tmp["golds"] = str(userstat["goldEarned"]) + " golds gagnés"
+            tmp["kda"] = str(userstat["kills"]) + " kills, " + str(userstat["deaths"]) + " deaths / " + str(userstat["assists"]) + " assists."
+            tmp["stats"] = str(userstat["totalDamageDealt"]) + " total damages dealt / " + str(userstat["totalDamageTaken"]) + " damages taken."
+            tmp["golds"] = str(userstat["goldEarned"]) + " golds earned"
             clean[count] = tmp
             count += 1
             await asyncio.sleep(0.5)

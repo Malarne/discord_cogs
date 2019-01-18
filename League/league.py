@@ -18,21 +18,21 @@ class League(commands.Cog):
 
     @commands.command()
     async def elo(self, ctx, *, summoner):
-        """Affiche l'elo du summoner demandé"""
+        """Show summoner ranking"""
         try:
             res = await self.stats.get_elo(summoner)
             await ctx.send(summoner + ": " + res)
             return
         except:
-            await ctx.send(_("Le summoner que vous avez demandé n'existe pas."))
+            await ctx.send(_("This summoner doesn't exist."))
 
     @commands.command()
     async def masteries(self, ctx, *, summoner):
-        """Affiche les champions sur lesquels vous avez le plus de masteries"""
+        """Show top masteries champions of the summoner."""
         try:
             elo = await self.stats.get_elo(summoner)
             emb = discord.Embed(title=summoner, description=elo)
-            emb.add_field(name=_("Score de maitrises totales: "), value=await self.stats.mastery_score(summoner), inline=True)
+            emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(summoner), inline=True)
             champs = await self.stats.top_champions_masteries(summoner)
             await ctx.send(embed=emb)
             emb = discord.Embed()
@@ -45,9 +45,9 @@ class League(commands.Cog):
                 master = "Mastery {}: {} points".format(mastery, points)
                 emb.add_field(name=champname, value=master, inline=True)
                 if coffre:
-                    emb.add_field(name=_("Coffre obtenu"), value=_("Oui"), inline=True)
+                    emb.add_field(name=_("Chest earned"), value=_("Yes"), inline=True)
                 else:
-                    emb.add_field(name=_("Coffre obtenu"), value=_("Non"), inline=True)
+                    emb.add_field(name=_("Chest earned"), value=_("No"), inline=True)
                 tmp += 1
                 if tmp == 3:
                     await ctx.send(embed=emb)
@@ -57,20 +57,20 @@ class League(commands.Cog):
                 await asyncio.sleep(0.5)
             await ctx.send(embed=emb)
         except:
-            await ctx.send(_("Summoner inconnu"))
+            await ctx.send(_("Unknown summoner"))
 
     @commands.command()
     async def game(self, ctx, *, summoner):
         try:
             infos = await self.stats.game_info(summoner)
             if infos is False:
-                await ctx.send(_("Ce summoner n'est actuellement pas in-game."))
+                await ctx.send(_("This summoner isn't currently ingame."))
                 return
             await ctx.send(infos["gamemode"])
-            bans1 = discord.Embed(title=_("Bans de l'équipe 1"))
-            bans2 = discord.Embed(title=_("Bans de l'équipe 2"))
-            team1 = discord.Embed(title=_("Elo de l'équipe 1"))
-            team2 = discord.Embed(title=_("Elo de l'équipe 2"))
+            bans1 = discord.Embed(title=_("First team bans"))
+            bans2 = discord.Embed(title=_("Second team bans"))
+            team1 = discord.Embed(title=_("First team ranks"))
+            team2 = discord.Embed(title=_("Second team ranks"))
             for i, j in infos["team1"]["bans"].items():
                 bans1.add_field(name=j, value=i, inline=True)
 
@@ -91,12 +91,12 @@ class League(commands.Cog):
 
             await ctx.send(embed=team2)
         except:
-            await ctx.send(_("Ce summoner n'est actuellement pas in-game ou inconnu."))
+            await ctx.send(_("This summoner isn't currently ingame or is unknown."))
 
     @commands.command()
     async def history(self, ctx, summoner, count : int = 5):
-        """Affiche les X dernieres games du summoner demandé (default: 5).
-        NB: utilisez "Mon pseudo a des espaces" si besoin est"""
+        """Shows X last game of a summoner (default: 5).
+        NB: if your summoner name contains spaces, use "" (eg: "My summoner name")"""
         async with ctx.typing():
             histo = await self.stats.get_history(summoner)
             tmp = 0
