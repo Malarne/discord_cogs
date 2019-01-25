@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Leveler</title>
+  <link href="https://unpkg.com/nes.css/css/nes.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#dialog" ).dialog();
+  } );
+
+  $(function() {
+        $( "#dialog" ).hide();
+    });
+
+    $('#button').click(function(){
+        $('#dialog').dialog('open');
+    });
+  </script>
+  <style>
+  html, body, pre, code, kbd, samp {
+    font-family: "Press Start 2P";
+  }
+
+  #inputdiv {
+    max-width: 70%;
+    margin: auto;
+    text-align: center;
+    position: fixed;
+    left: 15%;
+    right: 15%
+  }
+
+  #datadiv {
+    max-width: 30%;
+    margin: 0 auto;
+    text-align: center;
+    display: inline-block;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    position: relative;
+  }
+
+  #defaultdiv {
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    position: absolute;
+  }
+
+  .ui-draggable {
+    width: 30%;
+    height: 60%
+  }
+
+  #dialog {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border: 1px solid #000000;
+    border-radius: 2px;
+    position: absolute;
+  }
+
+  #DataContainer {
+    top: 30%;
+    margin: 0 auto;
+    position: absolute;
+  }
+
+  </style>
+</head>
+<body>
+  <div id="defaultdiv">
+  <!--(()) remplacé par de l'affichage, avec nom utilisateur dans une sous-div #full-widthheader-->
+  <!--Le but ici serait d'avoir une petite fenetre mignonne deplacable comme j'ai tenté avec l'aide de google, mais sa marche pas-->
+  <div id='dialog' style='display: none'>(())</div>
+  <form action="/" method="post" accept-charset="utf-8"
+      enctype="multipart/form-data">
+    <div id="inputdiv">
+    <label for="user">User:<br/>(display_name or id allowed)</br></label>
+    <input class="nes-input" id="user" name="user" type="text" value="" /><br/>
+    <input id="button" type="submit" value="Search" onclick="toggle_visibility('button')" />
+    </div>
+    </div>
+    <br />
+    <!--ici je remplace les [[]] par plusieurs div #datadiv que je voudrais afficher dynamiquement sur la page, pour le moment elles se superposent toutes :/-->
+    <div id='DataContainer' style='display: none'>[[]]</div>
+</form>
+</body>
+</html>
