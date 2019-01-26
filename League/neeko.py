@@ -17,34 +17,36 @@ class Neeko:
             async with session.get(url) as response:
                 return await response.json()
 
-    async def get_summoner_id(self, name):
-        request = self.url + "/lol/summoner/v3/summoners/by-name/{}".format(name) + self.apistring
+    async def get_summoner_puuid(self, name):
+        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + self.apistring
         js = await self.get(request)
-        return js["id"]
+        return js["puuid"]
 
     async def get_account_id(self, name):
-        request = self.url + "/lol/summoner/v3/summoners/by-name/{}".format(name) + self.apistring
+        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + self.apistring
         js = await self.get(request)
         return js["accountId"]
 
+    async def get_summoner_id(self, name):
+        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + self.apistring
+        js = await self.get(request)
+        return js["id"]
+
     async def top_champions_masteries(self, summoner):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v3/champion-masteries/by-summoner/{}".format(sumid) + self.apistring
+        request = self.url + "/lol/champion-mastery/v4/champion-masteries/by-summoner/{}".format(sumid) + self.apistring
         js = await self.get(request)
         return js
 
     async def mastery_score(self, summoner):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v3/scores/by-summoner/{}".format(sumid) + self.apistring
+        request = self.url + "/lol/champion-mastery/v4/scores/by-summoner/{}".format(sumid) + self.apistring
         js = await self.get(request)
         return js
 
     async def get_champion_name(self, idchamp):
         if self.champlist is None:
-            versionurl = "https://ddragon.leagueoflegends.com/api/versions.json"
-            version = await self.get(versionurl)
-            request = f"http://ddragon.leagueoflegends.com/cdn/{version[0]}/data/en_US/champion.json"
-            self.champlist = await self.get(request)
+            await self.update_champlist()
         champ = self.champlist["data"]
         if idchamp == -1:
             return "Aucun"
@@ -52,19 +54,24 @@ class Neeko:
             if champ[i]["key"] == idchamp:
                 return champ[i]["name"]
 
+    async def update_champlist(self):
+        versionurl = "https://ddragon.leagueoflegends.com/api/versions.json"
+        version = await self.get(versionurl)
+        request = f"http://ddragon.leagueoflegends.com/cdn/{version[0]}/data/en_US/champion.json"
+        self.champlist = await self.get(request)
+
     async def get_champion_id(self, name):
         if self.champlist is None:
-            request = self.url + "/lol/static-data/v3/champions" + self.apistring
-            self.champlist = await self.get(request)
+            await self.update_champlist()
         champ = self.champlist["data"]
         for i in champ:
             if champ[i]["name"] == name:
-                return champ[i]["id"]
+                return champ[i]["key"]
         return "Unknown character"
 
     async def get_champion_mastery(self, summoner, idchamp):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v3/champion-masteries/by-summoner/{}/by-champion/{}".format(sumid, idchamp) + self.apistring
+        request = self.url + "/lol/champion-mastery/v4/champion-masteries/by-summoner/{}/by-champion/{}".format(sumid, idchamp) + self.apistring
         js = await self.get(request)
         res = {}
         res["mastery"] = js["championLevel"]
@@ -73,7 +80,7 @@ class Neeko:
 
     async def get_elo(self, summoner):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/league/v3/positions/by-summoner/{}".format(sumid) + self.apistring
+        request = self.url + "/lol/league/v4/positions/by-summoner/{}".format(sumid) + self.apistring
         js = await self.get(request)
         if js != []:
             dct = js[0]
@@ -84,7 +91,7 @@ class Neeko:
 
     async def game_info(self, summoner):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/spectator/v3/active-games/by-summoner/{}".format(sumid) + self.apistring
+        request = self.url + "/lol/spectator/v4/active-games/by-summoner/{}".format(sumid) + self.apistring
         js = await self.get(request)
         ##try:
         if js["gameMode"] == "CLASSIC":
@@ -124,13 +131,13 @@ class Neeko:
             ##return False
 
     async def get_match(self, matchid):
-        request = self.url + "/lol/match/v3/matches/{}".format(matchid) + self.apistring
+        request = self.url + "/lol/match/v4/matches/{}".format(matchid) + self.apistring
         js = await self.get(request)
         return js
 
     async def get_history(self, summoner):
         sumid = await self.get_account_id(summoner)
-        request = self.url + "/lol/match/v3/matchlists/by-account/{}".format(sumid) + self.apistring
+        request = self.url + "/lol/match/v4/matchlists/by-account/{}".format(sumid) + self.apistring
         js = await self.get(request)
         clean = {}
         count = 0
@@ -161,7 +168,7 @@ class Neeko:
             else:
                 tmp["resultat"] = "loose"
             userstat = tmpvar["stats"]
-            tmp["kda"] = str(userstat["kills"]) + " kills, " + str(userstat["deaths"]) + " deaths / " + str(userstat["assists"]) + " assists."
+            tmp["kda"] = str(userstat["kills"]) + " kills / " + str(userstat["deaths"]) + " deaths / " + str(userstat["assists"]) + " assists."
             tmp["stats"] = str(userstat["totalDamageDealt"]) + " total damages dealt / " + str(userstat["totalDamageTaken"]) + " damages taken."
             tmp["golds"] = str(userstat["goldEarned"]) + " golds earned"
             clean[count] = tmp

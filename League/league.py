@@ -10,6 +10,10 @@ from .neeko import Neeko
 
 _ = Translator("League", __file__)
 
+## New season makes Riot Games have to update their API to include positionnal ranking and stuff
+## So the cog is maybe broken atm, gonna have to fix that, maybe waiting for positionnal ranking to be released on EUW to test the cog with that functionality
+## NB: i should also add a setting to switch region the cog gets infos, just had the idea while typing this aha
+
 class League(commands.Cog):
 
     def __init__(self, bot):
