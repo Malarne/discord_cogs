@@ -172,7 +172,7 @@ class Leveler(commands.Cog):
         xpbar = self.add_corners(Image.new("RGBA", (b_offset, 20), usercolor), 10)
         img.paste(xpbar, (12, 340), xpbar)
 
-        lvl_str = _("Level")
+        lvl_str = _("Level:")
         ldb_str = _("Ranking:")
         rank_str = _("Role:")
         prog_str = _("Progress:")
@@ -220,7 +220,7 @@ class Leveler(commands.Cog):
                 "nxp":100, 
                 "lvl":1, 
                 "minone":0,
-                "elo":_("Nouveau"),
+                "elo":_("New"),
                 "ldb":0,
                 "desc":"",
                 "bg":bg}
@@ -239,7 +239,7 @@ class Leveler(commands.Cog):
             roles = await self.profiles._get_guild_roles(user.guild)
             ln = data["lvl"] // 10
             if ln == 0 or len(roles) == 0:
-                data["elo"] = _("Nouveau")
+                data["elo"] = _("New")
             elif ln > len(roles):
                 elo = roles[len(roles)-1]
                 data["elo"] = user.guild.get_role(elo).name
@@ -346,7 +346,7 @@ class Leveler(commands.Cog):
             if user is None:
                 await self._reset_member(ctx.guild, cur["id"])
             else:
-                txt = _("Level")+" {} | {} XP | {} ".format(cur["lvl"], 
+                txt = _("Level:")+" {} | {} XP | {} ".format(cur["lvl"], 
                                                              cur["xp"], 
                                                              cur["today"]) +_("Messages Today!")
                 emb.add_field(name="{}".format(user.display_name), value=txt)

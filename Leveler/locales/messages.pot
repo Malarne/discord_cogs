@@ -20,7 +20,7 @@ msgid "Resets in 30 seconds max"
 msgstr ""
 
 #: leveler.py:175 leveler.py:349
-msgid "Level"
+msgid "Level:"
 msgstr ""
 
 #: leveler.py:176
@@ -36,7 +36,7 @@ msgid "Progress:"
 msgstr ""
 
 #: leveler.py:223 leveler.py:242
-msgid "Nouveau"
+msgid "New"
 msgstr ""
 
 #: leveler.py:253
