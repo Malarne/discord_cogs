@@ -394,7 +394,7 @@ class Leveler(commands.Cog):
         await ctx.send(_("Background image is now:") + str(link))
 
     @profileset.command()
-    async def description(self, ctx, *, description:str=None):
+    async def description(self, ctx, *, description:str=""):
         """Change your profile description"""
         await self.profiles._set_description(ctx.author, description)
         await ctx.send(_("Profile description set to: ") + str(description))
