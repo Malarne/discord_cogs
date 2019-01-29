@@ -1,5 +1,5 @@
 {
-    "author": "Malarne (Malarne#1418)",
+    "author": ["Malarne","Malarne#1418"],
     "bot_version": "3.0.0rc2",
     "description": "V3 update of https://github.com/Canule/Mash-Cogs oboobs cog",
     "hidden": false,
