@@ -15,6 +15,7 @@ _ = Translator("League", __file__)
 ## NB: i should also add a setting to switch region the cog gets infos, just had the idea while typing this aha
 
 class League(commands.Cog):
+    """League of legend cog"""
 
     def __init__(self, bot):
         self.bot = bot
@@ -65,6 +66,7 @@ class League(commands.Cog):
 
     @commands.command()
     async def game(self, ctx, *, summoner):
+        """Show information about current game of summoner"""
         try:
             infos = await self.stats.game_info(summoner)
             if infos is False:
