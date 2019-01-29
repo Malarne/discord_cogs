@@ -55,7 +55,7 @@ class Oboobs(commands.Cog):
                 rep = await response.json()
                 return rep
 
-    @commands.group(name="oboobs", pass_context=True)
+    @commands.group(name="oboobs")
     async def _oboobs(self, ctx):
         """The oboobs/obutts.ru pictures of nature cog."""
         if ctx.invoked_subcommand is None:
@@ -81,7 +81,7 @@ class Oboobs(commands.Cog):
             await ctx.send(embed=emb)
 
     # Ass
-    @commands.command(pass_context=True, no_pm=False)
+    @commands.command(no_pm=False)
     async def ass(self, ctx):
         """Shows some ass."""
         try:
@@ -100,7 +100,7 @@ class Oboobs(commands.Cog):
 
 
     @checks.admin_or_permissions(manage_server=True)
-    @_oboobs.command(pass_context=True, no_pm=True)
+    @_oboobs.command(no_pm=True)
     async def nsfw(self, ctx):
         """Toggle oboobs nswf for this channel on/off.
         Admin/owner restricted."""
@@ -122,7 +122,7 @@ class Oboobs(commands.Cog):
                 await ctx.send("nsfw OFF")
         
     @checks.admin_or_permissions(manage_server=True)
-    @_oboobs.command(pass_context=True, no_pm=True)
+    @_oboobs.command(no_pm=True)
     async def invert(self, ctx):
         """Invert nsfw blacklist to whitelist
         Admin/owner restricted."""
