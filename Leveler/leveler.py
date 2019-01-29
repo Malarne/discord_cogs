@@ -28,6 +28,7 @@ _ = Translator("Leveler", __file__)
 
 @cog_i18n(_)
 class Leveler(commands.Cog):
+    """A leveler cog !"""
 
     def __init__(self, bot):
         self.bot = bot
@@ -394,7 +395,7 @@ class Leveler(commands.Cog):
         await ctx.send(_("Background image is now:") + str(link))
 
     @profileset.command()
-    async def description(self, ctx, *, description:str=""):
+    async def description(self, ctx, *, description:str=None):
         """Change your profile description"""
         await self.profiles._set_description(ctx.author, description)
         await ctx.send(_("Profile description set to: ") + str(description))
@@ -455,6 +456,7 @@ class Leveler(commands.Cog):
     @whitelist.command(name="toggle")
     @checks.mod_or_permissions(manage_messages=True)
     async def toggle(self, ctx):
+        """Toggle whitelist on/off."""
         new = await self.profiles._toggle_whitelist(ctx.guild)
         verb = _("activated.") if new else _("deactivated.")
         await ctx.send(_("Whitelist is {verb}").format(verb=verb))
@@ -500,6 +502,7 @@ class Leveler(commands.Cog):
     @blacklist.command(name="toggle")
     @checks.mod_or_permissions(manage_messages=True)
     async def _toggle(self, ctx):
+        """Toggle blacklist on/off."""
         new = await self.profiles._toggle_blacklist(ctx.guild)
         verb = _("activated.") if new else _("deactivated.")
         await ctx.send(_("Blacklist is {verb}").format(verb=verb))
