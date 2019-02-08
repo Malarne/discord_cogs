@@ -63,10 +63,10 @@ class UserProfile:
         lvlup = 5*((lvl-1)**2)+(50*(lvl-1)) +100
         xp = await self.data.member(member).exp()
         while xp >= lvlup:
-            await self.data.member(member).level.set(lvl+1)
             lvl = await self.data.member(member).level()
             lvlup = 5*((lvl-1)**2)+(50*(lvl-1)) +100
             xp = await self.data.member(member).exp()
+        await self.data.member(member).level.set(lvl+1)
 
     async def _check_role_member(self, member):
         roles = await self.data.guild(member.guild).roles()
