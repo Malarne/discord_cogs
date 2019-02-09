@@ -28,6 +28,24 @@ class UserProfile:
         self.data.register_member(**default_member)
         self.data.register_guild(**default_guild)
 
+    async def update_all_members(
+        self,
+        config: Config,
+        guild: discord.Guild,
+        entries: dict,
+        ):
+        base_group = config._get_base_group(config.MEMBER, str(guild.id))
+        async with base_group() as all_members:
+            to_update = {k: v for k, v in all_members.items()}
+            for m in guild.members:
+                mid = str(m.id)
+                to_update[mid] = to_update.get(mid, {})
+                to_update[mid].update(entries)
+            all_members.update(to_update)
+
+    async def _set_guild_background(self, guild, bg):
+        await self.update_all_members(self.data, guild, {"background": bg})
+
     async def _give_exp(self, member, exp):
         current = await self.data.member(member).exp()
         await self.data.member(member).exp.set(current + exp)

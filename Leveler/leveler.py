@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import re
 from redbot.core import checks, Config
 import discord
 from redbot.core import commands
@@ -566,3 +566,14 @@ class Leveler(commands.Cog):
         await self.profiles._set_exp(member, xp)
         await ctx.send(member.name +_("'s XP set to ") + str(xp))
 
+    @levelerset.command()
+    @checks.mod_or_permissions(manage_messages=True)
+    async def defaultbackground(self, ctx, url):
+        """Allow you to set a default background for your server members."""
+        bg = re.findall(r"(?:http\:|https\:)?\/\/.*\.(?:png|jpg|gif)", url)
+        if not bg:
+            await ctx.send(_("Please give a direct link to an image on format png, jpg or gif !"))
+        else:
+            background = bg[0]
+            await self.profiles._set_guild_background(ctx.guild, background)
+            await ctx.send(f"Default background set to {background}.")
