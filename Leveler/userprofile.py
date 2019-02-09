@@ -57,15 +57,24 @@ class UserProfile:
 
     async def _get_user_lastmessage(self, member):
         return await self.data.member(member).lastmessage()
+    
+    async def _downgrade_level(self, member):
+        lvl = await self.data.member(member).level()
+        pastlvl = 5*((lvl-2)**2)+(50*(lvl-2)) +100
+        xp = await self.data.member(member).exp()
+        while xp < pastlvl:
+            lvl -= 1
+            pastlvl = 5*((lvl-2)**2)+(50*(lvl-2)) +100
+        await self.data.member(member).level.set(lvl+1)
 
     async def _check_exp(self, member):
         lvl = await self.data.member(member).level()
         lvlup = 5*((lvl-1)**2)+(50*(lvl-1)) +100
         xp = await self.data.member(member).exp()
+        await self._downgrade_level(member)
         while xp >= lvlup:
-            lvl = await self.data.member(member).level()
+            lvl += 1
             lvlup = 5*((lvl-1)**2)+(50*(lvl-1)) +100
-            xp = await self.data.member(member).exp()
         await self.data.member(member).level.set(lvl+1)
 
     async def _check_role_member(self, member):
