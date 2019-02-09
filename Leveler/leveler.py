@@ -76,6 +76,7 @@ class Leveler(commands.Cog):
                         if member is None:
                             await self._reset_member(i, j)
                         else:
+                            await self.profiles._check_exp(member)
                             await self.profiles.data.member(member).today.set(0)
                 self.restart = True
             if datetime.datetime.now().strftime('%H:%M') in ["05:00", "05:01", "05:02", "05:03", "05:04", "05:05"]:
