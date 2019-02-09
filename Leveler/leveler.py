@@ -35,7 +35,7 @@ class Leveler(commands.Cog):
         self.profiles = UserProfile()
         self.loop = self.bot.loop.create_task(self.start())
         self.restart = True
-        self.__path__ = __path__
+        self.defaultrole = _("New")
 
 
     __version__ = "1.0.0"
@@ -215,13 +215,14 @@ class Leveler(commands.Cog):
             bg = await self.get_background(await self.profiles._get_background(user))
         except:
             bg = None
+        default = await self.profiles.data.guild(user.guild).defaultrole()
         data = {"avatar_data":avatar, 
                 "user":user,
                 "xp":0, 
                 "nxp":100, 
                 "lvl":1, 
                 "minone":0,
-                "elo":_("New"),
+                "elo": default if default else _("New"),
                 "ldb":0,
                 "desc":"",
                 "bg":bg}
@@ -240,7 +241,8 @@ class Leveler(commands.Cog):
             roles = await self.profiles._get_guild_roles(user.guild)
             ln = data["lvl"] // 10
             if ln == 0 or len(roles) == 0:
-                data["elo"] = _("New")
+                default = await self.profiles.data.guild(user.guild).defaultrole()
+                data["elo"] = default if default else self.defaultrole
             elif ln > len(roles):
                 elo = roles[len(roles)-1]
                 data["elo"] = user.guild.get_role(elo).name
@@ -577,3 +579,10 @@ class Leveler(commands.Cog):
             background = bg[0]
             await self.profiles._set_guild_background(ctx.guild, background)
             await ctx.send(f"Default background set to {background}.")
+
+    @roles.command(name="defaultrole")
+    @checks.mod_or_permissions(manage_messages=True)
+    async def default_role(self, ctx, *, name):
+        """Allow you to rename default role for your guild."""
+        await self.profiles.data.guild(ctx.author.guild).defaultrole.set(name)
+        await ctx.send(_(f"Default role name set to {name}"))

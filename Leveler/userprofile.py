@@ -10,6 +10,7 @@ class UserProfile:
         default_guild = {
             "wlchannels": [],
             "blchannels": [],
+            "defaultrole": None,
             "roles": [],
             "database": [],
             "autoregister": False,
