@@ -72,12 +72,9 @@ class UserProfile:
         lvlup = 5*((lvl-1)**2)+(50*(lvl-1)) +100
         xp = await self.data.member(member).exp()
         await self._downgrade_level(member)
-        def foo(xp, lvl, lvlup):
-            if xp >= lvlup:
-                lvl += 1
-                lvlup = 5*((lvl-1)**2)+(50*(lvl-1)) +100
-                foo(xp, lvlup)
-        foo(xp, lvl, lvlup)
+        while xp >= lvlup:
+            lvl += 1
+            lvlup = 5*((lvl-1)**2)+(50*(lvl-1)) +100
         await self.data.member(member).level.set(lvl+1)
 
     async def _check_role_member(self, member):
