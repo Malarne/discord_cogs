@@ -67,7 +67,7 @@ class UserProfile:
         lvl = await self.data.member(member).level()
         pastlvl = 5*((lvl-2)**2)+(50*(lvl-2)) +100
         xp = await self.data.member(member).exp()
-        while xp < pastlvl:
+        while xp < pastlvl and not lvl <= 1:
             lvl -= 1
             pastlvl = 5*((lvl-1)**2)+(50*(lvl-1)) +100
         await self.data.member(member).level.set(lvl)
