@@ -6,11 +6,12 @@ import discord
 class UserProfile:
 
     def __init__(self):
-        self.data = Config.get_conf(self, identifier=1099710897114110101, force_registration=True)
+        self.data = Config.get_conf(self, identifier=1099710897114110101)
         default_guild = {
             "wlchannels": [],
             "blchannels": [],
             "defaultrole": None,
+            "defaultbg": None,
             "roles": [],
             "database": [],
             "autoregister": False,
@@ -29,23 +30,8 @@ class UserProfile:
         self.data.register_member(**default_member)
         self.data.register_guild(**default_guild)
 
-    async def update_all_members(
-        self,
-        config: Config,
-        guild: discord.Guild,
-        entries: dict,
-        ):
-        base_group = config._get_base_group(config.MEMBER, str(guild.id))
-        async with base_group() as all_members:
-            to_update = {k: v for k, v in all_members.items()}
-            for m in guild.members:
-                mid = str(m.id)
-                to_update[mid] = to_update.get(mid, {})
-                to_update[mid].update(entries)
-            all_members.update(to_update)
-
     async def _set_guild_background(self, guild, bg):
-        await self.update_all_members(self.data, guild, {"background": bg})
+        await self.data.guild(guild).defaultbg.set(bg)
 
     async def _give_exp(self, member, exp):
         current = await self.data.member(member).exp()
@@ -81,7 +67,7 @@ class UserProfile:
         lvl = await self.data.member(member).level()
         pastlvl = 5*((lvl-2)**2)+(50*(lvl-2)) +100
         xp = await self.data.member(member).exp()
-        while xp < pastlvl and not lvl <= 1:
+        while xp < pastlvl:
             lvl -= 1
             pastlvl = 5*((lvl-1)**2)+(50*(lvl-1)) +100
         await self.data.member(member).level.set(lvl)
@@ -207,7 +193,11 @@ class UserProfile:
         await self.data.member(member).background.set(background)
 
     async def _get_background(self, member):
-        return await self.data.member(member).background()
+        userbg = await self.data.member(member).background()
+        if userbg is None:
+            return await self.data.guild(member.guild).defaultbg()
+        else:
+            return userbg
 
     async def _set_description(self, member, description:str):
         await self.data.member(member).description.set(description)
