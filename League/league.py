@@ -19,7 +19,13 @@ class League(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.stats = Neeko("PUT YOUR API KEY HERE")
+        self.stats = Neeko(bot)
+
+    @checks.mod()
+    @commands.command()
+    async def setapikey(self, ctx, *, apikey):
+        await self.bot.db.api_tokens.set_raw("league", value={'api_key': apikey})
+        await ctx.send("Done")
 
     @commands.command()
     async def elo(self, ctx, *, summoner):

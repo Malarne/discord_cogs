@@ -5,42 +5,64 @@ import datetime
 
 class Neeko:
 
-    def __init__(self, api):
+    def __init__(self, bot):
         self.url = "https://euw1.api.riotgames.com"
-        self.api = api
-        self.apistring = "?api_key={}".format(self.api)
+        self.api = None
+        self.bot = bot
         self.champlist = None
+        self._session = aiohttp.ClientSession()
+
+    async def __unload(self):
+        asyncio.get_event_loop().create_task(self._session.close())
+
+    async def _get_api_key(self):
+        if not self.api:
+            db = await self.bot.db.api_tokens.get_raw("league", default=None)
+            self.api = db['api_key']
+        else:
+            return self.api
+
+    async def apistring(self):
+        apikey = await self._get_api_key()
+        if apikey is None:
+            return False
+        else:
+            return "?api_key={}".format(apikey)
 
 
     async def get(self, url):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                return await response.json()
+        async with self._session.get(url) as response:
+            return await response.json()
 
     async def get_summoner_puuid(self, name):
-        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + apistr
         js = await self.get(request)
         return js["puuid"]
 
     async def get_account_id(self, name):
-        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + apistr
         js = await self.get(request)
         return js["accountId"]
 
     async def get_summoner_id(self, name):
-        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/summoner/v4/summoners/by-name/{}".format(name) + apistr
         js = await self.get(request)
         return js["id"]
 
     async def top_champions_masteries(self, summoner):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v4/champion-masteries/by-summoner/{}".format(sumid) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/champion-mastery/v4/champion-masteries/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
         return js
 
     async def mastery_score(self, summoner):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v4/scores/by-summoner/{}".format(sumid) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/champion-mastery/v4/scores/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
         return js
 
@@ -71,7 +93,8 @@ class Neeko:
 
     async def get_champion_mastery(self, summoner, idchamp):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v4/champion-masteries/by-summoner/{}/by-champion/{}".format(sumid, idchamp) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/champion-mastery/v4/champion-masteries/by-summoner/{}/by-champion/{}".format(sumid, idchamp) + apistr
         js = await self.get(request)
         res = {}
         res["mastery"] = js["championLevel"]
@@ -80,7 +103,8 @@ class Neeko:
 
     async def get_elo(self, summoner):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/league/v4/positions/by-summoner/{}".format(sumid) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/league/v4/positions/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
         if js != []:
             dct = js[0]
@@ -91,7 +115,8 @@ class Neeko:
 
     async def game_info(self, summoner):
         sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/spectator/v4/active-games/by-summoner/{}".format(sumid) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/spectator/v4/active-games/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
         ##try:
         if js["gameMode"] == "CLASSIC":
@@ -131,13 +156,15 @@ class Neeko:
             ##return False
 
     async def get_match(self, matchid):
-        request = self.url + "/lol/match/v4/matches/{}".format(matchid) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/match/v4/matches/{}".format(matchid) + apistr
         js = await self.get(request)
         return js
 
     async def get_history(self, summoner):
         sumid = await self.get_account_id(summoner)
-        request = self.url + "/lol/match/v4/matchlists/by-account/{}".format(sumid) + self.apistring
+        apistr = await self.apistring()
+        request = self.url + "/lol/match/v4/matchlists/by-account/{}".format(sumid) + apistr
         js = await self.get(request)
         clean = {}
         count = 0

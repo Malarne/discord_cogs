@@ -48,12 +48,15 @@ class Oboobs(commands.Cog):
         }
         self.settings.register_guild(**default_guild)
         self.settings.register_global(**default_global)
+        self._session = aiohttp.ClientSession()
 
     async def get(self, url):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                rep = await response.json()
-                return rep
+        async with self._session.get(url) as response:
+            rep = await response.json()
+            return rep
+
+    def __unload(self):
+        asyncio.get_event_loop().create_task(self._session.close())
 
     @commands.group(name="oboobs")
     async def _oboobs(self, ctx):

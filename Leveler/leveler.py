@@ -3,19 +3,14 @@ import re
 from redbot.core import checks, Config
 import discord
 from redbot.core import commands
-from redbot.core.utils import mod
-from redbot.core.data_manager import cog_data_path
+from redbot.core.data_manager import bundled_data_path
 import asyncio
 import datetime
 from .userprofile import UserProfile
-from . import __path__
 from PIL import Image, ImageDraw, ImageFont
 from math import floor, ceil
 import os
-from collections import namedtuple
-import urllib
 import aiohttp
-from random import randint
 from redbot.core.i18n import Translator, cog_i18n
 from io import BytesIO
 import functools
@@ -36,6 +31,7 @@ class Leveler(commands.Cog):
         self.loop = self.bot.loop.create_task(self.start())
         self.restart = True
         self.defaultrole = _("New")
+        self._session = aiohttp.ClientSession()
 
 
     __version__ = "1.0.0"
@@ -61,6 +57,7 @@ class Leveler(commands.Cog):
 
 
     def __unload(self):
+        asyncio.get_event_loop().create_task(self._session.close())
         self.loop.cancel()
 
 
@@ -96,16 +93,14 @@ class Leveler(commands.Cog):
         await ctx.send(_("Resets in 30 seconds max"), delete_after=30)
 
     async def get_avatar(self, user):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(user.avatar_url_as(format="png", size=1024)) as f:
-                data = await f.read()
-                return BytesIO(data)
+        async with self._session.get(user.avatar_url_as(format="png", size=1024)) as f:
+            data = await f.read()
+            return BytesIO(data)
 
     async def get_background(self, url):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as f:
-                data = await f.read()
-                return Image.open(BytesIO(data))
+        async with self._session.get(url) as f:
+            data = await f.read()
+            return Image.open(BytesIO(data))
 
     def round_corner(self, radius):
         """Draw a round corner"""
@@ -158,9 +153,11 @@ class Leveler(commands.Cog):
         img.paste(nameplate, (155, 10), nameplate)
         img.paste(xptot, (15, 340), xptot)
 
-        font1 = ImageFont.truetype(os.path.join(__path__[0],"cambria.ttc"), 18)
-        font2 = ImageFont.truetype(os.path.join(__path__[0],"cambria.ttc"), 22)
-        font3 = ImageFont.truetype(os.path.join(__path__[0],"cambria.ttc"), 32)
+        fontpath = bundled_data_path(self) / "cambria.ttc"
+
+        font1 = ImageFont.truetype(fontpath, 18)
+        font2 = ImageFont.truetype(fontpath, 22)
+        font3 = ImageFont.truetype(fontpath, 32)
 
         avatar = Image.open(avatar_data)
         avatar_size = 130, 130
@@ -318,7 +315,7 @@ class Leveler(commands.Cog):
                 grade = message.guild.get_role(roles[ln-1])
             except:
                 return
-            if not grade in message.author.roles:
+            if grade not in message.author.roles:
                 for i in roles:
                     role = message.guild.get_role(i)
                     if role is None:
