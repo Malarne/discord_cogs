@@ -153,7 +153,7 @@ class Leveler(commands.Cog):
         img.paste(nameplate, (155, 10), nameplate)
         img.paste(xptot, (15, 340), xptot)
 
-        fontpath = bundled_data_path(self) / "cambria.ttc"
+        fontpath = str(bundled_data_path(self) / "cambria.ttc")
 
         font1 = ImageFont.truetype(fontpath, 18)
         font2 = ImageFont.truetype(fontpath, 22)
