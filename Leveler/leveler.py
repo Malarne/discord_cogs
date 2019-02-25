@@ -556,7 +556,10 @@ class Leveler(commands.Cog):
         """Modify an user's level"""
         if member is None:
             member = ctx.message.author
-        await self.profiles._set_level(member, level)
+        if await self.profiles._is_registered(member):
+            await self.profiles._set_exp(member, 5*((level-1)**2)+(50*(level-1)) +100)
+        else:
+            await ctx.send(_("That user is not registered."))
         await ctx.send(member.name + _(" Level set to ") + str(level))
 
     @levelerset.command()
@@ -565,7 +568,10 @@ class Leveler(commands.Cog):
         """Modify an user's xp."""
         if member is None:
             member = ctx.message.author
-        await self.profiles._set_exp(member, xp)
+        if await self.profiles._is_registered(member):
+            await self.profiles._set_exp(member, xp)
+        else:
+            await ctx.send(_("That user is not registered."))
         await ctx.send(member.name +_("'s XP set to ") + str(xp))
 
     @levelerset.command()
