@@ -301,10 +301,13 @@ class Leveler(commands.Cog):
                 xp = 1
             elif mots > 10:
                 xp = 2
+            oldlvl = await self.profiles._get_level(message.author)
             await self.profiles._today_addone(message.author)
             await self.profiles._give_exp(message.author, xp)
             await self.profiles._set_user_lastmessage(message.author, timenow)
             lvl = await self.profiles._get_level(message.author)
+            if lvl == oldlvl +1 and self.profiles.data.guild(message.guild).lvlup_announce():
+                await message.channel.send(_("{} is now level {} !".format(message.author.mention, lvl)))
             roles = await self.profiles._get_guild_roles(message.guild)
             ln = lvl//10
             if ln == 0:
@@ -583,3 +586,11 @@ class Leveler(commands.Cog):
         """Allow you to rename default role for your guild."""
         await self.profiles.data.guild(ctx.author.guild).defaultrole.set(name)
         await ctx.send(_(f"Default role name set to {name}"))
+
+    @levelerset.command()
+    @checks.mod_or_permissions(manage_messages=True)
+    async def announce(self, ctx, status : bool):
+        """Toggle whether the bot will announce levelups.
+        args are True/False."""
+        await self.profiles.data.guild(ctx.guild).lvlup_announce.set(status)
+        await ctx.send(_("Levelup announce is now {}.").format(_("enabled") if status else _("disabled")))

@@ -17,7 +17,8 @@ class UserProfile:
             "autoregister": False,
             "cooldown": 60.0,
             "whitelist": True,
-            "blacklist": False
+            "blacklist": False,
+            "lvlup_announce": False
         }
         default_member = {
             "exp": 0,
