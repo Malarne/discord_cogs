@@ -21,7 +21,8 @@ A cog to display information about League of Legends, like your ranking, masteri
 English translation is planned, just have to make the display look better first (it really is awful)
 
 # Leveler
-Require Pillow (pip3 install Pillow)
+Require Pillow 5.3.0 (pip3 install Pillow==5.3.0)
+Apparently the cog isn't working on latest version of Pillow, no idea why
 
 The first Leveler cog made for v3 !
 Inspired by Stevy's v2 Leveler
