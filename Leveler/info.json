@@ -5,7 +5,7 @@
   "hidden": false,
   "install_msg": "Thank you for installing this leveler !\nPlease consult the docs at ayrobot.netlify.com for setup informations.\nPlease note that this cog come with bundled data, mostly the font for profile image.",
   "required_cogs": [],
-  "requirements": ["pillow"],
+  "requirements": ["pillow==5.3.0"],
   "short": "Leveler tool, better than MEE6",
   "tags": ["leveler", "pillow", "fun"]
 }
