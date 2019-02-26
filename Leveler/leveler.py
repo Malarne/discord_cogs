@@ -324,7 +324,8 @@ class Leveler(commands.Cog):
                     if role is None:
                         continue
                     await message.author.remove_roles(role)
-                await message.author.add_roles(grade)
+                if grade:
+                    await message.author.add_roles(grade)
             
 
     @commands.command()
