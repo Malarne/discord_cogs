@@ -255,7 +255,7 @@ class Leveler(commands.Cog):
         return data
 
     @commands.command()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def profile(self, ctx, user : discord.Member = None):
         """Show your leveler progress. Default to yourself."""
         if user is None:
@@ -336,7 +336,7 @@ class Leveler(commands.Cog):
             
 
     @commands.command()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def register(self, ctx):
         """Allow you to start earning experience !"""
         if await self.profiles._is_registered(ctx.author):
@@ -348,7 +348,7 @@ class Leveler(commands.Cog):
             return
 
     @commands.command()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def toplevel(self, ctx):
         """Show the server leaderboard !"""
         ld = await self.profiles._get_leaderboard(ctx.guild)
@@ -367,54 +367,54 @@ class Leveler(commands.Cog):
 
     @commands.group()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def levelerset(self, ctx):
         """Configuration commands."""
         pass
 
     @levelerset.group()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def channel(self, ctx):
         """Configure channels whitelist/blacklist."""
         pass
 
     @channel.group()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def whitelist(self, ctx):
         """Whitelist configuration."""
         pass
 
     @channel.group()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def blacklist(self, ctx):
         """Blacklist configuration."""
         pass    
 
     @levelerset.group()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def roles(self, ctx):
         """Configuration of roles obtainable from experience."""
         pass
 
     @commands.group()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def profileset(self, ctx):
         """Change settings of your profile."""
         pass
 
     @profileset.command()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def background(self, ctx, *, link:str=None):
         """Change background image of your profile."""
         await self.profiles._set_background(ctx.author, link)
         await ctx.send(_("Background image is now:") + str(link))
 
     @profileset.command()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def description(self, ctx, *, description:str=None):
         """Change your profile description"""
         await self.profiles._set_description(ctx.author, description)
@@ -422,7 +422,7 @@ class Leveler(commands.Cog):
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def add(self, ctx, role : discord.Role):
         """Add a role to the list of roles you can get with experience."""
         await self.profiles._add_guild_role(ctx.guild, role.id)
@@ -430,7 +430,7 @@ class Leveler(commands.Cog):
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def remove(self, ctx, role : discord.Role):
         """Remove a role from the config."""
         if role.id in await self.profiles._get_guild_roles(ctx.guild):
@@ -441,7 +441,7 @@ class Leveler(commands.Cog):
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def move(self, ctx, role : discord.Role, position : int):
         """Allow you to move a role."""
         if role.id in await self.profiles._get_guild_roles(ctx.guild):
@@ -452,7 +452,7 @@ class Leveler(commands.Cog):
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def show(self, ctx):
         """Show the list of roles in the order which you get them from experience."""
         emb = discord.Embed()
@@ -471,7 +471,7 @@ class Leveler(commands.Cog):
 
     @whitelist.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def _add(self, ctx, channel : discord.TextChannel = None):
         """Add a channel to the whitelist."""
         if channel is None:
@@ -484,7 +484,7 @@ class Leveler(commands.Cog):
 
     @whitelist.command(name="toggle")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def toggle(self, ctx):
         """Toggle whitelist on/off."""
         new = await self.profiles._toggle_whitelist(ctx.guild)
@@ -493,7 +493,7 @@ class Leveler(commands.Cog):
 
     @whitelist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def _remove(self, ctx, channel : discord.TextChannel = None):
         """Delete a channel from the whitelist."""
         if channel is None:
@@ -506,7 +506,7 @@ class Leveler(commands.Cog):
 
     @whitelist.command(name="show")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def _show(self, ctx):
         """Show the list of channels configured to allow earning experience."""
         emb = discord.Embed()
@@ -521,7 +521,7 @@ class Leveler(commands.Cog):
 
     @blacklist.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def __add(self, ctx, channel : discord.TextChannel = None):
         """Add a channel to the blacklist."""
         if channel is None:
@@ -534,7 +534,7 @@ class Leveler(commands.Cog):
 
     @blacklist.command(name="toggle")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def _toggle(self, ctx):
         """Toggle blacklist on/off."""
         new = await self.profiles._toggle_blacklist(ctx.guild)
@@ -543,7 +543,7 @@ class Leveler(commands.Cog):
 
     @blacklist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def __remove(self, ctx, channel : discord.TextChannel = None):
         """Remove a channel from the blacklist."""
         if channel is None:
@@ -556,7 +556,7 @@ class Leveler(commands.Cog):
 
     @blacklist.command(name="show")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def __show(self, ctx):
         """Show the list of blacklisted channels."""
         emb = discord.Embed()
@@ -569,7 +569,7 @@ class Leveler(commands.Cog):
         await ctx.send(embed=emb)
 
     @levelerset.command()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def autoregister(self, ctx):
         """Toggle auto register of users"""
         if await self.profiles._get_auto_register(ctx.guild):
@@ -580,7 +580,7 @@ class Leveler(commands.Cog):
             await ctx.send(_("Auto register turned on"))
 
     @levelerset.command()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def cooldown(self, ctx, cooldown: float):
         """Modify the cooldown of xp gain, default to 60 seconds"""
         await self.profiles._set_cooldown(ctx.guild, cooldown)
@@ -588,7 +588,7 @@ class Leveler(commands.Cog):
 
     @levelerset.command()
     @checks.is_owner()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def setlevel(self, ctx, level:int, member:discord.Member=None):
         """Modify an user's level"""
         if member is None:
@@ -601,7 +601,7 @@ class Leveler(commands.Cog):
 
     @levelerset.command()
     @checks.is_owner()
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def setxp(self, ctx, xp:int, member:discord.Member=None):
         """Modify an user's xp."""
         if member is None:
@@ -614,7 +614,7 @@ class Leveler(commands.Cog):
 
     @levelerset.command()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def defaultbackground(self, ctx, url):
         """Allow you to set a default background for your server members."""
         bg = re.findall(r"(?:http\:|https\:)?\/\/.*\.(?:png|jpg|gif)", url)
@@ -627,7 +627,7 @@ class Leveler(commands.Cog):
 
     @roles.command(name="defaultrole")
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def default_role(self, ctx, *, name):
         """Allow you to rename default role for your guild."""
         await self.profiles.data.guild(ctx.author.guild).defaultrole.set(name)
@@ -635,7 +635,7 @@ class Leveler(commands.Cog):
 
     @levelerset.command()
     @checks.mod_or_permissions(manage_messages=True)
-    @checks.bot_in_a_guild()
+    @commands.guild_only()
     async def announce(self, ctx, status : bool):
         """Toggle whether the bot will announce levelups.
         args are True/False."""
