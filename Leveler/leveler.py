@@ -313,7 +313,7 @@ class Leveler(commands.Cog):
             await self.profiles._give_exp(message.author, xp)
             await self.profiles._set_user_lastmessage(message.author, timenow)
             lvl = await self.profiles._get_level(message.author)
-            if lvl == oldlvl +1 and self.profiles.data.guild(message.guild).lvlup_announce():
+            if lvl == oldlvl +1 and await self.profiles.data.guild(message.guild).lvlup_announce():
                 await message.channel.send(_("{} is now level {} !".format(message.author.mention, lvl)))
             roles = await self.profiles._get_guild_roles(message.guild)
             ln = lvl//10
