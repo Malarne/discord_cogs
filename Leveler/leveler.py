@@ -242,10 +242,16 @@ class Leveler(commands.Cog):
                 data["elo"] = default if default else self.defaultrole
             elif ln > len(roles):
                 elo = roles[len(roles)-1]
-                data["elo"] = user.guild.get_role(elo).name
+                try:
+                    data["elo"] = user.guild.get_role(elo).name
+                except:
+                    data["elo"] = default if default else self.defaultrole
             else:
                 elo = roles[ln-1]
-                data["elo"] = user.guild.get_role(elo).name
+                try:
+                    data["elo"] = user.guild.get_role(elo).name
+                except:
+                    data["elo"] = default if default else self.defaultrole
         return data
 
     @commands.command()
