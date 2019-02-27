@@ -446,7 +446,11 @@ class Leveler(commands.Cog):
         roles = await self.profiles._get_guild_roles(ctx.guild)
         counter = 1
         for x in roles:
-            emb.add_field(name=counter, value=discord.utils.get(ctx.guild.roles, id=x).name)
+            try:
+                emb.add_field(name=counter, value=discord.utils.get(ctx.guild.roles, id=x).name)
+            except:
+                # role no longer exists
+                pass
             counter += 1
         await ctx.send(embed=emb)
 
