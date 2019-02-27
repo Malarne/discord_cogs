@@ -242,10 +242,16 @@ class Leveler(commands.Cog):
                 data["elo"] = default if default else self.defaultrole
             elif ln > len(roles):
                 elo = roles[len(roles)-1]
-                data["elo"] = user.guild.get_role(elo).name
+                try:
+                    data["elo"] = user.guild.get_role(elo).name
+                except:
+                    data["elo"] = default if default else self.defaultrole
             else:
                 elo = roles[ln-1]
-                data["elo"] = user.guild.get_role(elo).name
+                try:
+                    data["elo"] = user.guild.get_role(elo).name
+                except:
+                    data["elo"] = default if default else self.defaultrole
         return data
 
     @commands.command()
@@ -324,7 +330,8 @@ class Leveler(commands.Cog):
                     if role is None:
                         continue
                     await message.author.remove_roles(role)
-                await message.author.add_roles(grade)
+                if grade:
+                    await message.author.add_roles(grade)
             
 
     @commands.command()
@@ -439,7 +446,11 @@ class Leveler(commands.Cog):
         roles = await self.profiles._get_guild_roles(ctx.guild)
         counter = 1
         for x in roles:
-            emb.add_field(name=counter, value=discord.utils.get(ctx.guild.roles, id=x).name)
+            try:
+                emb.add_field(name=counter, value=discord.utils.get(ctx.guild.roles, id=x).name)
+            except:
+                # role no longer exists
+                pass
             counter += 1
         await ctx.send(embed=emb)
 
