@@ -89,7 +89,7 @@ class UserProfile:
     async def _check_role_member(self, member):
         roles = await self.data.guild(member.guild).roles()
         lvl = await self.data.member(member).level()
-        level_role = if lvl > 0 roles[(lvl%10)-1] else 0
+        level_role = roles[(lvl%10)-1] if lvl > 0 else 0
         try:
             if level_role in [x.id for x in member.roles]:
                 return True
