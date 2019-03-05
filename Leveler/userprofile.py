@@ -105,9 +105,8 @@ class UserProfile:
         role = discord.utils.get(guild.roles, id=roleid)
         if role is None:
             return False
-        async with self.data.guild(guild).roles() as rolelist:
-            rolelist[str(level)] = roleid
-            return True
+        rl = await self.data.guild(guild).roles()
+        await self.data.guild(guild).roles.set(rl.update({str(level): roleid}))
 
     async def _remove_guild_role(self, guild, role):
         async with self.data.guild(guild).roles() as rolelist:
