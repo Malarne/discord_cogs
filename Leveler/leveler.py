@@ -236,22 +236,23 @@ class Leveler(commands.Cog):
             else:
                 data["minone"] = 0
             roles = await self.profiles._get_guild_roles(user.guild)
-            ln = data["lvl"] // 10
-            if ln == 0 or len(roles) == 0:
+            if len(roles) == 0:
                 default = await self.profiles.data.guild(user.guild).defaultrole()
                 data["elo"] = default if default else self.defaultrole
-            elif ln > len(roles):
-                elo = roles[len(roles)-1]
-                try:
-                    data["elo"] = user.guild.get_role(elo).name
-                except:
-                    data["elo"] = default if default else self.defaultrole
             else:
-                elo = roles[ln-1]
-                try:
-                    data["elo"] = user.guild.get_role(elo).name
-                except:
-                    data["elo"] = default if default else self.defaultrole
+                if str(lvl) in roles.keys():
+                    data["elo"] = discord.utils.get(user.guild.roles, id=roles[str(lvl)]).name
+                else:
+                    tmp = 0
+                    for k,v in roles.items():
+                        if int(k) < lvl:
+                            tmp = int(v)
+                            pass
+                    if tmp == 0:
+                        data["elo"] = default if default else self.defaultrole
+                    else:
+                        rl = discord.utils.get(user.guild.roles, id=tmp)
+                        data["elo"] = rl.name
         return data
 
     @commands.command()
@@ -315,24 +316,8 @@ class Leveler(commands.Cog):
             lvl = await self.profiles._get_level(message.author)
             if lvl == oldlvl +1 and await self.profiles.data.guild(message.guild).lvlup_announce():
                 await message.channel.send(_("{} is now level {} !".format(message.author.mention, lvl)))
-            roles = await self.profiles._get_guild_roles(message.guild)
-            ln = lvl//10
-            if ln == 0:
-                return
-            elif ln >= len(roles):
-                ln = len(roles) -1
-            try:
-                grade = message.guild.get_role(roles[ln-1])
-            except:
-                return
-            if grade not in message.author.roles:
-                for i in roles:
-                    role = message.guild.get_role(i)
-                    if role is None:
-                        continue
-                    await message.author.remove_roles(role)
-                if grade:
-                    await message.author.add_roles(grade)
+            await self.profiles._check_exp(message.author)
+            await self.profiles._check_role_member(message.author)
             
 
     @commands.command()
@@ -423,9 +408,9 @@ class Leveler(commands.Cog):
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def add(self, ctx, role : discord.Role):
-        """Add a role to the list of roles you can get with experience."""
-        await self.profiles._add_guild_role(ctx.guild, role.id)
+    async def add(self, ctx, level : int, role : discord.Role):
+        """Add a role to be given at chosen level."""
+        await self.profiles._add_guild_role(ctx.guild, level, role.id)
         await ctx.send(_("Role configured"))
 
     @roles.command()
@@ -442,31 +427,21 @@ class Leveler(commands.Cog):
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def move(self, ctx, role : discord.Role, position : int):
-        """Allow you to move a role."""
-        if role.id in await self.profiles._get_guild_roles(ctx.guild):
-            await self.profiles._move_guild_role(ctx.guild, role.id, position-1)
-            await ctx.send(_("Role moved"))
-        else:
-            await ctx.send(_("Remove a role from the list"))
-
-    @roles.command()
-    @checks.mod_or_permissions(manage_messages=True)
-    @commands.guild_only()
     async def show(self, ctx):
         """Show the list of roles in the order which you get them from experience."""
         emb = discord.Embed()
         emb.title = _("List of roles configured for this server.")
         emb.description= _("Guaranteed 100% almost no bugs.")
         roles = await self.profiles._get_guild_roles(ctx.guild)
-        counter = 1
-        for x in roles:
+        if len(roles) == 0:
+            await ctx.send(_("No roles yet configured for this guild !"))
+            return
+        for k,v in roles.items():   
             try:
-                emb.add_field(name=counter, value=discord.utils.get(ctx.guild.roles, id=x).name)
+                emb.add_field(name=str(k), value=discord.utils.get(ctx.guild.roles, id=v).name)
             except:
                 # role no longer exists
                 pass
-            counter += 1
         await ctx.send(embed=emb)
 
     @whitelist.command(name="add")

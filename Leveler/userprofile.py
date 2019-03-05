@@ -12,7 +12,7 @@ class UserProfile:
             "blchannels": [],
             "defaultrole": None,
             "defaultbg": None,
-            "roles": [],
+            "roles": {},
             "database": [],
             "autoregister": False,
             "cooldown": 60.0,
@@ -89,32 +89,29 @@ class UserProfile:
     async def _check_role_member(self, member):
         roles = await self.data.guild(member.guild).roles()
         lvl = await self.data.member(member).level()
-        level_role = roles[(lvl%10)-1] if lvl > 0 else 0
-        try:
-            if level_role in [x.id for x in member.roles]:
-                return True
+        for k,v in roles.items():
+            if lvl == int(k):
+                rl = discord.utils.get(member.guild.roles, id=v)
+                if rl in member.roles:
+                    return True
+                else:
+                    await member.add_roles(rl)
+                    return True
             else:
-                await member.add_roles(discord.utils.get(member.guild.roles, id=level_role))
-                return True
-        except:
-            return False
+                pass
+        return False
 
-    async def _add_guild_role(self, guild, roleid):
+    async def _add_guild_role(self, guild, level, roleid):
         role = discord.utils.get(guild.roles, id=roleid)
         if role is None:
             return False
         async with self.data.guild(guild).roles() as rolelist:
-            rolelist.append(roleid)
+            rolelist[level] = roleid
             return True
-
-    async def _move_guild_role(self, guild, role, new):
-        async with self.data.guild(guild).roles() as rolelist:
-            del rolelist[rolelist.index(role)]
-            rolelist.insert(new, role)
 
     async def _remove_guild_role(self, guild, role):
         async with self.data.guild(guild).roles() as rolelist:
-            rolelist.remove(role)
+            del rolelist[rolelist.index(role)]
 
     async def _get_guild_roles(self, guild):
         return await self.data.guild(guild).roles()
