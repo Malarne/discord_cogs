@@ -106,7 +106,8 @@ class UserProfile:
         if role is None:
             return False
         rl = await self.data.guild(guild).roles()
-        await self.data.guild(guild).roles.set(rl.update({str(level): roleid}))
+        rl.update({str(level): roleid})
+        await self.data.guild(guild).roles.set(rl)
 
     async def _remove_guild_role(self, guild, role):
         async with self.data.guild(guild).roles() as rolelist:
