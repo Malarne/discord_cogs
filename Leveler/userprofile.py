@@ -106,6 +106,8 @@ class UserProfile:
         if role is None:
             return False
         rl = await self.data.guild(guild).roles()
+        if isinstance(rl, list):
+            rl = {}
         rl.update({str(level): roleid})
         await self.data.guild(guild).roles.set(rl)
 
