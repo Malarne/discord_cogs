@@ -106,7 +106,7 @@ class UserProfile:
         if role is None:
             return False
         async with self.data.guild(guild).roles() as rolelist:
-            rolelist[level] = roleid
+            rolelist[str(level)] = roleid
             return True
 
     async def _remove_guild_role(self, guild, role):
