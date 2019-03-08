@@ -15,12 +15,13 @@ class WebServer:
         self.site = None
         self.div = ""
         self.body = None
+        self.var = 0
 
     def __unload(self):
         self.bot.loop.create_task(self.runner.cleanup())
 
-    def get_body(self, path):
-        if self.body is None:
+    def get_body(self, path, reset : bool = False):
+        if self.body is None or reset == True:
             folder = path[0]
             basic = os.path.join(folder, "index.html")
             body = open(basic, "r", encoding="utf-8").read()
@@ -47,7 +48,7 @@ class WebServer:
                     res += f"{user.display_name}: Niveau {userlevel} avec {userxp} XP !<br />"
                 res += "</p><br /><p id='datadiv'>"
             res += "</p>"
-            body = self.get_body(path)
+            body = self.get_body(path, True)
             body = body.replace("[[]]", res)
             body = body.replace("<div id='DataContainer' style='display: none'>", "<div id='DataContainer' style='display: inline-block'>")
             self.body = body
@@ -70,23 +71,29 @@ class WebServer:
                 ldb = info["ldb"]
                 desc = info["desc"]
                 roles = await stats._get_guild_roles(srch.guild)
-                ln = lvl // 10
-                if ln == 0 or len(roles) == 0:
-                    elo = "Nouveau"
-                elif ln > len(roles):
-                    relo = roles[len(roles)-1]
-                    elo = srch.guild.get_role(relo).name
+                if len(roles) == 0:
+                    default = await cog.profiles.data.guild(srch.guild).defaultrole()
+                    elo = default if default else cog.defaultrole
                 else:
-                    relo = roles[ln-1]
-                    elo = srch.guild.get_role(relo).name
-                res = f"<p><br />Niveau: {lvl}<br />Exp: {xp} / {nxp}<br />Elo: {elo}<br />Classement: {ldb+1}<br /><br />{desc}</p>"
-                body = body.replace("<div id='dialog' style='display: none'>", f"<div id='dialog' title={srch.display_name} style='display: none'>")
+                    if str(lvl) in roles.keys():
+                        elo = discord.utils.get(srch.guild.roles, id=roles[str(lvl)]).name
+                    else:
+                        tmp = 0
+                        for k,v in roles.items():
+                            if int(k) < lvl:
+                                tmp = int(v)
+                                pass
+                        if tmp == 0:
+                            elo = default if default else cog.defaultrole
+                        else:
+                            rl = discord.utils.get(srch.guild.roles, id=tmp)
+                            elo = rl.name
+                res = f"<p><br />Niveau: {lvl}<br />Exp: {xp} / {nxp}<br />Elo: {elo}<br />Classement: {ldb}<br /><br />{desc}</p>"
+                body = body.replace("<div id='dialog' class='nes-container' style='display: none'>", f"<div id='dialog' class='nes-container' title='{srch.display_name}' style='display: inline-block'>")
                 body = body.replace("(())", res)
-                body = body.replace("<div id='dialog' style='display: none'>", "<div id='dialog' style='display: inline-block'>")
-                self.body = body
+                body = body.replace("$(function() {$( '#dialog' ).hide();});", "<!--We no more hide our div ! --!>")
                 return web.Response(text=body, content_type='text/html')
             body = body.replace("(())", res)
-            self.body = body
             return web.Response(text=body, content_type='text/html')
 
         await asyncio.sleep(3)
