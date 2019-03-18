@@ -33,6 +33,7 @@ class Neeko:
         if not self.api:
             db = await self.bot.db.api_tokens.get_raw("league", default=None)
             self.api = db['api_key']
+            return self.api
         else:
             return self.api
 
@@ -193,7 +194,7 @@ class Neeko:
         js = await self.get(request)
         return js
 
-    async def get_history(self, cpt, region, *summoner):
+    async def get_history(self, cpt, region, summoner):
         #print(f"cpt: {cpt}\nregion: {region} ({self.regions[region]})\nsummoner: {summoner}")
         sumid = await self.get_account_id(region, summoner)
         if not sumid:
@@ -201,7 +202,6 @@ class Neeko:
         apistr = await self.apistring()
         if region not in self.regions:
             return False
-        print(f"self.urf: {self.url}\nregion: {region} ({self.regions[region]})\n sumid: {sumid}\n apistr: {apistr}")
         request = self.url.format(self.regions[region]) + "/lol/match/v4/matchlists/by-account/{}".format(sumid) + apistr
         js = await self.get(request)
         clean = {}
