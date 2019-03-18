@@ -5,46 +5,94 @@ import datetime
 
 class Neeko:
 
-    def __init__(self, api):
-        self.url = "https://euw1.api.riotgames.com"
-        self.api = api
-        self.apistring = "?api_key={}".format(self.api)
+    def __init__(self, bot):
+        self.url = "https://{}.api.riotgames.com"
+        self.api = None
+        self.bot = bot
         self.champlist = None
+        self._session = aiohttp.ClientSession()
+        self.regions = {
+            "br": "br1",
+            "eune": "eun1",
+            "euw": "euw1",
+            "jp": "jp1",
+            "kr": "kr",
+            "lan": "la1",
+            "las": "la2",
+            "na": "na1",
+            "oce": "oc1",
+            "tr": "tr1",
+            "ru": "ru",
+            "pbe": "pbe1"
+        }
+
+    async def __unload(self):
+        asyncio.get_event_loop().create_task(self._session.close())
+
+    async def _get_api_key(self):
+        if not self.api:
+            db = await self.bot.db.api_tokens.get_raw("league", default=None)
+            self.api = db['api_key']
+        else:
+            return self.api
+
+    async def apistring(self):
+        apikey = await self._get_api_key()
+        if apikey is None:
+            return False
+        else:
+            return "?api_key={}".format(apikey)
 
 
     async def get(self, url):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                return await response.json()
+        async with self._session.get(url) as response:
+            return await response.json()
 
-    async def get_summoner_id(self, name):
-        request = self.url + "/lol/summoner/v3/summoners/by-name/{}".format(name) + self.apistring
+    async def get_summoner_puuid(self, region, name):
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/summoner/v4/summoners/by-name/{}".format(name) + apistr
         js = await self.get(request)
-        return js["id"]
+        return js["puuid"]
 
-    async def get_account_id(self, name):
-        request = self.url + "/lol/summoner/v3/summoners/by-name/{}".format(name) + self.apistring
+    async def get_account_id(self, region, name):
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/summoner/v4/summoners/by-name/{}".format(name) + apistr
         js = await self.get(request)
         return js["accountId"]
 
-    async def top_champions_masteries(self, summoner):
-        sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v3/champion-masteries/by-summoner/{}".format(sumid) + self.apistring
+    async def get_summoner_id(self, region, name):
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/summoner/v4/summoners/by-name/{}".format(name) + apistr
+        js = await self.get(request)
+        return js["id"]
+
+    async def top_champions_masteries(self, region, summoner):
+        sumid = await self.get_summoner_id(region, summoner)
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/champion-mastery/v4/champion-masteries/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
         return js
 
-    async def mastery_score(self, summoner):
-        sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v3/scores/by-summoner/{}".format(sumid) + self.apistring
+    async def mastery_score(self, region, summoner):
+        sumid = await self.get_summoner_id(region, summoner)
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/champion-mastery/v4/scores/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
         return js
 
     async def get_champion_name(self, idchamp):
         if self.champlist is None:
-            versionurl = "https://ddragon.leagueoflegends.com/api/versions.json"
-            version = await self.get(versionurl)
-            request = f"http://ddragon.leagueoflegends.com/cdn/{version[0]}/data/en_US/champion.json"
-            self.champlist = await self.get(request)
+            await self.update_champlist()
         champ = self.champlist["data"]
         if idchamp == -1:
             return "Aucun"
@@ -52,28 +100,39 @@ class Neeko:
             if champ[i]["key"] == idchamp:
                 return champ[i]["name"]
 
-    async def get_champion_id(self, name):
+    async def update_champlist(self):
+        versionurl = "https://ddragon.leagueoflegends.com/api/versions.json"
+        version = await self.get(versionurl)
+        request = f"http://ddragon.leagueoflegends.com/cdn/{version[0]}/data/en_US/champion.json"
+        self.champlist = await self.get(request)
+
+    async def get_champion_id(self, *name):
         if self.champlist is None:
-            request = self.url + "/lol/static-data/v3/champions" + self.apistring
-            self.champlist = await self.get(request)
+            await self.update_champlist()
         champ = self.champlist["data"]
         for i in champ:
             if champ[i]["name"] == name:
-                return champ[i]["id"]
+                return champ[i]["key"]
         return "Unknown character"
 
-    async def get_champion_mastery(self, summoner, idchamp):
-        sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/champion-mastery/v3/champion-masteries/by-summoner/{}/by-champion/{}".format(sumid, idchamp) + self.apistring
+    async def get_champion_mastery(self, region, summoner, idchamp):
+        sumid = await self.get_summoner_id(region, summoner)
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/champion-mastery/v4/champion-masteries/by-summoner/{}/by-champion/{}".format(sumid, idchamp) + apistr
         js = await self.get(request)
         res = {}
         res["mastery"] = js["championLevel"]
         res["points"] = js["championPoints"]
         return res
 
-    async def get_elo(self, summoner):
-        sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/league/v3/positions/by-summoner/{}".format(sumid) + self.apistring
+    async def get_elo(self, region, summoner):
+        sumid = await self.get_summoner_id(region, summoner)
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/league/v4/positions/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
         if js != []:
             dct = js[0]
@@ -82,9 +141,12 @@ class Neeko:
             res = "Unranked"
         return res
 
-    async def game_info(self, summoner):
-        sumid = await self.get_summoner_id(summoner)
-        request = self.url + "/lol/spectator/v3/active-games/by-summoner/{}".format(sumid) + self.apistring
+    async def game_info(self, region, summoner):
+        sumid = await self.get_summoner_id(region, summoner)
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/spectator/v4/active-games/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
         ##try:
         if js["gameMode"] == "CLASSIC":
@@ -114,7 +176,7 @@ class Neeko:
             sumname = i["summonerName"]
             champ = await self.get_champion_name(str(i["championId"]))
             name = sumname + ": " + champ
-            elo = await self.get_elo(sumname)
+            elo = await self.get_elo(region, sumname)
             if i["teamId"] == 100:
                 res["team1"]["players"][name] = elo
             else:
@@ -123,14 +185,24 @@ class Neeko:
         ##except:
             ##return False
 
-    async def get_match(self, matchid):
-        request = self.url + "/lol/match/v3/matches/{}".format(matchid) + self.apistring
+    async def get_match(self, region, matchid):
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        request = self.url.format(self.regions[region]) + "/lol/match/v4/matches/{}".format(matchid) + apistr
         js = await self.get(request)
         return js
 
-    async def get_history(self, summoner):
-        sumid = await self.get_account_id(summoner)
-        request = self.url + "/lol/match/v3/matchlists/by-account/{}".format(sumid) + self.apistring
+    async def get_history(self, cpt, region, *summoner):
+        #print(f"cpt: {cpt}\nregion: {region} ({self.regions[region]})\nsummoner: {summoner}")
+        sumid = await self.get_account_id(region, summoner)
+        if not sumid:
+            return False
+        apistr = await self.apistring()
+        if region not in self.regions:
+            return False
+        print(f"self.urf: {self.url}\nregion: {region} ({self.regions[region]})\n sumid: {sumid}\n apistr: {apistr}")
+        request = self.url.format(self.regions[region]) + "/lol/match/v4/matchlists/by-account/{}".format(sumid) + apistr
         js = await self.get(request)
         clean = {}
         count = 0
@@ -140,7 +212,7 @@ class Neeko:
             tmp["role"] = i["lane"]
             if tmp["role"].lower() == "none":
                 tmp["role"] = i["role"]
-            match = await self.get_match(i["gameId"])
+            match = await self.get_match(region, i["gameId"])
             osef = floor(match["gameDuration"]/60)
             tmp["Durée"] = str(osef) + ":" + str(match["gameDuration"] - (osef*60))
             tmp["Gamemode"] = match["gameMode"]
@@ -161,10 +233,12 @@ class Neeko:
             else:
                 tmp["resultat"] = "loose"
             userstat = tmpvar["stats"]
-            tmp["kda"] = str(userstat["kills"]) + " kills, " + str(userstat["deaths"]) + " deaths / " + str(userstat["assists"]) + " assists."
+            tmp["kda"] = str(userstat["kills"]) + " kills / " + str(userstat["deaths"]) + " deaths / " + str(userstat["assists"]) + " assists."
             tmp["stats"] = str(userstat["totalDamageDealt"]) + " total damages dealt / " + str(userstat["totalDamageTaken"]) + " damages taken."
             tmp["golds"] = str(userstat["goldEarned"]) + " golds earned"
             clean[count] = tmp
             count += 1
+            if count == cpt:
+                return clean
             await asyncio.sleep(0.5)
         return clean

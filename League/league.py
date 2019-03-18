@@ -10,30 +10,54 @@ from .neeko import Neeko
 
 _ = Translator("League", __file__)
 
+## New season makes Riot Games have to update their API to include positionnal ranking and stuff
+## So the cog is maybe broken atm, gonna have to fix that, maybe waiting for positionnal ranking to be released on EUW to test the cog with that functionality
+## NB: i should also add a setting to switch region the cog gets infos, just had the idea while typing this aha
+
+def apikeyset():
+    async def predicate(ctx):
+        key = await ctx.bot.db.api_tokens.get_raw("league", default=None)
+        res = True if key["api_key"] else False
+        if not res and ctx.invoked_with in dir(ctx.bot.get_cog('League')):
+            await ctx.send("You need to set the API key using `[p]setapikey <api_key>` first !")
+        return res
+    return commands.check(predicate)
+
 class League(commands.Cog):
+    """League of legend cog"""
 
     def __init__(self, bot):
         self.bot = bot
-        self.stats = Neeko("PUT YOUR API KEY HERE")
+        self.stats = Neeko(bot)
+
+    @checks.mod()
+    @commands.command()
+    async def setapikey(self, ctx, *, apikey):
+        """Set your Riot API key for that cog to work.
+        Note that it is safer to use this command in DM."""
+        await self.bot.db.api_tokens.set_raw("league", value={'api_key': apikey})
+        await ctx.send("Done")
 
     @commands.command()
-    async def elo(self, ctx, *, summoner):
+    @apikeyset()
+    async def elo(self, ctx, region, *, summoner):
         """Show summoner ranking"""
         try:
-            res = await self.stats.get_elo(summoner)
+            res = await self.stats.get_elo(region, summoner)
             await ctx.send(summoner + ": " + res)
             return
         except:
-            await ctx.send(_("This summoner doesn't exist."))
+            await ctx.send(_("This summoner doesn't exist in that region."))
 
     @commands.command()
-    async def masteries(self, ctx, *, summoner):
+    @apikeyset()
+    async def masteries(self, ctx, region, *, summoner):
         """Show top masteries champions of the summoner."""
         try:
-            elo = await self.stats.get_elo(summoner)
+            elo = await self.stats.get_elo(region, summoner)
             emb = discord.Embed(title=summoner, description=elo)
-            emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(summoner), inline=True)
-            champs = await self.stats.top_champions_masteries(summoner)
+            emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(region, summoner), inline=True)
+            champs = await self.stats.top_champions_masteries(region, summoner)
             await ctx.send(embed=emb)
             emb = discord.Embed()
             tmp = 0
@@ -60,9 +84,11 @@ class League(commands.Cog):
             await ctx.send(_("Unknown summoner"))
 
     @commands.command()
-    async def game(self, ctx, *, summoner):
+    @apikeyset()
+    async def game(self, ctx, region, *, summoner):
+        """Show information about current game of summoner"""
         try:
-            infos = await self.stats.game_info(summoner)
+            infos = await self.stats.game_info(region, summoner)
             if infos is False:
                 await ctx.send(_("This summoner isn't currently ingame."))
                 return
@@ -94,12 +120,14 @@ class League(commands.Cog):
             await ctx.send(_("This summoner isn't currently ingame or is unknown."))
 
     @commands.command()
-    async def history(self, ctx, summoner, count : int = 5):
+    @apikeyset()
+    async def history(self, ctx, region, summoner, count : int = 5):
         """Shows X last game of a summoner (default: 5).
         NB: if your summoner name contains spaces, use "" (eg: "My summoner name")"""
         async with ctx.typing():
-            histo = await self.stats.get_history(summoner)
-            tmp = 0
+            histo = await self.stats.get_history(count, region, summoner)
+            if not histo:
+                return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys))
             emb = discord.Embed()
             for i in histo:
                 cur = histo[i]
@@ -118,9 +146,6 @@ class League(commands.Cog):
                 emb.add_field(name=kda, value=stats, inline=True)
                 await ctx.send(embed=emb)
                 emb = discord.Embed()
-                tmp += 1
-                if tmp == count:
-                    break
             
             
                 
