@@ -19,6 +19,7 @@ Uploaded with authorization of original author, you can also find that cog on hi
 
 A cog to display information about League of Legends, like your ranking, masteries, ranking of your current game, and history (may be slow, need to be modified)
 English translation is planned, just have to make the display look better first (it really is awful)
+NB: This cog may break randomly, for more updated version, use the one under WebLeveler branch, just note it'll work only on dev version until 3.1 version of Red is released
 
 # Leveler
 Require Pillow 5.3.0 (pip3 install Pillow==5.3.0)
