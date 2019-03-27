@@ -1,0 +1,12 @@
+{
+   "AUTHOR":"NerdieTony",
+   "SHORT":"The Account Cog",
+   "DESCRIPTION":"Just an account cog with fields like email, age, gender, and such.",
+   "DISABLED":false,
+   "NAME":"Account",
+   "TAGS":[
+      "Acconut",
+      "Profile"
+   ],
+   "INSTALL_MSG":"You just installed **Account.py**! \nJust an account cog with fields like email, age, gender, and such.\n\n**Official Cog Support Server:** https://discord.gg/gcCpwGG"
+}
