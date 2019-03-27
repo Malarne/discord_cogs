@@ -10,6 +10,11 @@ then:
 
 Enjoy
 
+# account
+
+Updated version of https://github.com/NekoTony/Neko-Cogs account cog
+I couldn't find that person's discord tag, so couldn't ask him before uploading, but my discord's DMs are open.
+
 # Boobs
 
 Updated version of https://github.com/Canule/Mash-Cogs oboobs cog
