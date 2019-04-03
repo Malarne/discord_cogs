@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Leveler &mdash; AyDocs  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="league.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> AyDocs
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Cog guides</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Leveler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AyDocs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Leveler</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/leveler.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="leveler">
+<h1>Leveler<a class="headerlink" href="#leveler" title="Permalink to this headline">¶</a></h1>
+<p>This is the guide for <code class="docutils literal notranslate"><span class="pre">Leveler</span></code> cog.
+Be sure to have the latest version of the cog first, using <code class="docutils literal notranslate"><span class="pre">[p]cog</span> <span class="pre">update</span></code> before reading this.
+<code class="docutils literal notranslate"><span class="pre">[p]</span></code> being your bot’s prefix</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>To install the cog, first load the downloader cog, included
+in core Red.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="n">load</span> <span class="n">downloader</span>
+</pre></div>
+</div>
+<p>Then you will need to install my repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="n">repo</span> <span class="n">add</span> <span class="n">Malarne</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Malarne</span><span class="o">/</span><span class="n">discord_cogs</span>
+</pre></div>
+</div>
+<p>Finally, you can install the cog:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="n">cog</span> <span class="n">install</span> <span class="n">Malarne</span> <span class="n">Leveler</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The cog is not loaded by default.
+To load it, type this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="n">load</span> <span class="n">Leveler</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>First of all, the channel whitelist is enabled by default.
+Check out the config commands to set up your cog correctly.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This is the basic configuration command.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">announce</span> <span class="pre">&lt;status&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p><strong>&lt;status&gt;</strong>: expects a boolean
+That means you can turn on levelup announce with <code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">announce</span> <span class="pre">True</span></code>
+and disable them using <code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">announce</span> <span class="pre">False</span></code>
+Default to False</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">autoregister</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will simply switch the autoregister on or off.
+Default turned off.
+This will simply allow your users to gain xp without having to use <code class="docutils literal notranslate"><span class="pre">[p]register</span></code> first.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This is the basic channel configuration command.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">whitelist</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will allow you to manage your channel whitelist.
+Any whitelisted channel will allow users sending messages to that channel to earn experience.
+Note that it is toggled on by default, and will not work if you toggle it off.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">whitelist</span> <span class="pre">add</span> <span class="pre">&lt;channel&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will add the given channel to your server whitelist.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">whitelist</span> <span class="pre">remove</span> <span class="pre">&lt;channel&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will remove the given channel from your server whitelist.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">whitelist</span> <span class="pre">show</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will show you the whitelisted channels of your server.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">whitelist</span> <span class="pre">toggle</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will toggle on or off the channel whitelist for your server.
+Default on</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">blacklist</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will allow you to manage your channel blacklist.
+Any blacklisted channel will not allow users sending messages to that channel to earn experience.
+Note that it is toggled off by default, and will not work if you toggle it off.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">blacklist</span> <span class="pre">add</span> <span class="pre">&lt;channel&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will add the given channel to your server blacklist.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">blacklist</span> <span class="pre">remove</span> <span class="pre">&lt;channel&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will remove the given channel from your server blacklist.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">blacklist</span> <span class="pre">show</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will show you the blacklisted channels of your server.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">channel</span> <span class="pre">blacklist</span> <span class="pre">toggle</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will toggle on or off the channel blacklist for your server.
+Default off</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">cooldown</span> <span class="pre">&lt;cooldown&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Allow you to set a cooldown between an user xp gain.
+&lt;cooldown&gt; expects an int, put in there a cooldown in seconds
+Default to 60 seconds
+Set to 0 to disable</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">defaultbackground</span> <span class="pre">&lt;url&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Allow you to put a default custom background to your guild members’ profiles.
+&lt;url&gt; must be a direct link to your image to work.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">roles</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Basic configuration command for role given by the leveler.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">roles</span> <span class="pre">add</span> <span class="pre">&lt;level&gt;</span> <span class="pre">&lt;role&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>&lt;level&gt;: int. This will be the level &lt;role&gt; will be given.
+&lt;role&gt;: The role that will be given.
+Just note that the bot should have an higher role than the role you want it to give,
+otherwise it won’t be able to give it to any user.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">roles</span> <span class="pre">remove</span> <span class="pre">&lt;role&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will remove &lt;role&gt; from being given by the leveler.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">roles</span> <span class="pre">show</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will show you the configurated channels for your server.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">roles</span> <span class="pre">defaultrole</span> <span class="pre">&lt;name&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>&lt;name&gt; will be the new name for the default role of users
+“New” by default</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">setlevel</span> <span class="pre">&lt;level&gt;</span> <span class="pre">&lt;user&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will set &lt;user&gt;’s level to &lt;level&gt;
+Note that setting level to higher than 1000 can throw errors</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]levelerset</span> <span class="pre">setxp</span> <span class="pre">&lt;xp&gt;</span> <span class="pre">&lt;user&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>This will set &lt;user&gt;’s xp to &lt;xp&gt;
+Note that settting xp to a really high value can throw errors.</p>
+</div></blockquote>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="league.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Malarne#1418
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
