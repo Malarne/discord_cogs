@@ -1,4 +1,5 @@
 # discord_cogs V3 ONLY
+This is my testing branch, do not report any issue with those cogs !
 
 Install guide:
 
