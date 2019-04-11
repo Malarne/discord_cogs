@@ -21,6 +21,12 @@ A cog to display information about League of Legends, like your ranking, masteri
 English translation is planned, just have to make the display look better first (it really is awful)
 NB: This cog may break randomly, for more updated version, use the one under WebLeveler branch, just note it'll work only on dev version until 3.1 version of Red is released
 
+# Apex
+
+A cog to display informations about Apex !
+Just note that it can only display informations you have a tracker on your hero.
+NB: just like League, it'll work only on dev version until 3.1 is released.
+
 # Leveler
 Require Pillow (pip3 install Pillow)
 
