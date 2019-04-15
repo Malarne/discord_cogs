@@ -29,7 +29,7 @@ Finally, you can install the cog::
         [p]load Leveler
 
 -----
-Usage
+Configuration commands
 -----
 
 First of all, the channel whitelist is enabled by default.
@@ -124,3 +124,28 @@ Check out the config commands to set up your cog correctly.
    *   ``[p]levelerset setxp <xp> <user>``
       This will set <user>'s xp to <xp>
       Note that settting xp to a really high value can throw errors.
+
+
+-----
+Usage
+-----
+
+*   ``[p]profileset``
+   Profile customization base command.
+
+   *   ``[p]profileset background <url>``
+      Allow you to change your profile background to the image you want.
+      Just note that it only accepts url for security reasons.
+
+   *   ``[p]profileset description <description>``
+      Allow you to add a description to your profile.
+
+*   ``[p]register``
+   Allow user to start gaining xp.
+   Note that it's not needed if you turned on autoregister setting.
+
+*   ``[p]profile [user]``
+   Show your or user (if provided)'s profile.
+
+*   ``[p]toplevel``
+   Show the 9 highest members of your server and how many messages they sent today !

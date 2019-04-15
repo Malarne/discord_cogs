@@ -83,6 +83,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Leveler</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-commands">Configuration commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
 </ul>
 </li>
@@ -179,8 +180,8 @@ To load it, type this:</p>
 </div>
 </div>
 </div>
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="configuration-commands">
+<h2>Configuration commands<a class="headerlink" href="#configuration-commands" title="Permalink to this headline">¶</a></h2>
 <p>First of all, the channel whitelist is enabled by default.
 Check out the config commands to set up your cog correctly.</p>
 <ul class="simple">
@@ -347,6 +348,47 @@ Note that setting level to higher than 1000 can throw errors</p>
 <div><p>This will set &lt;user&gt;’s xp to &lt;xp&gt;
 Note that settting xp to a really high value can throw errors.</p>
 </div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]profileset</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Profile customization base command.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]profileset</span> <span class="pre">background</span> <span class="pre">&lt;url&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Allow you to change your profile background to the image you want.
+Just note that it only accepts url for security reasons.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]profileset</span> <span class="pre">description</span> <span class="pre">&lt;description&gt;</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Allow you to add a description to your profile.</p>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]register</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Allow user to start gaining xp.
+Note that it’s not needed if you turned on autoregister setting.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]profile</span> <span class="pre">[user]</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Show your or user (if provided)’s profile.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[p]toplevel</span></code></p></li>
+</ul>
+<blockquote>
+<div><p>Show the 9 highest members of your server and how many messages they sent today !</p>
 </div></blockquote>
 </div>
 </div>
