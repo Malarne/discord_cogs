@@ -114,8 +114,12 @@ class UserProfile:
         await self.data.guild(guild).roles.set(rl)
 
     async def _remove_guild_role(self, guild, role):
-        async with self.data.guild(guild).roles() as rolelist:
-            del rolelist[rolelist.index(role)]
+        rolelist = await self.data.guild(guild).roles()
+        for k, v in rolelist.items():
+            if v == role.id:
+                del rolelist[k]
+                await self.data.guild(guild).roles.set(rolelist)
+                return
 
     async def _get_guild_roles(self, guild):
         return await self.data.guild(guild).roles()
