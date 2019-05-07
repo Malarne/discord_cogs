@@ -419,7 +419,7 @@ class Leveler(commands.Cog):
     async def remove(self, ctx, role : discord.Role):
         """Remove a role from the config."""
         if role.id in (await self.profiles._get_guild_roles(ctx.guild)).values():
-            await self.profiles._remove_guild_role(ctx.guild, role.id)
+            await self.profiles._remove_guild_role(ctx.guild, role)
             await ctx.send(_("Role deleted."))
         else:
             await ctx.send(_("Remove a role from the list."))
