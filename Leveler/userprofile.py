@@ -89,8 +89,6 @@ class UserProfile:
     async def _check_role_member(self, member):
         roles = await self.data.guild(member.guild).roles()
         lvl = await self.data.member(member).level()
-        if isinstance(roles, list):
-            roles = {}
         for k,v in roles.items():
             if lvl == int(k):
                 rl = discord.utils.get(member.guild.roles, id=v)

@@ -54,6 +54,7 @@ class Leveler(commands.Cog):
     }
 
     def __unload(self):
+        self.bot.remove_listener(self.listener)
         asyncio.get_event_loop().create_task(self._session.close())
         self.loop.cancel()
 
@@ -283,7 +284,7 @@ class Leveler(commands.Cog):
         img.seek(0)
         await ctx.send(file=discord.File(img))
 
-    async def on_message(self, message):
+    async def listener(self, message):
         if type(message.author) != discord.Member:
             # throws an error when webhooks talk, this fixes it
             return
