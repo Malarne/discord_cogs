@@ -17,7 +17,6 @@ import functools
 import textwrap
 
 
-
 _ = Translator("Leveler", __file__)
 
 
@@ -33,7 +32,6 @@ class Leveler(commands.Cog):
         self.defaultrole = _("New")
         self._session = aiohttp.ClientSession()
 
-
     __version__ = "1.0.0"
     __author__ = "Malarne#1418"
     __info__ = {
@@ -42,24 +40,22 @@ class Leveler(commands.Cog):
             "A leveler cog for Red V3\n",
             "Inspired by Stevy's v2 leveler cog\n",
             "Please consult the docs at ayrobot.netlify.com for setup informations.\n",
-            "Thanks for using my cog !"
+            "Thanks for using my cog !",
         ),
         "hidden": False,
         "install_msg": (
             "Thank you for installing this leveler !\n",
-            "Please consult the docs at ayrobot.netlify.com for setup informations."
+            "Please consult the docs at ayrobot.netlify.com for setup informations.",
         ),
         "required_cogs": [],
         "requirements": ["pillow"],
         "short": "Leveler tool, better than MEE6",
-        "tags": ["leveler", "pillow", "fun"]
+        "tags": ["leveler", "pillow", "fun"],
     }
-
 
     def __unload(self):
         asyncio.get_event_loop().create_task(self._session.close())
         self.loop.cancel()
-
 
     async def start(self):
         await self.bot.wait_until_ready()
@@ -75,7 +71,14 @@ class Leveler(commands.Cog):
                         else:
                             await self.profiles.data.member(member).today.set(0)
                 self.restart = True
-            if datetime.datetime.now().strftime('%H:%M') in ["05:00", "05:01", "05:02", "05:03", "05:04", "05:05"]:
+            if datetime.datetime.now().strftime("%H:%M") in [
+                "05:00",
+                "05:01",
+                "05:02",
+                "05:03",
+                "05:04",
+                "05:05",
+            ]:
                 self.restart = False
             await asyncio.sleep(30)
 
@@ -93,9 +96,14 @@ class Leveler(commands.Cog):
         await ctx.send(_("Resets in 30 seconds max"), delete_after=30)
 
     async def get_avatar(self, user):
-        async with self._session.get(user.avatar_url_as(format="png", size=1024)) as f:
-            data = await f.read()
-            return BytesIO(data)
+        try:
+            res = BytesIO()
+            await user.avatar_url.save(res, seek_begin=True)
+            return res
+        except:
+            async with self._session.get(user.avatar_url_as(format="png", size=1024)) as r:
+                img = await r.content.read()
+                return BytesIO(img)
 
     async def get_background(self, url):
         async with self._session.get(url) as f:
@@ -104,7 +112,7 @@ class Leveler(commands.Cog):
 
     def round_corner(self, radius):
         """Draw a round corner"""
-        corner = Image.new('L', (radius, radius), 0)
+        corner = Image.new("L", (radius, radius), 0)
         draw = ImageDraw.Draw(corner)
         draw.pieslice((0, 0, radius * 2, radius * 2), 180, 270, fill=255)
         return corner
@@ -112,12 +120,12 @@ class Leveler(commands.Cog):
     def add_corners(self, im, rad):
         # https://stackoverflow.com/questions/7787375/python-imaging-library-pil-drawing-rounded-rectangle-with-gradient
         width, height = im.size
-        alpha = Image.new('L', im.size, 255)
+        alpha = Image.new("L", im.size, 255)
         origCorner = self.round_corner(rad)
         corner = origCorner
-        alpha.paste(corner, (0,0))
+        alpha.paste(corner, (0, 0))
         corner = origCorner.rotate(90)
-        alpha.paste(corner, (0, height-rad))
+        alpha.paste(corner, (0, height - rad))
         corner = origCorner.rotate(180)
         alpha.paste(corner, (width - rad, height - rad))
         corner = origCorner.rotate(270)
@@ -129,19 +137,19 @@ class Leveler(commands.Cog):
         img = Image.new("RGBA", (340, 390), (17, 17, 17, 255))
         if bg is not None:
             bg_width, bg_height = bg.size
-            ratio = bg_height/390
-            bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
-            if bg.size[0] <340:
-                ratio = bg_width/340
-                bg = bg.resize((int(bg_width/(ratio)), int(bg_height/ratio)))
+            ratio = bg_height / 390
+            bg = bg.resize((int(bg_width / (ratio)), int(bg_height / ratio)))
+            if bg.size[0] < 340:
+                ratio = bg_width / 340
+                bg = bg.resize((int(bg_width / (ratio)), int(bg_height / ratio)))
             bg = bg.convert("RGBA")
             bg.putalpha(128)
             offset = 0
             if bg.size[0] >= 340:
-                offset = (int((-(bg.size[0]-340)/2)), 0)
-            if bg.size[0] <340:
-                offset = (0, int((-(bg.size[1]-390)/2)))
-        
+                offset = (int((-(bg.size[0] - 340) / 2)), 0)
+            if bg.size[0] < 340:
+                offset = (0, int((-(bg.size[1] - 390) / 2)))
+
             img.paste(bg, offset, bg)
         img = self.add_corners(img, 10)
         draw = ImageDraw.Draw(img)
@@ -175,18 +183,18 @@ class Leveler(commands.Cog):
         rank_str = _("Role:")
         prog_str = _("Progress:")
 
-        draw.text((10, 180), lvl_str, fill='white', font=font3)
-        draw.text((10, 220), ldb_str, fill='white', font=font3)
-        draw.text((10, 260), rank_str, fill='white', font=font3)
+        draw.text((10, 180), lvl_str, fill="white", font=font3)
+        draw.text((10, 220), ldb_str, fill="white", font=font3)
+        draw.text((10, 260), rank_str, fill="white", font=font3)
         nick = user.display_name
         if font2.getsize(nick)[0] > 150:
             nick = nick[:15] + "..."
 
         draw.text((154, 316), f"{lprc}%", fill=usercolor, font=font1)
         draw.text((100, 360), (prog_str + f" {xp}/{nxp}"), fill=usercolor, font=font1)
-        draw.text(((font3.getsize(lvl_str)[0]+20), 180), f"{lvl}", fill=usercolor, font=font3)
-        draw.text(((font3.getsize(ldb_str)[0]+20), 220), f"{ldb}", fill=usercolor, font=font3)
-        draw.text(((font3.getsize(rank_str)[0]+20), 260), f"{elo}", fill=usercolor, font=font3)
+        draw.text(((font3.getsize(lvl_str)[0] + 20), 180), f"{lvl}", fill=usercolor, font=font3)
+        draw.text(((font3.getsize(ldb_str)[0] + 20), 220), f"{ldb}", fill=usercolor, font=font3)
+        draw.text(((font3.getsize(rank_str)[0] + 20), 260), f"{elo}", fill=usercolor, font=font3)
 
         draw.text((162, 14), f"{nick}", fill=usercolor, font=font2)
         draw.text((162, 40), f"{user.name}#{user.discriminator}", fill=usercolor, font=font1)
@@ -213,18 +221,20 @@ class Leveler(commands.Cog):
         except:
             bg = None
         default = await self.profiles.data.guild(user.guild).defaultrole()
-        data = {"avatar_data":avatar, 
-                "user":user,
-                "xp":0, 
-                "nxp":100, 
-                "lvl":1, 
-                "minone":0,
-                "elo": default if default else _("New"),
-                "ldb":0,
-                "desc":"",
-                "bg":bg}
+        data = {
+            "avatar_data": avatar,
+            "user": user,
+            "xp": 0,
+            "nxp": 100,
+            "lvl": 1,
+            "minone": 0,
+            "elo": default if default else _("New"),
+            "ldb": 0,
+            "desc": "",
+            "bg": bg,
+        }
         if not await self.profiles._is_registered(user):
-            return data            
+            return data
         else:
             data["xp"] = await self.profiles._get_exp(user)
             data["nxp"] = await self.profiles._get_level_exp(user)
@@ -232,7 +242,7 @@ class Leveler(commands.Cog):
             data["ldb"] = await self.profiles._get_leaderboard_pos(user.guild, user)
             data["desc"] = await self.profiles._get_description(user)
             if data["lvl"] != 1:
-                data["minone"] = await self.profiles._get_xp_for_level(lvl -1)
+                data["minone"] = await self.profiles._get_xp_for_level(lvl - 1)
             else:
                 data["minone"] = 0
             roles = await self.profiles._get_guild_roles(user.guild)
@@ -244,7 +254,7 @@ class Leveler(commands.Cog):
                     data["elo"] = discord.utils.get(user.guild.roles, id=roles[str(lvl)]).name
                 else:
                     tmp = 0
-                    for k,v in roles.items():
+                    for k, v in roles.items():
                         if int(k) < lvl:
                             tmp = int(v)
                             pass
@@ -257,19 +267,19 @@ class Leveler(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def profile(self, ctx, user : discord.Member = None):
+    async def profile(self, ctx, user: discord.Member = None):
         """Show your leveler progress. Default to yourself."""
         if user is None:
             user = ctx.author
         data = await self.profile_data(user)
-        
+
         task = functools.partial(self.make_full_profile, **data)
         task = self.bot.loop.run_in_executor(None, task)
         try:
             img = await asyncio.wait_for(task, timeout=60)
         except asyncio.TimeoutError:
             return
-            
+
         img.seek(0)
         await ctx.send(file=discord.File(img))
 
@@ -282,10 +292,14 @@ class Leveler(commands.Cog):
         if message.author.bot:
             return
         if await self.profiles.data.guild(message.guild).whitelist():
-            if message.channel.id not in await self.profiles._get_guild_channels(message.author.guild):
+            if message.channel.id not in await self.profiles._get_guild_channels(
+                message.author.guild
+            ):
                 return
         elif await self.profiles.data.guild(message.guild).blacklist():
-            if message.channel.id in await self.profiles._get_guild_blchannels(message.author.guild):
+            if message.channel.id in await self.profiles._get_guild_blchannels(
+                message.author.guild
+            ):
                 return
 
         if not await self.profiles._is_registered(message.author):
@@ -314,11 +328,15 @@ class Leveler(commands.Cog):
             await self.profiles._give_exp(message.author, xp)
             await self.profiles._set_user_lastmessage(message.author, timenow)
             lvl = await self.profiles._get_level(message.author)
-            if lvl == oldlvl +1 and await self.profiles.data.guild(message.guild).lvlup_announce():
-                await message.channel.send(_("{} is now level {} !".format(message.author.mention, lvl)))
+            if (
+                lvl == oldlvl + 1
+                and await self.profiles.data.guild(message.guild).lvlup_announce()
+            ):
+                await message.channel.send(
+                    _("{} is now level {} !".format(message.author.mention, lvl))
+                )
             await self.profiles._check_exp(message.author)
             await self.profiles._check_role_member(message.author)
-            
 
     @commands.command()
     @commands.guild_only()
@@ -344,9 +362,11 @@ class Leveler(commands.Cog):
             if user is None:
                 await self._reset_member(ctx.guild, cur["id"])
             else:
-                txt = _("Level:")+" {} | {} XP | {} ".format(cur["lvl"], 
-                                                             cur["xp"], 
-                                                             cur["today"]) +_("Messages Today!")
+                txt = (
+                    _("Level:")
+                    + " {} | {} XP | {} ".format(cur["lvl"], cur["xp"], cur["today"])
+                    + _("Messages Today!")
+                )
                 emb.add_field(name="{}".format(user.display_name), value=txt)
         await ctx.send(embed=emb)
 
@@ -376,7 +396,7 @@ class Leveler(commands.Cog):
     @commands.guild_only()
     async def blacklist(self, ctx):
         """Blacklist configuration."""
-        pass    
+        pass
 
     @levelerset.group()
     @checks.mod_or_permissions(manage_messages=True)
@@ -393,14 +413,14 @@ class Leveler(commands.Cog):
 
     @profileset.command()
     @commands.guild_only()
-    async def background(self, ctx, *, link:str=None):
+    async def background(self, ctx, *, link: str = None):
         """Change background image of your profile."""
         await self.profiles._set_background(ctx.author, link)
         await ctx.send(_("Background image is now:") + str(link))
 
     @profileset.command()
     @commands.guild_only()
-    async def description(self, ctx, *, description:str=None):
+    async def description(self, ctx, *, description: str = None):
         """Change your profile description"""
         await self.profiles._set_description(ctx.author, description)
         await ctx.send(_("Profile description set to: ") + str(description))
@@ -408,7 +428,7 @@ class Leveler(commands.Cog):
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def add(self, ctx, level : int, role : discord.Role):
+    async def add(self, ctx, level: int, role: discord.Role):
         """Add a role to be given at chosen level."""
         await self.profiles._add_guild_role(ctx.guild, level, role.id)
         await ctx.send(_("Role configured"))
@@ -416,10 +436,10 @@ class Leveler(commands.Cog):
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def remove(self, ctx, role : discord.Role):
+    async def remove(self, ctx, role: discord.Role):
         """Remove a role from the config."""
-        if role.id in (await self.profiles._get_guild_roles(ctx.guild)).values():
-            await self.profiles._remove_guild_role(ctx.guild, role)
+        if role.id in await self.profiles._get_guild_roles(ctx.guild):
+            await self.profiles._remove_guild_role(ctx.guild, role.id)
             await ctx.send(_("Role deleted."))
         else:
             await ctx.send(_("Remove a role from the list."))
@@ -431,12 +451,12 @@ class Leveler(commands.Cog):
         """Show the list of roles in the order which you get them from experience."""
         emb = discord.Embed()
         emb.title = _("List of roles configured for this server.")
-        emb.description= _("Guaranteed 100% almost no bugs.")
+        emb.description = _("Guaranteed 100% almost no bugs.")
         roles = await self.profiles._get_guild_roles(ctx.guild)
         if len(roles) == 0:
             await ctx.send(_("No roles yet configured for this guild !"))
             return
-        for k,v in roles.items():   
+        for k, v in roles.items():
             try:
                 emb.add_field(name=str(k), value=discord.utils.get(ctx.guild.roles, id=v).name)
             except:
@@ -447,7 +467,7 @@ class Leveler(commands.Cog):
     @whitelist.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def _add(self, ctx, channel : discord.TextChannel = None):
+    async def _add(self, ctx, channel: discord.TextChannel = None):
         """Add a channel to the whitelist."""
         if channel is None:
             channel = ctx.channel
@@ -469,7 +489,7 @@ class Leveler(commands.Cog):
     @whitelist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def _remove(self, ctx, channel : discord.TextChannel = None):
+    async def _remove(self, ctx, channel: discord.TextChannel = None):
         """Delete a channel from the whitelist."""
         if channel is None:
             channel = ctx.channel
@@ -490,14 +510,15 @@ class Leveler(commands.Cog):
         channels = await self.profiles._get_guild_channels(ctx.guild)
         if not len(channels):
             return await ctx.send(_("No channels configured"))
-        emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
+        emb.add_field(
+            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels])
+        )
         await ctx.send(embed=emb)
-
 
     @blacklist.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def __add(self, ctx, channel : discord.TextChannel = None):
+    async def __add(self, ctx, channel: discord.TextChannel = None):
         """Add a channel to the blacklist."""
         if channel is None:
             channel = ctx.channel
@@ -519,7 +540,7 @@ class Leveler(commands.Cog):
     @blacklist.command(name="remove")
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def __remove(self, ctx, channel : discord.TextChannel = None):
+    async def __remove(self, ctx, channel: discord.TextChannel = None):
         """Remove a channel from the blacklist."""
         if channel is None:
             channel = ctx.channel
@@ -540,7 +561,9 @@ class Leveler(commands.Cog):
         channels = await self.profiles._get_guild_blchannels(ctx.guild)
         if not len(channels):
             return await ctx.send(_("No channels configured"))
-        emb.add_field(name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels]))
+        emb.add_field(
+            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels])
+        )
         await ctx.send(embed=emb)
 
     @levelerset.command()
@@ -564,12 +587,12 @@ class Leveler(commands.Cog):
     @levelerset.command()
     @checks.is_owner()
     @commands.guild_only()
-    async def setlevel(self, ctx, level:int, member:discord.Member=None):
+    async def setlevel(self, ctx, level: int, member: discord.Member = None):
         """Modify an user's level"""
         if member is None:
             member = ctx.message.author
         if await self.profiles._is_registered(member):
-            await self.profiles._set_exp(member, 5*((level-1)**2)+(50*(level-1)) +100)
+            await self.profiles._set_exp(member, 5 * ((level - 1) ** 2) + (50 * (level - 1)) + 100)
         else:
             await ctx.send(_("That user is not registered."))
         await ctx.send(member.name + _(" Level set to ") + str(level))
@@ -577,7 +600,7 @@ class Leveler(commands.Cog):
     @levelerset.command()
     @checks.is_owner()
     @commands.guild_only()
-    async def setxp(self, ctx, xp:int, member:discord.Member=None):
+    async def setxp(self, ctx, xp: int, member: discord.Member = None):
         """Modify an user's xp."""
         if member is None:
             member = ctx.message.author
@@ -585,7 +608,7 @@ class Leveler(commands.Cog):
             await self.profiles._set_exp(member, xp)
         else:
             await ctx.send(_("That user is not registered."))
-        await ctx.send(member.name +_("'s XP set to ") + str(xp))
+        await ctx.send(member.name + _("'s XP set to ") + str(xp))
 
     @levelerset.command()
     @checks.mod_or_permissions(manage_messages=True)
@@ -611,8 +634,10 @@ class Leveler(commands.Cog):
     @levelerset.command()
     @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
-    async def announce(self, ctx, status : bool):
+    async def announce(self, ctx, status: bool):
         """Toggle whether the bot will announce levelups.
         args are True/False."""
         await self.profiles.data.guild(ctx.guild).lvlup_announce.set(status)
-        await ctx.send(_("Levelup announce is now {}.").format(_("enabled") if status else _("disabled")))
+        await ctx.send(
+            _("Levelup announce is now {}.").format(_("enabled") if status else _("disabled"))
+        )
