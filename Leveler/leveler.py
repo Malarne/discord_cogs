@@ -53,7 +53,7 @@ class Leveler(commands.Cog):
         "tags": ["leveler", "pillow", "fun"],
     }
 
-    def __unload(self):
+    def cog_unload(self):
         self.bot.remove_listener(self.listener)
         asyncio.get_event_loop().create_task(self._session.close())
         self.loop.cancel()
