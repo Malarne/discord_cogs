@@ -180,7 +180,7 @@ class Oboobs(commands.Cog):
             elif res == []:
                 step = round(step/2)
                 if step <= 1:
-                    await self.settings.ama_boobs.set(curr_boobs)
+                    await self.settings.ama_boobs.set(q)
                     done = True
             await asyncio.sleep(1)
         print("Total amount of boobs:", await self.settings.ama_boobs())
@@ -208,7 +208,6 @@ class Oboobs(commands.Cog):
             elif res == []:
                 step = round(step/2)
                 if step <= 1:
-                    await self.settings.ama_ass.set(curr_ass)
                     done = True
             await asyncio.sleep(1)
         if await self.settings.ama_ass() == 0:
