@@ -108,7 +108,7 @@ class Account(commands.Cog):
                 data.add_field(name="Error:warning:",value="Sadly, this feature is only available for people who had registered for an account. \n\nYou can register for a account today for free. All you have to do is say `{}signup` and you'll be all set.".format(prefix))
                 await ctx.send(embed=data)
         else:
-            server = ctx.message.server
+            server = ctx.guild
             if user.id in db:
                 data = discord.Embed(description="{}".format(server), colour=user.colour)
                 if userdata["Age"]:
@@ -188,7 +188,7 @@ class Account(commands.Cog):
     async def website(self, ctx, *, site):
         """Do you have a website?"""
         
-        server = ctx.message.server
+        server = ctx.guild
         user = ctx.message.author
         prefix = ctx.prefix
         db = await self.config.guild(server).db()
