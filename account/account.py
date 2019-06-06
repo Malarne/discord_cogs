@@ -52,7 +52,7 @@ class Account(commands.Cog):
                     
         server = ctx.guild
         db = await self.config.guild(server).db()
-        userdata = await self.config.member(user).all()
+        userdata = await self.config.member(user).all() if user else None
 
         if not user:
             user = ctx.message.author
