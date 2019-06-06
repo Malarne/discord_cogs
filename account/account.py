@@ -58,12 +58,12 @@ class Account(commands.Cog):
         data = discord.Embed(description="{}".format(server), colour=user.colour)
         fields = [data.add_field(name=k, value=v) for k,v in userdata.items() if v]
         
-            if len(fields) != 0:
-                await ctx.send(embed=data)
-            else:
-                data = discord.Embed(colour=user.colour)
-                data.add_field(name="Error:warning:",value="{} doesn't have an account at the moment, sorry.".format(user.mention))
-                await ctx.send(embed=data)
+        if len(fields) != 0:
+            await ctx.send(embed=data)
+        else:
+            data = discord.Embed(colour=user.colour)
+            data.add_field(name="Error:warning:",value="{} doesn't have an account at the moment, sorry.".format(user.mention))
+            await ctx.send(embed=data)
 
     @commands.group(name="update", no_pm=True)
     async def update(self, ctx):
