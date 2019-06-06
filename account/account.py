@@ -52,109 +52,12 @@ class Account(commands.Cog):
                     
         server = ctx.guild
         db = await self.config.guild(server).db()
-        userdata = await self.config.member(user).all() if user else None
-
-        if not user:
-            user = ctx.message.author
-            userdata = await self.config.member(user).all()
-            if user.id in db:
-                data = discord.Embed(description="{}".format(server), colour=user.colour)
-                if userdata["Age"]:
-                    age = userdata["Age"]
-                    data.add_field(name="Age:", value=age)
-                else:
-                    pass
-                if userdata["Site"]:
-                    site = userdata["Site"]
-                    data.add_field(name="Website:", value=site)
-                else:
-                    pass
-                if userdata["About"]:
-                    about = userdata["About"]
-                    data.add_field(name="About:", value=about)
-                else:
-                    pass
-                if userdata["Gender"]:
-                    gender = userdata["Gender"]
-                    data.add_field(name="Gender:", value=gender)
-                else:
-                    pass 
-                if userdata["Job"]:
-                    job = userdata["Job"]
-                    data.add_field(name="Profession:", value=job)
-                else:
-                    pass
-                if userdata["Email"]:
-                    email = userdata["Email"]
-                    data.add_field(name="Email Address:", value=email)
-                else:
-                    pass
-                if userdata["Other"]:
-                    other = userdata["Other"]
-                    data.add_field(name="Other:", value=other)
-                else:
-                    pass
-                if user.avatar_url:
-                    name = str(user)
-                    name = " ~ ".join((name, user.nick)) if user.nick else name
-                    data.set_author(name=name, url=user.avatar_url)
-                    data.set_thumbnail(url=user.avatar_url)
-                else:
-                    data.set_author(name=user.name)
-
-                await ctx.send(embed=data)
-            else:
-                prefix = ctx.prefix
-                data = discord.Embed(colour=user.colour)
-                data.add_field(name="Error:warning:",value="Sadly, this feature is only available for people who had registered for an account. \n\nYou can register for a account today for free. All you have to do is say `{}signup` and you'll be all set.".format(prefix))
-                await ctx.send(embed=data)
-        else:
-            server = ctx.guild
-            if user.id in db:
-                data = discord.Embed(description="{}".format(server), colour=user.colour)
-                if userdata["Age"]:
-                    town = userdata["Age"]
-                    data.add_field(name="Age", value=town)
-                else:
-                    pass
-                if userdata["Site"]:
-                    site = userdata["Site"]
-                    data.add_field(name="Website:", value=site)
-                else:
-                    pass
-                if userdata["About"]:
-                    about = userdata["About"]
-                    data.add_field(name="About:", value=about)
-                else:
-                    pass
-                if userdata["Gender"]:
-                    gender = userdata["Gender"]
-                    data.add_field(name="Gender:", value=gender)
-                else:
-                    pass 
-                if userdata["Job"]:
-                    job = userdata["Job"]
-                    data.add_field(name="Profession:", value=job)
-                else:
-                    pass
-                if userdata["Email"]:
-                    email = userdata["Email"]
-                    data.add_field(name="Email Address:", value=email)
-                else:
-                    pass
-                if userdata["Other"]:
-                    other = userdata["Other"]
-                    data.add_field(name="Other:", value=other)
-                else:
-                    pass
-                if user.avatar_url:
-                    name = str(user)
-                    name = " ~ ".join((name, user.nick)) if user.nick else name
-                    data.set_author(name=name, url=user.avatar_url)
-                    data.set_thumbnail(url=user.avatar_url)
-                else:
-                    data.set_author(name=user.name)
-
+        userdata = await self.config.member(user).all() if user else await self.config.member(ctx.author).all()
+        
+        data = discord.Embed(description="{}".format(server), colour=user.colour)
+        fields = [data.add_field(name=k, value=v) for k,v in userdata.items() if v]
+        
+            if len(fields) != 0:
                 await ctx.send(embed=data)
             else:
                 data = discord.Embed(colour=user.colour)
