@@ -56,6 +56,7 @@ class Account(commands.Cog):
 
         if not user:
             user = ctx.message.author
+            userdata = await self.config.member(user).all()
             if user.id in db:
                 data = discord.Embed(description="{}".format(server), colour=user.colour)
                 if userdata["Age"]:
