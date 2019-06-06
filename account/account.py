@@ -58,6 +58,14 @@ class Account(commands.Cog):
         data = discord.Embed(description="{}".format(server), colour=user.colour)
         fields = [data.add_field(name=k, value=v) for k,v in userdata.items() if v]
         
+        if user.avatar_url:
+            name = str(user)
+            name = " ~ ".join((name, user.nick)) if user.nick else name
+            data.set_author(name=name, url=user.avatar_url)
+            data.set_thumbnail(url=user.avatar_url)
+        else:
+            data.set_author(name=user.name)
+        
         if len(fields) != 0:
             await ctx.send(embed=data)
         else:
