@@ -52,7 +52,8 @@ class Account(commands.Cog):
                     
         server = ctx.guild
         db = await self.config.guild(server).db()
-        userdata = await self.config.member(user).all() if user else await self.config.member(ctx.author).all()
+        user = user if user else ctx.author
+        userdata = await self.config.member(user).all()
         
         data = discord.Embed(description="{}".format(server), colour=user.colour)
         fields = [data.add_field(name=k, value=v) for k,v in userdata.items() if v]
