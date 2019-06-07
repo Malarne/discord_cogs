@@ -10,7 +10,7 @@ class Wraith:
         self.bot = bot
 
     async def __unload(self):
-        asyncio.get_event_loop().create_task(self._session.close())
+        self._session.detach()
 
     async def _get_api_key(self):
         if not self.api:
