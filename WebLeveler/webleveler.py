@@ -14,6 +14,6 @@ class WebLeveler(commands.Cog):
         self.web = WebServer(bot)
         self.bot.loop.create_task(self.web.make_webserver(__path__))
 
-    def __unload(self):
+    def cog_unload(self):
         self.bot.loop.create_task(self.web.runner.cleanup())
 
