@@ -17,11 +17,11 @@ msgstr ""
 
 #: leveler.py:95
 msgid "Resets in 30 seconds max"
-msgstr "Reset dans 30 secondes max"
+msgstr "Réintialisation dans 30 secondes max"
 
 #: leveler.py:175 leveler.py:349
 msgid "Level:"
-msgstr "Niveau"
+msgstr "Niveau:"
 
 #: leveler.py:176
 msgid "Ranking:"
@@ -29,7 +29,7 @@ msgstr "Classement:"
 
 #: leveler.py:177
 msgid "Role:"
-msgstr "Role:"
+msgstr "Rôle:"
 
 #: leveler.py:178
 msgid "Progress:"
@@ -42,20 +42,20 @@ msgstr "Nouveau"
 #: leveler.py:253
 #, docstring
 msgid "Show your leveler progress. Default to yourself."
-msgstr "Affiche votre progression sur le Leveler. Defaut a soi-meme."
+msgstr "Affiche votre progression sur le Leveler. Par défaut le vôtre."
 
 #: leveler.py:329
 #, docstring
 msgid "Allow you to start earning experience !"
-msgstr "Vous permet de commencer a gagner de l'experience !"
+msgstr "Vous permet de commencer à gagner de l'expérience !"
 
 #: leveler.py:331
 msgid "You are already registered !"
-msgstr "Vous etes deja enregistre !"
+msgstr "Vous êtes déjà enregistré !"
 
 #: leveler.py:335
 msgid "You have been successfully registered !"
-msgstr "Vous avez bien ete enregistre !"
+msgstr "Vous avez bien été enregistré !"
 
 #: leveler.py:340
 #, docstring
@@ -68,17 +68,17 @@ msgstr "Classement"
 
 #: leveler.py:351
 msgid "Messages Today!"
-msgstr "Messages aujourd'hui !"
+msgstr "Messages Aujourd'hui !"
 
 #: leveler.py:358
 #, docstring
 msgid "Configuration commands."
-msgstr "Commande de configuration"
+msgstr "Commande de configuration."
 
 #: leveler.py:364
 #, docstring
 msgid "Configure channels whitelist/blacklist."
-msgstr "COnfiguration des channels whitelist/blacklist"
+msgstr "Cofiguration des salons whitelist/blacklist"
 
 #: leveler.py:370
 #, docstring
@@ -93,7 +93,7 @@ msgstr "Configuration de la blacklist."
 #: leveler.py:382
 #, docstring
 msgid "Configuration of roles obtainable from experience."
-msgstr "Configuration des roles obtenables grace au Leveler."
+msgstr "Configuration des rôles obtenables grâce depuis l'expérience."
 
 #: leveler.py:387
 #, docstring
@@ -103,11 +103,11 @@ msgstr "Permet de personnaliser votre profil."
 #: leveler.py:392
 #, docstring
 msgid "Change background image of your profile."
-msgstr "Modifie l'arriere plan de votre profil."
+msgstr "Modifie l'arrière-plan de votre profil."
 
 #: leveler.py:394
 msgid "Background image is now:"
-msgstr "Votre arriere plan est maintenant:"
+msgstr "Votre arrière-plan est maintenant:"
 
 #: leveler.py:398
 #, docstring
@@ -121,24 +121,24 @@ msgstr "Description du profil modifié en :"
 #: leveler.py:405
 #, docstring
 msgid "Add a role to the list of roles you can get with experience."
-msgstr "Ajoute un role a la liste obtenable grace au Leveler."
+msgstr "Ajoute un rôle a la liste des rôles obtenable avec l'expérience."
 
 #: leveler.py:407
 msgid "Role configured"
-msgstr "Role configuré"
+msgstr "Rôle configuré"
 
 #: leveler.py:412
 #, docstring
 msgid "Remove a role from the config."
-msgstr "Supprime un role de la config."
+msgstr "Supprime un rôle de la configuration."
 
 #: leveler.py:415
 msgid "Role deleted."
-msgstr "Role supprimé."
+msgstr "Rôle supprimé."
 
 #: leveler.py:417
 msgid "Remove a role from the list."
-msgstr "Supprime un role de la liste."
+msgstr "Supprime un rôle de la liste."
 
 #: leveler.py:422
 #, docstring
@@ -268,7 +268,7 @@ msgstr "Enregistrement automatique activé"
 #: leveler.py:544
 #, docstring
 msgid "Modify the cooldown of xp gain, default to 60 seconds"
-msgstr "Modifie le cooldown entre 2 gains d'xp, defaut a 60 secondes"
+msgstr "Modifie le cooldown entre 2 gains d'XP, par défaut 60 secondes"
 
 #: leveler.py:546
 msgid "Cooldown is now: "
@@ -277,7 +277,7 @@ msgstr "Le cooldown est maintenant réglé sur: "
 #: leveler.py:551
 #, docstring
 msgid "Modify an user's level"
-msgstr "Modifie le level d'un utilisateur"
+msgstr "Modifie le niveau d'un utilisateur"
 
 #: leveler.py:555
 msgid " Level set to "
@@ -286,7 +286,7 @@ msgstr " est maintenant niveau "
 #: leveler.py:560
 #, docstring
 msgid "Modify an user's xp."
-msgstr "Modifie l'xp d'un utilisateur"
+msgstr "Modifie l'XP d'un utilisateur"
 
 #: leveler.py:564
 msgid "'s XP set to "
