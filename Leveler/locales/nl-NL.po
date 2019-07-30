@@ -1,0 +1,297 @@
+﻿# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2018-12-27 17:34+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: redgettext 2.1\n"
+
+
+#: leveler.py:95
+msgid "Reset dans max 30 secondes"
+msgstr "Resetten in maximaal 30 seconden"
+
+#: leveler.py:161
+msgid "Niveau:"
+msgstr "Level:"
+
+#: leveler.py:162
+msgid "Classement:"
+msgstr "Ranking:"
+
+#: leveler.py:163
+msgid "Elo:"
+msgstr "Rol:"
+
+#: leveler.py:164
+msgid "Le progrès:"
+msgstr "Progressie"
+
+#: leveler.py:211 leveler.py:230
+msgid "Nouveau"
+msgstr "Nieuw"
+
+#: leveler.py:241
+#, docstring
+msgid "Affiche la progression sur le Leveler. Defaut a soi-même s'il n'y a pas de tag après la commande."
+msgstr "Toon de voortgang van je leveller. Standaard voor jezelf."
+
+#: leveler.py:314
+#, docstring
+msgid "Vous permets de commencer a gagner de l'expérience !"
+msgstr "Hiermee kan je beginnen punten te verdienen."
+
+#: leveler.py:316
+msgid "Vous êtes déjà enregistré !"
+msgstr "Je bent al geregistreerd!"
+
+#: leveler.py:320
+msgid "Vous avez été enregistré avec succés !"
+msgstr "Je bent succesvol geregistreerd!"
+
+#: leveler.py:325
+#, docstring
+msgid "Affiche le classement des meilleures blablateurs !"
+msgstr "Toon de server leaderboard."
+
+#: leveler.py:327
+msgid "Le classement des PGM !"
+msgstr "Ranking"
+
+#: leveler.py:334
+msgid "Niveau"
+msgstr "Level"
+
+#: leveler.py:334
+msgid "Messages Today!"
+msgstr "Berichten vandaag!"
+
+#: leveler.py:341
+#, docstring
+msgid "Commandes de configuration."
+msgstr "Configuratie opdrachten."
+
+#: leveler.py:347
+#, docstring
+msgid "Configuration des channels permettant de gagner de l'expérience."
+msgstr "Configureer kanalen witte lijst / zwarte lijst."
+
+#: leveler.py:353
+#, docstring
+msgid "Configuration des channels whitelistés"
+msgstr "Witte lijst configuratie"
+
+#: leveler.py:359
+#, docstring
+msgid "Configuration des channels blacklistés"
+msgstr "Zwarte lijst configuratie"
+
+#: leveler.py:365
+#, docstring
+msgid "Configuration des roles obtenables grâce à l'expérience."
+msgstr "Configuratie van rollen verkrijgbaar uit punten."
+
+#: leveler.py:370
+#, docstring
+msgid "Définir divers paramètres de profil"
+msgstr "Verander je profielinstellingen"
+
+#: leveler.py:375
+#, docstring
+msgid "Définir l'image de fond du profil"
+msgstr "Verander je profiel achtergrondafbeelding."
+
+#: leveler.py:377
+msgid "Profil de fond défini sur: "
+msgstr "Achtergrondafbeelding is nu:"
+
+#: leveler.py:381
+#, docstring
+msgid "Définir la description du profil"
+msgstr "Wijzig je profielbeschrijving."
+
+#: leveler.py:383
+msgid "Description du profil définie sur: "
+msgstr "Profielbeschrijving ingesteld op:"
+
+#: leveler.py:388
+#, docstring
+msgid "Ajoute un role a la liste des roles obtenables grâce à l'expérience."
+msgstr "Voeg een rol toe aan de lijst met rollen die je kan krijgen met punten."
+
+#: leveler.py:390
+msgid "Role configuré"
+msgstr "Rol ingesteld."
+
+#: leveler.py:395
+#, docstring
+msgid "Supprime un role de la liste des roles obtenables grâce à l'expérience."
+msgstr "Verwijder een rol van de witte lijst."
+
+#: leveler.py:398
+msgid "Role supprimé"
+msgstr "Rol verwijderd."
+
+#: leveler.py:400 leveler.py:410
+msgid "Role inconnu dans la config"
+msgstr "Verwijder een rol van de lijst."
+
+#: leveler.py:405
+#, docstring
+msgid "Permet de déplacer un role, modifiant l'expérience necessaire pour l'obtenir."
+msgstr "Hiermee kan je een rol verplaatsen."
+
+#: leveler.py:408
+msgid "Role déplacé"
+msgstr "Rol verplaatst"
+
+#: leveler.py:415
+#, docstring
+msgid "Affiche la liste des roles dans l'ordre auquel ils sont obtenables."
+msgstr "Toon de lijst met rollen in de volgorde hoe je ze krijgt met punten."
+
+#: leveler.py:417
+msgid "Liste des roles configurés pour le leveler de ce serveur."
+msgstr "Lijst met rollen geconfigureerd voor deze server."
+
+#: leveler.py:418
+msgid "Garanti 100% presque pas bugué."
+msgstr "Bijna geen bugs!"
+
+#: leveler.py:429
+#, docstring
+msgid "Ajoute un channel, permettant aux utilisateurs de gagner de l'expérience lorsqu'ils parlent dans ce channel là."
+msgstr "Voeg een kanaal toe aan de witte lijst."
+
+#: leveler.py:434
+msgid "Channel ajouté"
+msgstr "Kanaal toegevoegd"
+
+#: leveler.py:436
+msgid "Channel déjà enregistré"
+msgstr "Kanaal staat al op de witte lijst"
+
+#: leveler.py:447
+#, docstring
+msgid "Supprime un channel, les utilisateurs qui y parleront ne gagneront ainsi plus d'expérience."
+msgstr "Verwijder een kanaal van de witte lijst."
+
+#: leveler.py:451 leveler.py:493
+msgid "Ce channel n'est pas dans la liste configurée."
+msgstr "Dit kanaal staat niet op de witte lijst"
+
+#: leveler.py:454 leveler.py:496
+msgid "Channel supprimé"
+msgstr "Kanaal verwijderd"
+
+#: leveler.py:459
+#, docstring
+msgid "Affiche la liste des channels configurés pour donner de l'expérience."
+msgstr "Toon de lijst met kanalen die zijn geconfigureerd om punten verdiening mogelijk te maken."
+
+#: leveler.py:461
+msgid "Liste des channels autorisés a faire gagner de l'experience sur ce serveur."
+msgstr "Lijst met kanalen die zijn geconfigureerd om ervaring op deze server punten te verdienen."
+
+#: leveler.py:462 leveler.py:506
+msgid "A une vache près, c'pas une science exacte"
+msgstr "Het is min of meer geen exacte wetenschap."
+
+#: leveler.py:465 leveler.py:509
+msgid "Aucun channel configuré"
+msgstr "Geen kanalen ingesteld."
+
+#: leveler.py:473
+#, docstring
+msgid "Ajoute un channel à ignorer dans le gain d'xp."
+msgstr "Voeg een kanaal toe aan de zwarte lijst."
+
+#: leveler.py:478
+msgid "Channel ignoré"
+msgstr "Kanaal toegevoegd aan zwarte lijst."
+
+#: leveler.py:480
+msgid "Channel déjà ignoré"
+msgstr "Kanaal staat al op de zwarte lijst."
+
+#: leveler.py:491
+#, docstring
+msgid "Supprime un channel, les utilisateurs qui y parleront gagneront ainsi de l'expérience."
+msgstr "Verwijder een kanaal van de zwarte lijst."
+
+#: leveler.py:503
+#, docstring
+msgid "Affiche la liste des channels configurés pour être ignorés."
+msgstr "Toon kanalen van de zwarte lijst."
+
+#: leveler.py:505
+msgid "Liste des channels non autorisés a faire gagner de l'experience sur ce serveur."
+msgstr "Lijst van kanalen op de zwarte lijst in deze server."
+
+#: leveler.py:509
+msgid "Aucun channel configuré"
+msgstr "Geen kanaal ingesteld."
+
+#: leveler.py:515
+#, docstring
+msgid "Bascule l'enregistrement automatique des utilisateurs"
+msgstr "Schakel automatisch register van gebruikers in."
+
+#: leveler.py:518
+msgid "Enregistrement automatique dêsactivê"
+msgstr "Auto register uitgeschakeld"
+
+#: leveler.py:521
+msgid "Enregistrement automatique activê"
+msgstr "Auto register ingeschakeld"
+
+#: leveler.py:525
+#, docstring
+msgid "Définir le temps de recharge pour le gain xp, la valeur par défaut est 60 secondes"
+msgstr "Wijzig de cooldown van xp verdiensten, standaard op 60 seconden."
+
+#: leveler.py:527
+msgid "Le temps de recharge est réglé sur: "
+msgstr "Cooldown is nu:"
+
+#: leveler.py:532
+#, docstring
+msgid "Définir un niveau de membres, principalement pour les tests"
+msgstr "Pas level aan van gebruiker."
+
+#: leveler.py:536
+msgid " niveau réglé à "
+msgstr "Level ingesteld op:"
+
+#: leveler.py:541
+#, docstring
+msgid "définir un membre xp, principalement pour les tests"
+msgstr "Pas gebruikers xp aan."
+
+#: leveler.py:545
+msgid " xp mis à"
+msgstr "XP ingesteld op:"
+
+#: leveler.py:460
+msgid "La whitelist est désormais {verb}"
+msgstr "Witte lijst is {verb}"
+
+#: leveler.py:505
+msgid "La blacklist est désormais {verb}"
+msgstr "Zwarte lijst is {verb}"
+
+#: leveler.py:459 leveler.py:504
+msgid "activée."
+msgstr "ingeschakeld."
+
+#: leveler.py:459 leveler.py:504
+msgid "désactivée."
+msgstr "uitgeschakeld."
