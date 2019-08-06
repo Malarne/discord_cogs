@@ -16,7 +16,7 @@ _ = Translator("League", __file__)
 
 def apikeyset():
     async def predicate(ctx):
-        key = await ctx.bot.db.api_tokens.get_raw("league", default=None)
+        key = await ctx.bot.db.api_tokens.get_raw("league", default=False)
         res = True if key["api_key"] else False
         if not res and ctx.invoked_with in dir(ctx.bot.get_cog('League')):
             await ctx.send("You need to set the API key using `[p]setapikey <api_key>` first !")
