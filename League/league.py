@@ -49,12 +49,16 @@ class League(commands.Cog):
         ##try:
         res = await self.stats.get_elo(region, summoner)
         if type(res) == list:
-            msg = (summoner + ": " + "\n".join(res))
-            embed = discord.Embed(title="League ELO", description=msg, color=0x000099)
+            msg = (res)
+            embed = discord.Embed(title="League ELO", color=0x000099)
+            embed.add_field(name="Summoner", value=summoner, inline=True)
+            embed.add_field(name="Stats", value=msg, inline=True)
             await ctx.send(embed=embed)
         else:
-            msg = (summoner + ": " + res)
-            embed = discord.Embed(title="League ELO", description=msg, color=0x000099)
+            msg = (res)
+            embed = discord.Embed(title="League ELO", color=0x000099)
+            embed.add_field(name="Summoner", value=summoner, inline=True)
+            embed.add_field(name="Stats", value=msg, inline=True)
             await ctx.send(embed=embed)
         return
         ##except:
