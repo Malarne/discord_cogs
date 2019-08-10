@@ -2,7 +2,9 @@ import asyncio
 import aiohttp
 from math import floor, ceil
 import datetime
+import logging
 
+log = logging.getLogger("red.League.League")
 class Neeko:
 
     def __init__(self, bot):
@@ -148,8 +150,10 @@ class Neeko:
         if js != []:
             for i in js:
                 res.append(i["queueType"] + " : " + i["tier"] + " " + i["rank"] + " " + str(i["leaguePoints"]) + "LP")
+                log.error(res)
         else:
             res = "Unranked"
+            log.error(res)
         return res
 
     async def game_info(self, region, summoner):
