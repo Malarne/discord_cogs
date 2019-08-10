@@ -48,8 +48,8 @@ class League(commands.Cog):
         """Show summoner ranking"""
         ##try:
         res = await self.stats.get_elo(region, summoner)
-        summoner = summoner.replace(" ", "_")
-        link = "http://avatar.leagueoflegends.com/" + region + "/" + summoner + ".png"
+        summonericon = summoner.replace(" ", "_")
+        link = "http://avatar.leagueoflegends.com/" + region + "/" + summonericon + ".png"
         if type(res) == list:
             embed = discord.Embed(title="League elo", color=7802332)
             embed.add_field(name="Summoner", value=summoner, inline=True)
