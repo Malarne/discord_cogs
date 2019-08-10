@@ -49,9 +49,13 @@ class League(commands.Cog):
         ##try:
         res = await self.stats.get_elo(region, summoner)
         if type(res) == list:
-            await ctx.send(summoner + ": " + "\n".join(res))
+            msg = (summoner + ": " + "\n".join(res))
+            embed = discord.Embed(title="League ELO", description=msg, color=0x000099)
+            await ctx.send(embed=embed)
         else:
-            await ctx.send(summoner + ": " + res)
+            msg = (summoner + ": " + res)
+            embed = discord.Embed(title="League ELO", description=msg, color=0x000099)
+            await ctx.send(embed=embed)
         return
         ##except:
         ##    await ctx.send(_("This summoner doesn't exist in that region."))
