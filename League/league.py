@@ -59,7 +59,7 @@ class League(commands.Cog):
         else:
             embed = discord.Embed(title="League elo", color=ctx.bot.color)
             embed.add_field(name="Summoner", value=summoner, inline=True)
-            embed.add_field(name="Stats", value="\n".join(res), inline=False)
+            embed.add_field(name="Stats", value=res, inline=False)
             await ctx.send(embed=embed)
         return
         ##except:
