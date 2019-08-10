@@ -150,10 +150,10 @@ class Neeko:
         if js != []:
             for i in js:
                 res.append(i["queueType"] + " : " + i["tier"] + " " + i["rank"] + " " + str(i["leaguePoints"]) + "LP")
-                log.error(res)
+                log.error("Log 1" + res)
         else:
             res = "Unranked"
-            log.error(res)
+            log.error("log 2" + res)
         return res
 
     async def game_info(self, region, summoner):
