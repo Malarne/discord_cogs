@@ -51,13 +51,13 @@ class League(commands.Cog):
         summonericon = summoner.replace(" ", "_")
         link = "http://avatar.leagueoflegends.com/" + region + "/" + summonericon + ".png"
         if type(res) == list:
-            embed = discord.Embed(title="League elo", color=7802332)
+            embed = discord.Embed(title="League elo", color=ctx.bot.color)
             embed.add_field(name="Summoner", value=summoner, inline=True)
             embed.add_field(name="Stats", value="\n".join(res), inline=False)
             embed.set_thumbnail(url=link)
             await ctx.send(embed=embed)
         else:
-            embed = discord.Embed(title="League elo", color=7802332)
+            embed = discord.Embed(title="League elo", color=ctx.bot.color)
             embed.add_field(name="Summoner", value=summoner, inline=True)
             embed.add_field(name="Stats", value="\n".join(res), inline=False)
             await ctx.send(embed=embed)
