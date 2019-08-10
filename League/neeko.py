@@ -116,6 +116,15 @@ class Neeko:
                 return champ[i]["key"]
         return "Unknown character"
 
+    async def get_champion_desc(self, champ):
+        if self.champlist is None:
+            await self.update_champlist()
+        data = self.champlist["data"]
+        for i in data:
+            if champ[i]["name"] == champ:
+                return champ[i]["blurb"]
+        return "Unknown character"
+
     async def get_champion_mastery(self, region, summoner, idchamp):
         sumid = await self.get_summoner_id(region, summoner)
         apistr = await self.apistring()
@@ -232,7 +241,7 @@ class Neeko:
             if winlose == "win":
                 tmp["resultat"] = winlose
             else:
-                tmp["resultat"] = "loose"
+                tmp["resultat"] = "loss"
             userstat = tmpvar["stats"]
             tmp["kda"] = str(userstat["kills"]) + " kills / " + str(userstat["deaths"]) + " deaths / " + str(userstat["assists"]) + " assists."
             tmp["stats"] = str(userstat["totalDamageDealt"]) + " total damages dealt / " + str(userstat["totalDamageTaken"]) + " damages taken."
