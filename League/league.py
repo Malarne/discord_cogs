@@ -51,12 +51,12 @@ class League(commands.Cog):
         if type(res) == list:
             embed = discord.Embed(title="League elo", color=7802332)
             embed.add_field(name="Summoner", value=summoner, inline=True)
-            embed.add_field(name="Stats", value=res, inline=True)
+            embed.add_field(name="Stats", value="\n".join(res)), inline=True)
             await ctx.send(embed=embed)
         else:
             embed = discord.Embed(title="League elo", color=7802332)
             embed.add_field(name="Summoner", value=summoner, inline=True)
-            embed.add_field(name="Stats", value=res, inline=True)
+            embed.add_field(name="Stats", value="\n".join(res)), inline=True)
             await ctx.send(embed=embed)
         return
         ##except:
