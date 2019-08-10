@@ -196,9 +196,9 @@ class Neeko:
             name = sumname + ": " + champ
             elo = await self.get_elo(region, sumname)
             if i["teamId"] == 100:
-                res["team1"]["players"][name] = "\n".join(elo)
+                res["team1"]["players"][name] = "\n".join(elo) if (type(elo) == list) else elo
             else:
-                res["team2"]["players"][name] = "\n".join(elo)
+                res["team2"]["players"][name] = "\n".join(elo) if (type(elo) == list) else elo
         return res
         ##except:
             ##return False
