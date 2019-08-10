@@ -2,9 +2,8 @@ import asyncio
 import aiohttp
 from math import floor, ceil
 import datetime
-import logging
+from io import BytesIO
 
-log = logging.getLogger("red.League.League")
 class Neeko:
 
     def __init__(self, bot):
@@ -109,6 +108,12 @@ class Neeko:
         request = f"http://ddragon.leagueoflegends.com/cdn/{version[0]}/data/en_US/champion.json"
         self.champlist = await self.get(request)
 
+    async def get_champion_pic(self, champname):
+        versionurl = "https://ddragon.leagueoflegends.com/api/versions.json"
+        version = await self.get(versionurl)
+        req = f"http://ddragon.leagueoflegends.com/cdn/{version[0]}/img/champion/{champname if (' ' not in champname) else ''.join(champname.split(' '))}.png"
+        return req
+
     async def get_champion_id(self, *name):
         if self.champlist is None:
             await self.update_champlist()
@@ -123,8 +128,8 @@ class Neeko:
             await self.update_champlist()
         data = self.champlist["data"]
         for i in data:
-            if champ[i]["name"] == champ:
-                return champ[i]["blurb"]
+            if data[i]["name"] == champ:
+                return data[i]["blurb"]
         return "Unknown character"
 
     async def get_champion_mastery(self, region, summoner, idchamp):
