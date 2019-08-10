@@ -52,7 +52,7 @@ class League(commands.Cog):
             embed = discord.Embed(title="League elo", color=7802332)
             embed.add_field(name="Summoner", value=summoner, inline=True)
             embed.add_field(name="Stats", value="\n".join(res), inline=False)
-            embed.set_thumbnail(url="https://cdn.imgbin.com/23/22/1/imgbin-league-of-legends-logo-riot-games-font-brand-league-of-legends-CP19cbUSsuXxYnX81YaFyLfrL.jpg")
+            embed.set_thumbnail(url="https://banner2.kisspng.com/20180926/igw/kisspng-league-of-legends-esports-logo-font-game-v-v-pls173-5bab06e810b838.0162687215379350800685.jpg")
             await ctx.send(embed=embed)
         else:
             embed = discord.Embed(title="League elo", color=7802332)
