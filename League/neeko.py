@@ -27,7 +27,7 @@ class Neeko:
         }
 
     async def __unload(self):
-        self._session.detach()
+        asyncio.get_event_loop().create_task(self._session.close())
 
     async def _get_api_key(self):
         if not self.api:
@@ -116,6 +116,15 @@ class Neeko:
                 return champ[i]["key"]
         return "Unknown character"
 
+    async def get_champion_desc(self, champ):
+        if self.champlist is None:
+            await self.update_champlist()
+        data = self.champlist["data"]
+        for i in data:
+            if champ[i]["name"] == champ:
+                return champ[i]["blurb"]
+        return "Unknown character"
+
     async def get_champion_mastery(self, region, summoner, idchamp):
         sumid = await self.get_summoner_id(region, summoner)
         apistr = await self.apistring()
@@ -133,11 +142,12 @@ class Neeko:
         apistr = await self.apistring()
         if region not in self.regions:
             return False
-        request = self.url.format(self.regions[region]) + "/lol/league/v4/positions/by-summoner/{}".format(sumid) + apistr
+        request = self.url.format(self.regions[region]) + "/lol/league/v4/entries/by-summoner/{}".format(sumid) + apistr
         js = await self.get(request)
+        res = []
         if js != []:
-            dct = js[0]
-            res = dct["tier"] + " " + dct["rank"] + " " + str(dct["leaguePoints"]) + " LP"
+            for i in js:
+                res.append(i["queueType"] + " : " + i["tier"] + " " + i["rank"] + " " + str(i["leaguePoints"]) + "LP")
         else:
             res = "Unranked"
         return res
@@ -179,9 +189,9 @@ class Neeko:
             name = sumname + ": " + champ
             elo = await self.get_elo(region, sumname)
             if i["teamId"] == 100:
-                res["team1"]["players"][name] = elo
+                res["team1"]["players"][name] = "\n".join(elo)
             else:
-                res["team2"]["players"][name] = elo
+                res["team2"]["players"][name] = "\n".join(elo)
         return res
         ##except:
             ##return False
@@ -231,7 +241,7 @@ class Neeko:
             if winlose == "win":
                 tmp["resultat"] = winlose
             else:
-                tmp["resultat"] = "loose"
+                tmp["resultat"] = "loss"
             userstat = tmpvar["stats"]
             tmp["kda"] = str(userstat["kills"]) + " kills / " + str(userstat["deaths"]) + " deaths / " + str(userstat["assists"]) + " assists."
             tmp["stats"] = str(userstat["totalDamageDealt"]) + " total damages dealt / " + str(userstat["totalDamageTaken"]) + " damages taken."
