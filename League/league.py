@@ -71,7 +71,7 @@ class League(commands.Cog):
         """Show top masteries champions of the summoner."""
         ##try:
         elo = await self.stats.get_elo(region, summoner)
-        emb = discord.Embed(title=summoner, description="\n".join(elo))
+        emb = discord.Embed(title=summoner, description="\n".join(elo), color=ctx.bot.color)
         emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(region, summoner), inline=True)
         champs = await self.stats.top_champions_masteries(region, summoner)
         await ctx.send(embed=emb)
@@ -86,7 +86,7 @@ class League(commands.Cog):
             points = i["championPoints"]
             coffre = i["chestGranted"]
             cdesc = await self.stats.get_champion_desc(champname)
-            emb = discord.Embed(title=champname, description=cdesc)
+            emb = discord.Embed(title=champname, description=cdesc, color=ctx.bot.color)
             emb.set_thumbnail(url=pic)
             emb.add_field(name=f"Mastery {mastery}", value=f"{points} points !", inline=True)
             if coffre:
@@ -112,10 +112,10 @@ class League(commands.Cog):
                 await ctx.send(_("This summoner isn't currently ingame."))
                 return
             await ctx.send(infos["gamemode"])
-            bans1 = discord.Embed(title=_("First team bans"))
-            bans2 = discord.Embed(title=_("Second team bans"))
-            team1 = discord.Embed(title=_("First team ranks"))
-            team2 = discord.Embed(title=_("Second team ranks"))
+            bans1 = discord.Embed(title=_("First team bans"), color=ctx.bot.color)
+            bans2 = discord.Embed(title=_("Second team bans"), color=ctx.bot.color)
+            team1 = discord.Embed(title=_("First team ranks"), color=ctx.bot.color)
+            team2 = discord.Embed(title=_("Second team ranks"), color=ctx.bot.color)
             for i, j in infos["team1"]["bans"].items():
                 bans1.add_field(name=j, value=i, inline=True)
 
@@ -148,7 +148,7 @@ class League(commands.Cog):
             histo = await self.stats.get_history(count, region, summoner)
             if not histo:
                 return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys))
-            emb = discord.Embed()
+            emb = discord.Embed(color=ctx.bot.color))
             emblist = []
             for i in histo:
                 cur = histo[i]
