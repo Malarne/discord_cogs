@@ -61,10 +61,6 @@ class League(commands.Cog):
             embed.add_field(name="Summoner", value=summoner, inline=True)
             embed.add_field(name="Stats", value=res, inline=False)
             await ctx.send(embed=embed)
-        if type(res) == list:
-            await ctx.send(summoner + ": " + "\n".join(res))
-        else:
-            await ctx.send(summoner + ": " + res)
         return
         ##except:
         ##    await ctx.send(_("This summoner doesn't exist in that region."))
