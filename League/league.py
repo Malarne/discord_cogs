@@ -2,6 +2,7 @@ from redbot.core import checks, Config
 from redbot.core.i18n import Translator, cog_i18n
 import discord
 from redbot.core import commands
+from redbot.core.utils.menus import menu, DEFAULT_CONTROLS, start_adding_reactions
 from redbot.core.utils import mod
 import asyncio
 import datetime
@@ -22,7 +23,7 @@ def apikeyset():
         except:
             res = False
         if not res and ctx.invoked_with in dir(ctx.bot.get_cog('League')):
-            await ctx.send("You need to set the API key using `[p]setapikey <api_key>` first !")
+            raise commands.UserFeedbackCheckFailure(message="You need to set the API key using `[p]setapikey <api_key>` first !")
         return res
     return commands.check(predicate)
 
@@ -45,12 +46,12 @@ class League(commands.Cog):
     @apikeyset()
     async def elo(self, ctx, region, *, summoner):
         """Show summoner ranking"""
-        try:
-            res = await self.stats.get_elo(region, summoner)
-            await ctx.send(summoner + ": " + res)
-            return
-        except:
-            await ctx.send(_("This summoner doesn't exist in that region."))
+        ##try:
+        res = await self.stats.get_elo(region, summoner)
+        await ctx.send(summoner + ": " + "\n".join(res))
+        return
+        ##except:
+        ##    await ctx.send(_("This summoner doesn't exist in that region."))
 
     @commands.command()
     @apikeyset()
@@ -64,13 +65,16 @@ class League(commands.Cog):
             await ctx.send(embed=emb)
             emb = discord.Embed()
             tmp = 0
+            emblist = []
             for i in champs:
                 champname = await self.stats.get_champion_name(str(i["championId"]))
                 mastery = i["championLevel"]
                 points = i["championPoints"]
                 coffre = i["chestGranted"]
                 master = "Mastery {}: {} points".format(mastery, points)
-                emb.add_field(name=champname, value=master, inline=True)
+                cdesc = await self.stats.get_champion_desc(champname)
+                emb = discord.Embed(title=champname, value=cdesc)
+                emb.set_footer(text=master)
                 if coffre:
                     emb.add_field(name=_("Chest earned"), value=_("Yes"), inline=True)
                 else:
@@ -81,8 +85,9 @@ class League(commands.Cog):
                     emb = discord.Embed()
                 if tmp >= 6:
                     break
+                emblist.append(emb)
                 await asyncio.sleep(0.5)
-            await ctx.send(embed=emb)
+            await menu(ctx, emblist, DEFAULT_CONTROLS)
         except:
             await ctx.send(_("Unknown summoner"))
 
@@ -127,11 +132,13 @@ class League(commands.Cog):
     async def history(self, ctx, region, summoner, count : int = 5):
         """Shows X last game of a summoner (default: 5).
         NB: if your summoner name contains spaces, use "" (eg: "My summoner name")"""
+        msg = await ctx.send(f"Loading last {count} games of {summoner} ...")
         async with ctx.typing():
             histo = await self.stats.get_history(count, region, summoner)
             if not histo:
-                return await ctx.send("```Unknown region or summoner.\nList of league of legends regions:\n" + '\n'.join(self.stats.regions.keys()) + "```")
+                return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys))
             emb = discord.Embed()
+            emblist = []
             for i in histo:
                 cur = histo[i]
                 champ = cur["champ"]
@@ -147,9 +154,11 @@ class League(commands.Cog):
                 emb.add_field(name=role, value=duree, inline=False)
                 emb.add_field(name=golds, value=horo, inline=False)
                 emb.add_field(name=kda, value=stats, inline=True)
-                await ctx.send(embed=emb)
+                emblist.append(emb)
                 emb = discord.Embed()
+        await msg.edit(content="")
+        await menu(ctx=ctx, pages=emblist, controls=DEFAULT_CONTROLS, message=msg, page=1)
+        await start_adding_reactions(msg, DEFAULT_CONTROLS.keys(), self.bot.loop)
+
             
-            
-                
         
