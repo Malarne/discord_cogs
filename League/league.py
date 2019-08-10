@@ -61,6 +61,10 @@ class League(commands.Cog):
             embed.add_field(name="Summoner", value=summoner, inline=True)
             embed.add_field(name="Stats", value=res, inline=False)
             await ctx.send(embed=embed)
+        if type(res) == list:
+            await ctx.send(summoner + ": " + "\n".join(res))
+        else:
+            await ctx.send(summoner + ": " + res)
         return
         ##except:
         ##    await ctx.send(_("This summoner doesn't exist in that region."))
@@ -72,6 +76,7 @@ class League(commands.Cog):
         ##try:
         elo = await self.stats.get_elo(region, summoner)
         emb = discord.Embed(title=summoner, description="\n".join(elo), color=ctx.bot.color)
+        emb = discord.Embed(title=summoner, description="\n".join(elo))
         emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(region, summoner), inline=True)
         champs = await self.stats.top_champions_masteries(region, summoner)
         await ctx.send(embed=emb)
@@ -87,6 +92,7 @@ class League(commands.Cog):
             coffre = i["chestGranted"]
             cdesc = await self.stats.get_champion_desc(champname)
             emb = discord.Embed(title=champname, description=cdesc, color=ctx.bot.color)
+            emb = discord.Embed(title=champname, description=cdesc)
             emb.set_thumbnail(url=pic)
             emb.add_field(name=f"Mastery {mastery}", value=f"{points} points !", inline=True)
             if coffre:
