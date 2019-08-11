@@ -82,13 +82,11 @@ class League(commands.Cog):
         for i in champs:
             champname = await self.stats.get_champion_name(str(i["championId"]))
             pic = await self.stats.get_champion_pic(champname)
-            print(pic)
             mastery = i["championLevel"]
             points = i["championPoints"]
             coffre = i["chestGranted"]
             cdesc = await self.stats.get_champion_desc(champname)
             emb = discord.Embed(title=champname, description=cdesc, color=ctx.bot.color)
-            emb = discord.Embed(title=champname, description=cdesc)
             emb.set_thumbnail(url=pic)
             emb.add_field(name=f"Mastery {mastery}", value=f"{points} points !", inline=True)
             if coffre:
