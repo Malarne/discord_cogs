@@ -24,7 +24,10 @@ def apikeyset():
             res = False
         if not res and ctx.invoked_with in dir(ctx.bot.get_cog('League')):
             raise commands.UserFeedbackCheckFailure(message="You need to set the API key using `[p]setapikey <api_key>` first !")
-        return res
+        if ctx.channel.permissions_for(discord.utils.get(ctx.guild.members, id=ctx.bot.user.id)).add_reactions:
+            return res
+        else:
+            raise commands.UserFeedbackCheckFailure(message="I need permission to add reactions first !")
     return commands.check(predicate)
 
 class League(commands.Cog):
