@@ -10,12 +10,15 @@ class UserProfile:
         default_guild = {
             "wlchannels": [],
             "blchannels": [],
-            "roles": [],
+            "defaultrole": None,
+            "defaultbg": None,
+            "roles": {},
             "database": [],
             "autoregister": False,
             "cooldown": 60.0,
             "whitelist": True,
-            "blacklist": False
+            "blacklist": False,
+            "lvlup_announce": False
         }
         default_member = {
             "exp": 0,
@@ -27,6 +30,9 @@ class UserProfile:
         }
         self.data.register_member(**default_member)
         self.data.register_guild(**default_guild)
+
+    async def _set_guild_background(self, guild, bg):
+        await self.data.guild(guild).defaultbg.set(bg)
 
     async def _give_exp(self, member, exp):
         current = await self.data.member(member).exp()
@@ -57,6 +63,15 @@ class UserProfile:
 
     async def _get_user_lastmessage(self, member):
         return await self.data.member(member).lastmessage()
+    
+    async def _downgrade_level(self, member):
+        lvl = await self.data.member(member).level()
+        pastlvl = 5*((lvl-2)**2)+(50*(lvl-2)) +100
+        xp = await self.data.member(member).exp()
+        while xp < pastlvl and not lvl <= 1:
+            lvl -= 1
+            pastlvl = 5*((lvl-1)**2)+(50*(lvl-1)) +100
+        await self.data.member(member).level.set(lvl)
 
     async def _check_exp(self, member):
         lvl = await self.data.member(member).level()
@@ -64,41 +79,45 @@ class UserProfile:
         xp = await self.data.member(member).exp()
         if xp >= lvlup:
             await self.data.member(member).level.set(lvl+1)
-            lvl = await self.data.member(member).level()
+            lvl += 1
             lvlup = 5*((lvl-1)**2)+(50*(lvl-1)) +100
-            xp = await self.data.member(member).exp()
             if xp >= lvlup:
                 await self._check_exp(member)
+        elif xp < lvlup and lvl > 1:
+            await self._downgrade_level(member)
 
     async def _check_role_member(self, member):
         roles = await self.data.guild(member.guild).roles()
         lvl = await self.data.member(member).level()
-        level_role = roles[(lvl%10)-1]
-        try:
-            if level_role in [x.id for x in member.roles]:
-                return True
+        for k,v in roles.items():
+            if lvl == int(k):
+                rl = discord.utils.get(member.guild.roles, id=v)
+                if rl in member.roles:
+                    return True
+                else:
+                    await member.add_roles(rl)
+                    return True
             else:
-                await member.add_roles(discord.utils.get(member.guild.roles, id=level_role))
-                return True
-        except:
-            return False
+                pass
+        return False
 
-    async def _add_guild_role(self, guild, roleid):
+    async def _add_guild_role(self, guild, level, roleid):
         role = discord.utils.get(guild.roles, id=roleid)
         if role is None:
             return False
-        async with self.data.guild(guild).roles() as rolelist:
-            rolelist.append(roleid)
-            return True
-
-    async def _move_guild_role(self, guild, role, new):
-        async with self.data.guild(guild).roles() as rolelist:
-            del rolelist[rolelist.index(role)]
-            rolelist.insert(new, role)
+        rl = await self.data.guild(guild).roles()
+        if isinstance(rl, list):
+            rl = {}
+        rl.update({str(level): roleid})
+        await self.data.guild(guild).roles.set(rl)
 
     async def _remove_guild_role(self, guild, role):
-        async with self.data.guild(guild).roles() as rolelist:
-            rolelist.remove(role)
+        rolelist = await self.data.guild(guild).roles()
+        for k, v in rolelist.items():
+            if v == role.id:
+                del rolelist[k]
+                await self.data.guild(guild).roles.set(rolelist)
+                return
 
     async def _get_guild_roles(self, guild):
         return await self.data.guild(guild).roles()
@@ -178,7 +197,11 @@ class UserProfile:
         await self.data.member(member).background.set(background)
 
     async def _get_background(self, member):
-        return await self.data.member(member).background()
+        userbg = await self.data.member(member).background()
+        if userbg is None:
+            return await self.data.guild(member.guild).defaultbg()
+        else:
+            return userbg
 
     async def _set_description(self, member, description:str):
         await self.data.member(member).description.set(description)
@@ -208,3 +231,36 @@ class UserProfile:
             if count == 10:
                 break
         return res
+
+## Thank you flare, and F to mongo Kappa
+
+    async def mee6_convert(self, cog, ctx, pages: int):
+        """Convert Mee6 levels.
+        Each page returns 999 users at most."""
+        failed = 0
+        done = 0
+        for i in range(pages):
+            async with cog.session.get(
+            f"https://mee6.xyz/api/plugins/levels/leaderboard/{ctx.guild.id}?page={i}&limit=999"
+            ) as r:
+                if r.status == 200:
+                    data = await r.json()
+                else:
+                    return await ctx.send("No data was found within the Mee6 API.")
+                    
+            for userdata in data["players"]:
+                user = ctx.bot.get_user(int(userdata["id"]))
+                if user is None:
+                    failed += 1
+                    continue
+                lvl = userdata["level"]
+                # I don't need to "create the user"
+                
+                # Neither to reset anything
+                
+                # add in new exp
+                to_add = 5*((lvl-1)**2)+(50*(lvl-1)) +100
+                await self._give_exp(user, to_add)
+                done += 1
+                
+                await ctx.send(f"{done} users were synced successfully !\n{failed} users could not be found and were skipped.")
