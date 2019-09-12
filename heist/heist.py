@@ -30,6 +30,9 @@ class Heist(commands.Cog):
         self.version = "a0.0.1"
         self.redver = "3.1.2"
         self.cycle_task = bot.loop.create_task(self.thief.vault_updater(bot))
+        
+    async def cog_unload(self):
+        self.cycle_task.cancel()
 
     @commands.group(no_pm=True)
     async def heist(self, ctx):
