@@ -4,6 +4,7 @@ from redbot.core import checks, Config
 import discord
 from redbot.core import commands
 from redbot.core.data_manager import bundled_data_path
+from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 import asyncio
 import datetime
 from .userprofile import UserProfile
@@ -453,6 +454,8 @@ class Leveler(commands.Cog):
         emb = discord.Embed()
         emb.title = _("List of roles configured for this server.")
         emb.description = _("Guaranteed 100% almost no bugs.")
+        tmp = 0
+        emblist = []
         roles = await self.profiles._get_guild_roles(ctx.guild)
         if len(roles) == 0:
             await ctx.send(_("No roles yet configured for this guild !"))
@@ -460,10 +463,16 @@ class Leveler(commands.Cog):
         for k, v in roles.items():
             try:
                 emb.add_field(name=str(k), value=discord.utils.get(ctx.guild.roles, id=v).name)
+                tmp += 1
+                if tmp == 25:
+                    emblist.append(emb)
+                    emb = discord.Embed()
+                    tmp = 0
             except:
                 # role no longer exists
                 pass
-        await ctx.send(embed=emb)
+        emblist.append(emb) if emb else pass
+        await menu(ctx, emblist, DEFAULT_CONTROLS)
 
     @whitelist.command(name="add")
     @checks.mod_or_permissions(manage_messages=True)
