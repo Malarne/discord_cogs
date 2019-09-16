@@ -471,7 +471,7 @@ class Leveler(commands.Cog):
             except:
                 # role no longer exists
                 pass
-        emblist.append(emb) if emb else pass
+        emblist.append(emb) if emb else emblist
         await menu(ctx, emblist, DEFAULT_CONTROLS)
 
     @whitelist.command(name="add")
