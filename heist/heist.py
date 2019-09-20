@@ -28,11 +28,8 @@ class Heist(commands.Cog):
         self.bot = bot
         self.thief = Thief()
         self.version = "a0.0.1"
-        self.redver = "3.1.5"
+        self.redver = "3.1.2"
         self.cycle_task = bot.loop.create_task(self.thief.vault_updater(bot))
-        
-    async def cog_unload(self):
-        self.cycle_task.cancel()
 
     @commands.group(no_pm=True)
     async def heist(self, ctx):
@@ -555,4 +552,163 @@ class Heist(commands.Cog):
         else:
             msg = await self.thief.theme_loader(guild, theme)
 
+        await ctx.send(msg)
+
+
+
+    @commands.group(no_pm=True)
+    async def setheist(self, ctx):
+        """Set different options in the heist config"""
+
+        pass
+
+    @setheist.command(name="output")
+    @checks.admin_or_permissions(manage_guild=True)
+    async def _output_setheist(self, ctx, output: str):
+        """Change how detailed the starting output is.
+        None: Displays just the number of crew members.
+
+        Short: Displays five participants and truncates the rest.
+
+        Long: Shows entire crew list. WARNING Not suitable for
+              really big crews.
+        """
+        guild = ctx.message.server
+        settings = await self.thief.get_guild_settings(guild)
+        if output.title() not in ["None", "Short", "Long"]:
+            return await ctx.send("You must choose \'None\', \'Short\', or \'Long\'.")
+
+        settings["Crew"] = output.title()
+        await self.thief.config.guild(guild).Config.set(settings)
+        await ctx.send("Now setting the message output type to {}.".format(output))
+
+    @staticmethod
+    def message_handler(settings, crew, players):
+        message_type = settings["Crew"]
+        if message_type == "Short":
+            name_list = '\n'.join(player.name for player in players[:5])
+            message = "{} crew members, including:```\n{}```".format(crew, name_list)
+        elif message_type == "Long":
+            name_list = '\n'.join(player.name for player in players)
+            message = "{} crew members, including:```\n{}```".format(crew, name_list)
+        else:
+            message = "{} crew members".format(crew)
+        return message
+
+    @setheist.command(name="sentence")
+    @checks.admin_or_permissions(manage_guild=True)
+    async def _sentence_setheist(self, ctx, seconds: int):
+        """Set the base apprehension time when caught"""
+        guild = ctx.message.server
+        config = await self.thief.get_guild_settings(guild)
+        theme = await self.thief.get_theme(config)
+        t_jail = theme["Jail"]
+        t_sentence =theme["Sentence"]
+
+        if seconds > 0:
+            config["Sentence"] = seconds
+            await self.thief.config.guild(guild).Config.set(config)
+            time_fmt = self.time_format(seconds)
+            msg = "Setting base {} {} to {}.".format(t_jail, t_sentence, time_fmt)
+        else:
+            msg = "Need a number higher than 0."
+        await ctx.send(msg)
+
+    @setheist.command(name="cost")
+    @checks.admin_or_permissions(manage_guild=True)
+    async def _cost_setheist(self, ctx, cost: int):
+        """Set the cost to play heist"""
+        guild = ctx.guild
+        config = await self.thief.get_guild_settings(guild)
+
+        if cost >= 0:
+            config["Cost"] = cost
+            await self.thief.config.guild(guild).Config.set(config)
+            msg = "Setting heist cost to {}.".format(cost)
+        else:
+            msg = "Need a number higher than -1."
+        await ctx.send(msg)
+
+    @setheist.command(name="authorities")
+    @checks.admin_or_permissions(manage_guild=True)
+    async def _authorities_setheist(self, ctx, seconds: int):
+        """Set the time authorities will prevent heists"""
+        guild = ctx.guild
+        config = await self.thief.get_guild_settings(guild)
+        theme = await self.thief.get_theme(config)
+        t_police = theme["Police"]
+
+        if seconds > 0:
+            config["Police"] = seconds
+            await self.thief.config.guild(guild).Config.set(config)
+            time_fmt = self.time_format(seconds)
+            msg = "Setting {} alert time to {}.".format(t_police, time_fmt)
+        else:
+            msg = "Need a number higher than 0."
+        await ctx.send(msg)
+
+    @setheist.command(name="bail")
+    @checks.admin_or_permissions(manage_guild=True)
+    async def _bail_setheist(self, ctx, cost: int):
+        """Set the base cost of bail"""
+        guild = ctx.guild
+        config = await self.thief.get_guild_settings(guild)
+        theme = await self.thief.get_theme(config)
+        t_bail = theme["Bail"]
+        if cost >= 0:
+            config["Bail Base"] = cost
+            await self.thief.config.guild(guild).Config.set(config)
+            msg = "Setting base {} cost to {}.".format(t_bail, cost)
+        else:
+            msg = "Need a number higher than -1."
+        await ctx.send(msg)
+
+    @setheist.command(name="death")
+    @checks.admin_or_permissions(manage_guild=True)
+    async def _death_setheist(self, ctx, seconds: int):
+        """Set how long players are dead"""
+        guild = ctx.guild
+        config = await self.thief.get_guild_settings(guild)
+
+        if seconds > 0:
+            config["Death"] = seconds
+            await self.thief.config.guild(guild).Config.set(config)
+            time_fmt = self.time_format(seconds)
+            msg = "Setting death timer to {}.".format(time_fmt)
+        else:
+            msg = "Need a number higher than 0."
+        await ctx.send(msg)
+
+    @setheist.command(name="hardcore")
+    @checks.admin_or_permissions(manage_guild=True)
+    async def _hardcore_setheist(self, ctx):
+        """Set game to hardcore mode. Deaths will wipe credits and chips."""
+        guild = ctx.guild
+        config = await self.thief.get_guild_settings(guild)
+
+        if config["Hardcore"]:
+            config["Hardcore"] = False
+            msg = "Hardcore mode now OFF."
+        else:
+            config["Hardcore"] = True
+            msg = "Hardcore mode now ON! **Warning** death will result in credit **and chip wipe**."
+        await self.thief.config.guild(guild).Config.set(config)
+        await ctx.send(msg)
+
+    @setheist.command(name="wait")
+    @checks.admin_or_permissions(manage_guild=True)
+    async def _wait_setheist(self, ctx, seconds: int):
+        """Set how long a player can gather players"""
+        guild = ctx.guild
+        config = await self.thief.get_guild_settings(guild)
+        theme = await self.thief.get_theme(config)
+        t_crew = theme["Crew"]
+
+        if seconds > 0:
+            config["Wait"] = seconds
+            await self.thief.config.guild(guild).Config.set(config)
+            time_fmt = self.time_format(seconds)
+            msg = "Setting {} gather time to {}.".format(t_crew, time_fmt)
+        else:
+            msg = "Need a number higher than 0."
         await ctx.send(msg)
