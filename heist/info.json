@@ -1,5 +1,5 @@
 {
-    "author" : ["Redjumpman", "Malarne"];
+    "author" : ["Redjumpman", "Malarne"],
     "short" : "Heist mini-game inspired by Twitch's deep bot",
     "description" : "v3 version of RJM heist cog. i'm a bit lazy to write something really helpful there, i'm pretty sure you already know what this cog does ...",
     "name" : "Heist",
