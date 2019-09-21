@@ -573,7 +573,7 @@ class Heist(commands.Cog):
         Long: Shows entire crew list. WARNING Not suitable for
               really big crews.
         """
-        guild = ctx.message.server
+        guild = ctx.guild
         settings = await self.thief.get_guild_settings(guild)
         if output.title() not in ["None", "Short", "Long"]:
             return await ctx.send("You must choose \'None\', \'Short\', or \'Long\'.")
@@ -608,7 +608,7 @@ class Heist(commands.Cog):
         if seconds > 0:
             config["Sentence"] = seconds
             await self.thief.config.guild(guild).Config.set(config)
-            time_fmt = self.time_format(seconds)
+            time_fmt = self.thief.time_format(seconds)
             msg = "Setting base {} {} to {}.".format(t_jail, t_sentence, time_fmt)
         else:
             msg = "Need a number higher than 0."
@@ -641,7 +641,7 @@ class Heist(commands.Cog):
         if seconds > 0:
             config["Police"] = seconds
             await self.thief.config.guild(guild).Config.set(config)
-            time_fmt = self.time_format(seconds)
+            time_fmt = self.thief.time_format(seconds)
             msg = "Setting {} alert time to {}.".format(t_police, time_fmt)
         else:
             msg = "Need a number higher than 0."
@@ -673,7 +673,7 @@ class Heist(commands.Cog):
         if seconds > 0:
             config["Death"] = seconds
             await self.thief.config.guild(guild).Config.set(config)
-            time_fmt = self.time_format(seconds)
+            time_fmt = self.thief.time_format(seconds)
             msg = "Setting death timer to {}.".format(time_fmt)
         else:
             msg = "Need a number higher than 0."
@@ -707,7 +707,7 @@ class Heist(commands.Cog):
         if seconds > 0:
             config["Wait"] = seconds
             await self.thief.config.guild(guild).Config.set(config)
-            time_fmt = self.time_format(seconds)
+            time_fmt = self.thief.time_format(seconds)
             msg = "Setting {} gather time to {}.".format(t_crew, time_fmt)
         else:
             msg = "Need a number higher than 0."
