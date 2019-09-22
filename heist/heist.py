@@ -586,7 +586,7 @@ class Heist(commands.Cog):
     @checks.admin_or_permissions(manage_guild=True)
     async def _sentence_setheist(self, ctx, seconds: int):
         """Set the base apprehension time when caught"""
-        guild = ctx.message.server
+        guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
         theme = await self.thief.config.guild(guild).Theme()
         t_jail = theme["Jail"]
