@@ -582,26 +582,13 @@ class Heist(commands.Cog):
         await self.thief.config.guild(guild).Config.set(settings)
         await ctx.send("Now setting the message output type to {}.".format(output))
 
-    @staticmethod
-    def message_handler(settings, crew, players):
-        message_type = settings["Crew"]
-        if message_type == "Short":
-            name_list = '\n'.join(player.name for player in players[:5])
-            message = "{} crew members, including:```\n{}```".format(crew, name_list)
-        elif message_type == "Long":
-            name_list = '\n'.join(player.name for player in players)
-            message = "{} crew members, including:```\n{}```".format(crew, name_list)
-        else:
-            message = "{} crew members".format(crew)
-        return message
-
     @setheist.command(name="sentence")
     @checks.admin_or_permissions(manage_guild=True)
     async def _sentence_setheist(self, ctx, seconds: int):
         """Set the base apprehension time when caught"""
         guild = ctx.message.server
         config = await self.thief.get_guild_settings(guild)
-        theme = await self.thief.get_theme(config)
+        theme = self.thief.get_theme(config)
         t_jail = theme["Jail"]
         t_sentence =theme["Sentence"]
 
@@ -635,7 +622,7 @@ class Heist(commands.Cog):
         """Set the time authorities will prevent heists"""
         guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
-        theme = await self.thief.get_theme(config)
+        theme = self.thief.get_theme(config)
         t_police = theme["Police"]
 
         if seconds > 0:
@@ -653,7 +640,7 @@ class Heist(commands.Cog):
         """Set the base cost of bail"""
         guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
-        theme = await self.thief.get_theme(config)
+        theme = self.thief.get_theme(config)
         t_bail = theme["Bail"]
         if cost >= 0:
             config["Bail Base"] = cost
@@ -701,7 +688,7 @@ class Heist(commands.Cog):
         """Set how long a player can gather players"""
         guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
-        theme = await self.thief.get_theme(config)
+        theme = self.thief.get_theme(config)
         t_crew = theme["Crew"]
 
         if seconds > 0:
