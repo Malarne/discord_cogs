@@ -588,7 +588,7 @@ class Heist(commands.Cog):
         """Set the base apprehension time when caught"""
         guild = ctx.message.server
         config = await self.thief.get_guild_settings(guild)
-        theme = self.thief.get_theme(config)
+        theme = await self.thief.config.guild(guild).Theme()
         t_jail = theme["Jail"]
         t_sentence =theme["Sentence"]
 
@@ -622,7 +622,7 @@ class Heist(commands.Cog):
         """Set the time authorities will prevent heists"""
         guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
-        theme = self.thief.get_theme(config)
+        theme = await self.thief.config.guild(guild).Theme()
         t_police = theme["Police"]
 
         if seconds > 0:
@@ -640,7 +640,7 @@ class Heist(commands.Cog):
         """Set the base cost of bail"""
         guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
-        theme = self.thief.get_theme(config)
+        theme = await self.thief.config.guild(guild).Theme()
         t_bail = theme["Bail"]
         if cost >= 0:
             config["Bail Base"] = cost
@@ -688,7 +688,7 @@ class Heist(commands.Cog):
         """Set how long a player can gather players"""
         guild = ctx.guild
         config = await self.thief.get_guild_settings(guild)
-        theme = self.thief.get_theme(config)
+        theme = await self.thief.config.guild(guild).Theme()
         t_crew = theme["Crew"]
 
         if seconds > 0:
