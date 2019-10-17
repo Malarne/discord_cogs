@@ -85,7 +85,7 @@ class VRChat(commands.Cog):
         for i in favs:
             user = await self.getUserByName(ctx, i)
             emb = discord.Embed(title="Current user:", description=user.displayName)
-            emb.add_field(name="Status:", value=user.status + user.statusDescription if user.statusDescription else "")
+            emb.add_field(name="Status:", value=str(user.status).split("Status.")[1] + "\n" + user.statusDescription if user.statusDescription else "")
             emb.set_thumbnail(url=user.currentAvatarThumbnailImageUrl)
             display_list.append(emb)
         await menu(ctx, display_list, DEFAULT_CONTROLS)
