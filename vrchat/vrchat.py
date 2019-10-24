@@ -108,7 +108,7 @@ class VRChat(commands.Cog):
         for location, users in sorted(friendsInLocations.items(), key=lambda x: len(x[1]), reverse=True): ### What the fuck is that sort ? no idea
             emb = discord.Embed(title="List of friend in:", description=worlds[location.worldId].name + str(getInstanceNumberFromId(location.instanceId)))
             emb.add_field(name="Friends in this location:", value="\n".join([x.displayName for x in users]))
-            emb.set_thumbnail(url=location.imageUrl)
+            emb.set_thumbnail(url=location.thumbnailImageUrl)
             display_list.append(emb)
         if display_list:
             await menu(ctx, display_list, DEFAULT_CONTROLS)
