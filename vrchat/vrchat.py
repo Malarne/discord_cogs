@@ -72,7 +72,7 @@ class VRChat(commands.Cog):
         password = await self.data.user(ctx.author).password()
         a = VRChatAPI(name, password)
         a.authenticate()
-        return a.getUserById(username + "/name")
+        return a._callApi("users/" + username + "/name")
 
     @commands.command()
     @check_credentials()
@@ -84,9 +84,9 @@ class VRChat(commands.Cog):
         display_list = []
         for i in favs:
             user = await self.getUserByName(ctx, i)
-            emb = discord.Embed(title="Current user:", description=user.displayName)
-            emb.add_field(name="Status:", value=str(user.status).split("Status.")[1] + "\n" + user.statusDescription if user.statusDescription else "")
-            emb.set_thumbnail(url=user.currentAvatarThumbnailImageUrl)
+            emb = discord.Embed(title="Current user:", description=user['displayName'])
+            emb.add_field(name="Status:", value=str(user['status']).split("Status.")[1] + "\n" + user['statusDescription'] if user['statusDescription'] else "")
+            emb.set_thumbnail(url=user['currentAvatarThumbnailImageUrl'])
             display_list.append(emb)
         await menu(ctx, display_list, DEFAULT_CONTROLS)
 
