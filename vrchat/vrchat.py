@@ -84,9 +84,27 @@ class VRChat(commands.Cog):
         display_list = []
         for i in favs:
             user = await self.getUserByName(ctx, i)
-            emb = discord.Embed(title="Current user:", description=user['displayName'])
-            emb.add_field(name="Status:", value=str(user['status']).split("Status.")[1] + "\n" + user['statusDescription'] if user['statusDescription'] else "")
+            colour = discord.Colour(0x93FF77)
+            if user['status'] == "join me":
+                colour = discord.Colour(0x16b1ff)
+            if user['status'] == "busy" or user['state'] == "offline":
+                colour = discord.Colour(0xFF6969)
+            emb = discord.Embed(title=user['displayName'], description=user['statusDescription'] if user['statusDescription'] else "", colour=colour)
+            status = str(user['status']).split("Status.")[1] if len(str(user['status']).split("Status.")) > 1 else "";
+            if len(status):
+                emb.add_field(name="Status:", value=status)
             emb.set_thumbnail(url=user['currentAvatarThumbnailImageUrl'])
+            if user['location'] == "private":
+                emb.add_field(name="Currently in:", value="private world")
+            elif user['location'] == "offline":
+                emb.add_field(name="User is offline", value="Last login: " + user['last_login'])
+            else:
+                name = await self.data.user(ctx.author).username()
+                password = await self.data.user(ctx.author).password()
+                a = VRChatAPI(name, password)
+                a.authenticate()
+                world = a.getWorldById(user['location'])
+                emb.add_field(name="Currently in:", value=world.name)
             display_list.append(emb)
         await menu(ctx, display_list, DEFAULT_CONTROLS)
 
@@ -106,7 +124,11 @@ class VRChat(commands.Cog):
         worlds = dict([(x, a.getWorldById(x)) for x in worldIds]) ### I might have stolen some lines from an example of the api
         friendsInLocations = dict([(x, list(filter(lambda y: y.location == x, friends))) for x in locations])
         for location, users in sorted(friendsInLocations.items(), key=lambda x: len(x[1]), reverse=True): ### What the fuck is that sort ? no idea
-            emb = discord.Embed(title="List of friend in:", description=worlds[location.worldId].name + str(getInstanceNumberFromId(location.instanceId)))
+            emb = discord.Embed(
+                title="List of friend in:",
+                description=worlds[location.worldId].name + str(getInstanceNumberFromId(location.instanceId)),
+                colour=discord.Colour(0x16b1ff)
+            )
             emb.add_field(name="Friends in this location:", value="\n".join([x.displayName for x in users]))
             try:
                 emb.set_thumbnail(url=location.thumbnailImageUrl)
@@ -117,4 +139,3 @@ class VRChat(commands.Cog):
             await menu(ctx, display_list, DEFAULT_CONTROLS)
         else:
             await ctx.send("No friend online ... :(")
-
