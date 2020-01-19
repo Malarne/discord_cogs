@@ -472,7 +472,7 @@ class Thief:
         try:
             await asyncio.sleep(20)  # Start-up Time
             while True:
-                servers = [x.id for x in bot.servers if (await self.config.guild(x).Config())["Registered"]]
+                servers = [x.id for x in bot.guilds if (await self.config.guild(x).Config())["Registered"]]
                 for server in servers:
                     for target in await self.config.guild(server).Targets():
                         vault = target["Vault"]
