@@ -1,6 +1,7 @@
 from redbot.core import checks, Config
 from redbot.core.i18n import Translator, cog_i18n
 import discord
+from redbot import version_info, VersionInfo
 from redbot.core import commands
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS, start_adding_reactions
 from redbot.core.utils import mod
@@ -17,7 +18,10 @@ _ = Translator("League", __file__)
 
 def apikeyset():
     async def predicate(ctx):
-        key = await ctx.bot.db.api_tokens.get_raw("league", default=None)
+        if version_info >= VersionInfo.from_str("3.2.0"):
+            key = await ctx.bot.get_shared_api_tokens("league")
+        else:
+            key = await ctx.bot.db.api_tokens.get_raw("league", default=None)
         try:
             res = True if key["api_key"] else False
         except:
@@ -39,7 +43,10 @@ class League(commands.Cog):
     async def setapikey(self, ctx, *, apikey):
         """Set your Riot API key for that cog to work.
         Note that it is safer to use this command in DM."""
-        await self.bot.db.api_tokens.set_raw("league", value={'api_key': apikey})
+        if version_info >= VersionInfo.from_str("3.2.0"):
+            key = await ctx.bot.set_shared_api_tokens("league", api_key=apikey)
+        else:
+            await self.bot.db.api_tokens.set_raw("league", value={'api_key': apikey})
         await ctx.send("Done")
 
     @commands.command()
