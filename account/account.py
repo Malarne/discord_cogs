@@ -38,7 +38,7 @@ class Account(commands.Cog):
             db.append(user.id)
             await self.config.guild(server).db.set(db)
             data = discord.Embed(colour=user.colour)
-            data.add_field(name="Congrats!:sparkles:", value="You have offically created your account for **{}**, {}.".format(server.name, user.mention))
+            data.add_field(name="Congrats!:sparkles:", value="You have officially created your account for **{}**, {}.".format(server.name, user.mention))
             await ctx.send(embed=data)
         else: 
             data = discord.Embed(colour=user.colour)
