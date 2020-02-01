@@ -165,9 +165,9 @@ class League(commands.Cog):
                 emb.add_field(name=kda, value=stats, inline=True)
                 emblist.append(emb)
                 emb = discord.Embed()
-        await msg.edit(content="")
         await menu(ctx=ctx, pages=emblist, controls=DEFAULT_CONTROLS, message=msg, page=1)
         await start_adding_reactions(msg, DEFAULT_CONTROLS.keys(), self.bot.loop)
+        await msg.edit(content="")
 
             
         
