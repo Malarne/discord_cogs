@@ -34,9 +34,9 @@ class Neeko:
     async def _get_api_key(self):
         if not self.api:
             if version_info >= VersionInfo.from_str("3.2.0"):
-                db = await ctx.bot.get_shared_api_tokens("league")
+                db = await self.bot.get_shared_api_tokens("league")
             else:
-                db = await ctx.bot.db.api_tokens.get_raw("league", default=None)
+                db = await self.bot.db.api_tokens.get_raw("league", default=None)
             self.api = db['api_key']
             return self.api
         else:
