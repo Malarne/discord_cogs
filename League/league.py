@@ -54,6 +54,7 @@ class League(commands.Cog):
     async def elo(self, ctx, region, *, summoner):
         """Show summoner ranking"""
         ##try:
+        region = region.lower()
         res = await self.stats.get_elo(region, summoner)
         if type(res) == list:
             await ctx.send(summoner + ": " + "\n".join(res))
@@ -68,7 +69,10 @@ class League(commands.Cog):
     async def masteries(self, ctx, region, *, summoner):
         """Show top masteries champions of the summoner."""
         ##try:
+        region = region.lower()
         elo = await self.stats.get_elo(region, summoner)
+        if not elo:
+            return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys()))
         emb = discord.Embed(title=summoner, description="\n".join(elo))
         emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(region, summoner), inline=True)
         champs = await self.stats.top_champions_masteries(region, summoner)
@@ -105,9 +109,10 @@ class League(commands.Cog):
     async def game(self, ctx, region, *, summoner):
         """Show information about current game of summoner"""
         try:
+            region = region.lower()
             infos = await self.stats.game_info(region, summoner)
             if infos is False:
-                await ctx.send(_("This summoner isn't currently ingame."))
+                await ctx.send(_("This summoner isn't currently ingame or the region is invalid."))
                 return
             await ctx.send(infos["gamemode"])
             bans1 = discord.Embed(title=_("First team bans"))
@@ -142,6 +147,7 @@ class League(commands.Cog):
         """Shows X last game of a summoner (default: 5).
         NB: if your summoner name contains spaces, use "" (eg: "My summoner name")"""
         msg = await ctx.send(f"Loading last {count} games of {summoner} ...")
+        region = region.lower()
         async with ctx.typing():
             histo = await self.stats.get_history(count, region, summoner)
             if not histo:
