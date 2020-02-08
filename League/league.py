@@ -145,7 +145,7 @@ class League(commands.Cog):
         async with ctx.typing():
             histo = await self.stats.get_history(count, region, summoner)
             if not histo:
-                return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys))
+                return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys()))
             emb = discord.Embed()
             emblist = []
             for i in histo:
