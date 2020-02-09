@@ -1,6 +1,6 @@
 {
    "AUTHOR": ["NerdieTony", "Malarne"],
-   "bot_version": [3,1,1],
+   "min_bot_version": "3.1.1",
    "SHORT":"The Account Cog",
    "DESCRIPTION":"Just an account cog with fields like email, age, gender, and such.",
    "NAME":"Account",
