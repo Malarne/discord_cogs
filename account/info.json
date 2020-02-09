@@ -1,12 +1,12 @@
 {
-   "AUTHOR": ["NerdieTony", "Malarne"],
-   "bot_version": [3,1,1],
-   "SHORT":"The Account Cog",
-   "DESCRIPTION":"Just an account cog with fields like email, age, gender, and such.",
-   "NAME":"Account",
-   "TAGS":[
+   "author": ["NerdieTony", "Malarne (Malarne#1418)"],
+   "min_bot_version": "3.1.1",
+   "short":"The Account Cog",
+   "description":"Just an account cog with fields like email, age, gender, and such.",
+   "name":"Account",
+   "tags":[
       "Account",
       "Profile"
    ],
-   "INSTALL_MSG":"You just installed **Account.py**! \nJust an account cog with fields like email, age, gender, and such.\n\n**Official Cog Support Server:** https://discord.gg/gcCpwGG"
+   "install_msg":"You just installed **Account.py**! \nJust an account cog with fields like email, age, gender, and such.\n\n**Official Cog Support Server:** https://discord.gg/gcCpwGG"
 }
