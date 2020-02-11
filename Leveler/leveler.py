@@ -422,10 +422,13 @@ class Leveler(commands.Cog):
 
     @profileset.command()
     @commands.guild_only()
-    async def description(self, ctx, *, description: str = None):
+    async def description(self, ctx, *, description: str = ""):
         """Change your profile description"""
         await self.profiles._set_description(ctx.author, description)
-        await ctx.send(_("Profile description set to: ") + str(description))
+        if description == "":
+            await ctx.send(_("Cleared profile description!"))
+        else:
+            await ctx.send(_("Profile description set to: ") + str(description))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
