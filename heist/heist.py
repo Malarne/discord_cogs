@@ -122,7 +122,7 @@ class Heist(commands.Cog):
                    "lasts...".format(player.display_name))
             await bank.withdraw_credits(author, cost)
             await self.thief.set_member_free(author)
-            await self.thief.set_member_oob(author, True)
+            await self.thief.set_member_oob(author, False)
         elif "no" in response.content.lower():
             msg = "Canceling transaction."
         else:
