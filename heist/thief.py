@@ -227,7 +227,7 @@ class Thief:
             bail = await self.get_member_bailcost(author)
             sentence_raw = await self.get_member_sentence(author)
             time_served = await self.get_member_timeserved(author)
-            remaining = self.cooldown_calculator(sentence_raw, time_served)
+            remaining = self.cooldown_calculator(time_served, sentence_raw)
             sentence = self.time_format(sentence_raw)
             if remaining == "No Cooldown":
                 msg = ("Looks like your {} is over, but you're still in {}! Get released "
