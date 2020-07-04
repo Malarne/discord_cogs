@@ -318,12 +318,12 @@ class Thief:
                 results.append(good_thing[0].format(player.name))
             else:
                 bad_thing = random.choice(bad_out)
-                dropout_msg = bad_thing[0] + "```\n{0} dropped out of the game.```"
+                dropout_msg = bad_thing[0] + f"```\n{player.name} dropped out of the game.```"
                 await self.failure_handler(player, bad_thing[1])
                 del crew[str(player.id)]
                 await self.config.guild(guild).Crew.set(crew)
                 bad_out.remove(bad_thing)
-                results.append(dropout_msg.format(player.name))
+                results.append(dropout_msg)
         return results
 
     def get_theme(self, config):
