@@ -28,8 +28,8 @@ class Heist(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.thief = Thief()
-        self.version = "a0.0.1"
-        self.redver = "3.1.2"
+        self.version = "b0.3.1"
+        self.redver = "3.3.9"
         self.cycle_task = bot.loop.create_task(self.thief.vault_updater(bot))
 
     @commands.group(no_pm=True)
