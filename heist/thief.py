@@ -319,7 +319,7 @@ class Thief:
                 results.append(good_thing[0].format(escape(player.display_name, formatting=True)))
             else:
                 bad_thing = random.choice(bad_out)
-                dropout_msg = (bad_thing[0] + "```\n{0} dropped out of the game.```").format(escape(player.name, formatting=True))
+                dropout_msg = (bad_thing[0] + "```\n{0} dropped out of the game.```").format(escape(player.display_name, formatting=True))
                 await self.failure_handler(player, bad_thing[1])
                 del crew[str(player.id)]
                 await self.config.guild(guild).Crew.set(crew)
@@ -418,7 +418,7 @@ class Thief:
         crew = await self.config.guild(guild).Crew()
         targets = await self.get_guild_targets(guild)
 
-        names = [player.name for player in players]
+        names = [escape(player.display_name, formatting=True) for player in players]
         bonuses = [subdict["Bonus"] for subdict in crew.values()]
         vault = targets[target]["Vault"]
         credits_stolen = int(int(vault) * 0.75 / len(crew))
