@@ -13,6 +13,7 @@ import discord
 from redbot.core import commands
 from redbot.core.data_manager import bundled_data_path
 from redbot.core.i18n import Translator, cog_i18n
+from redbot.core.utils.chat_formatting import escape
 from .thief import Thief, PluralDict
 
 from tabulate import tabulate
@@ -95,7 +96,7 @@ class Heist(commands.Cog):
             player = user
 
         if await self.thief.get_member_status(player) != "Apprehended":
-            return await ctx.send("{} is not in jail.".format(player.display_name))
+            return await ctx.send("{} is not in jail.".format(escape(player.display_name, formatting=True))
 
         cost = await self.thief.get_member_bailcost(player)
         if not await bank.get_balance(player) >= cost:
@@ -108,7 +109,7 @@ class Heist(commands.Cog):
                    "Do you still wish to pay the {0} amount?".format(t_bail, cost, t_sentence))
         else:
             msg = ("You are about pay a {2} amount for {0} and it will cost you {1} credits. "
-                   "Are you sure you wish to pay {1} for {0}?".format(player.name, cost, t_bail))
+                   "Are you sure you wish to pay {1} for {0}?".format(escape(player.display_name, formatting=True)), cost, t_bail))
 
         await ctx.send(msg)
         response = await self.bot.wait_for('MESSAGE', timeout=15, check=lambda x: x.author == author)
@@ -119,7 +120,7 @@ class Heist(commands.Cog):
 
         if "yes" in response.content.lower():
             msg = ("Congratulations {}, you are free! Enjoy your freedom while it "
-                   "lasts...".format(player.display_name))
+                   "lasts...".format(escape(player.display_name, formatting=True))))
             await bank.withdraw_credits(author, cost)
             await self.thief.set_member_free(author)
             await self.thief.set_member_oob(author, False)
@@ -478,7 +479,7 @@ class Heist(commands.Cog):
             crew = await self.thief.add_crew_member(author)
             await ctx.send("A {4} is being planned by {0}\nThe {4} "
                                "will begin in {1} seconds. Type {2}heist play to join their "
-                               "{3}.".format(author.name, wait_time, ctx.prefix, t_crew, t_heist))
+                               "{3}.".format(escape(author.display_name, formatting=True)), wait_time, ctx.prefix, t_crew, t_heist))
             await asyncio.sleep(wait_time)
             
             crew = await self.thief.config.guild(guild).Crew()
@@ -495,7 +496,7 @@ class Heist(commands.Cog):
             crew = await self.thief.add_crew_member(author)
             crew_size = len(crew)
             await ctx.send("{0} has joined the {2}.\nThe {2} now has {1} "
-                               "members.".format(author.display_name, crew_size, t_crew))
+                               "members.".format(escape(author.display_name, formatting=True), crew_size, t_crew))
 
     async def heist_game(self, ctx, guild, t_heist, t_crew, t_vault):
         config = await self.thief.get_guild_settings(guild)
