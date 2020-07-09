@@ -1,5 +1,6 @@
 from redbot.core import Config, bank
 from redbot.core.data_manager import bundled_data_path
+from redbot.core.utils.chat_formatting import escape
 import time
 import bisect
 import random
@@ -312,13 +313,13 @@ class Thief:
             if chance <= success_rate:
                 good_thing = random.choice(good_out)
                 good_out.remove(good_thing)
-                crew[player.id] = {"Name": player.display_name, "Bonus": good_thing[1]}
+                crew[player.id] = {"Name": escape(player.display_name), "Bonus": good_thing[1]}
                 await self.config.guild(guild).Crew.set(crew)
                 await self.add_member_spree(player)
-                results.append(good_thing[0].format(player.name))
+                results.append(good_thing[0].format(escape(player.display_name)))
             else:
                 bad_thing = random.choice(bad_out)
-                dropout_msg = (bad_thing[0]).format(player.name) + f"```\n{player.name} dropped out of the game.```"
+                dropout_msg = (bad_thing[0] + f"```\n{0} dropped out of the game.```").format(escape(player.name))
                 await self.failure_handler(player, bad_thing[1])
                 del crew[str(player.id)]
                 await self.config.guild(guild).Crew.set(crew)
@@ -395,10 +396,10 @@ class Thief:
         config = await self.get_guild_settings(guild)
         message_type = config["Crew"]
         if message_type == "Short":
-            name_list = '\n'.join(player.display_name for player in players[:5])
+            name_list = '\n'.join(escape(player.display_name) for player in players[:5])
             message = "{} crew members, including:```\n{}```".format(crew, name_list)
         elif message_type == "Long":
-            name_list = '\n'.join(player.display_name for player in players)
+            name_list = '\n'.join(escape(player.display_name) for player in players)
             message = "{} crew members, including:```\n{}```".format(crew, name_list)
         else:
             message = "{} crew members".format(crew)
