@@ -191,6 +191,9 @@ class Heist(commands.Cog):
 
         await ctx.send("What is the maximum number of credits this target can hold?")
         vault_max = await self.bot.wait_for('MESSAGE', timeout=35, check=check)
+        
+        if vault_max.content.isdigit() and int(vault_max.content) >= ((2**64)-1):
+            return await ctx.send("Number is too high, canceling target creation.")
 
         if vault_max is None:
             await ctx.send("You took too long. canceling target creation.")
