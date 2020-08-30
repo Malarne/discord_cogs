@@ -478,7 +478,7 @@ class Thief:
                     targets = await self.config.guild(server).Targets()
                     for target, settings in targets.items():
                         vault = settings["Vault"]
-                        vault_max = target["Vault Max"]
+                        vault_max = settings["Vault Max"]
                         if vault < vault_max:
                             increment = int(vault_max * 0.04)
                             new_vault = min(vault + increment, vault_max)
