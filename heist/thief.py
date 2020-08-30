@@ -475,14 +475,15 @@ class Thief:
             while True:
                 servers = [x for x in bot.guilds if (await self.config.guild(x).Config())["Registered"]]
                 for server in servers:
-                    for target in (await self.config.guild(server).Targets()).items():
-                        vault = target[1]
-                        vault_max = target["Vault Max"]
+                    targets = await self.config.guild(server).Targets()
+                    for target, settings in targets.items():
+                        vault = settings["Vault"]
+                        vault_max = settings["Vault Max"]
                         if vault < vault_max:
-                            increment = min(vault + int(vault_max * 0.04), vault_max)
-                            target[1] = increment
-                        else:
-                            pass
+                            increment = int(vault_max * 0.04)
+                            new_vault = min(vault + increment, vault_max)
+                            targets[target]["Vault"] = new_vault
+                    await self.config.guild(server).Targets.set_raw(value=targets)                        
                 await asyncio.sleep(120)  # task runs every 120 seconds
         except asyncio.CancelledError:
             pass
