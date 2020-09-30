@@ -632,14 +632,15 @@ class Audio(commands.Cog):
             await asyncio.wait_for(
                 channel.connect(), timeout=5, loop=self.bot.loop
             )
-        except asyncio.futures.TimeoutError as e:
-            print(e)
-            self.connect_timers[server.id] = time.time() + 300
-            raise ConnectTimeout(
-                "We timed out connecting to a voice channel,"
-                " please try again in 10 minutes."
-            )
-
+        except:# asyncio.futures.TimeoutError as e:
+            pass
+            #print(e)
+            #self.connect_timers[server.id] = time.time() + 300
+            #raise ConnectTimeout(
+            #    "We timed out connecting to a voice channel,"
+            #    " please try again in 10 minutes."
+            #)
+            
     def _match_sc_playlist(self, url):
         return self._match_sc_url(url)
 
@@ -1179,8 +1180,6 @@ class Audio(commands.Cog):
                 await self._stop_and_disconnect(server)
                 await self._join_voice_channel(voice_channel)
 
-        # If not playing, spawn a downloader if it doesn't exist and begin
-        #   downloading the next song
 
         if self.currently_downloading(server):
             await ctx.send("I'm already downloading a file!")

@@ -1,0 +1,9 @@
+{
+    "author" : ["Redjumpman", "Malarne (Malarne#1418)"],
+    "short" : "Heist mini-game inspired by Twitch's deep bot",
+    "description" : "v3 version of RJM heist cog. i'm a bit lazy to write something really helpful there, i'm pretty sure you already know what this cog does ...",
+    "name" : "Heist",
+    "requirements": ["tabulate"],
+    "tags" : ["heist", "games", "economy"],
+    "install_msg" : "Thank you for installing Heist.\nOriginally made by Redjumpman, updated to v3 by Malarne.\nThis cog creates a data folder which holds text files for themes.\nIf you like my cog please star my repo or post any issues on my github here:\nhttps://github.com/Malarne/discord_cogs"
+}
