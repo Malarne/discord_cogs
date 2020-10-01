@@ -2,11 +2,11 @@
 
 Install guide:
 
-[p]repo add MalarneCogs https://github.com/Malarne/discord_cogs
+`[p]repo add MalarneCogs https://github.com/Malarne/discord_cogs`
 
 then:
 
-[p]cog install MalarneCogs WhatYouWant
+`[p]cog install MalarneCogs WhatYouWant`
 
 Enjoy
 
@@ -27,7 +27,7 @@ English translation is planned, just have to make the display look better first 
 NB: This cog may break randomly, for more updated version, use the one under WebLeveler branch, just note it'll work only on dev version until 3.1 version of Red is released
 
 # Leveler
-Require Pillow 5.3.0 (pip3 install Pillow==5.3.0)
+Require Pillow 5.3.0 (`pip3 install Pillow==5.3.0`)
 Apparently the cog isn't working on latest version of Pillow, no idea why
 
 The first Leveler cog made for v3 !
