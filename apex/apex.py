@@ -25,7 +25,6 @@ class Apex(commands.Cog):
         await ctx.send("Done")
 
     @commands.command()
-    @bank.cost(500)
     async def apex(self, ctx, *, username):
         res = await self.api.get_infos(username)
         ls = []
