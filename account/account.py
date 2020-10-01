@@ -27,7 +27,8 @@ class Account(commands.Cog):
         self.config.register_guild(**default_guild)
         self.config.register_member(**default_member)
     
-    @commands.command(name="signup", no_pm=True)
+    @commands.command(name="signup")
+    @commands.guild_only()
     async def _reg(self, ctx):
         """Sign up to get your own account today!"""
 
@@ -46,7 +47,8 @@ class Account(commands.Cog):
             await ctx.send(embed=data)
         
     
-    @commands.command(name="account", no_pm=True)
+    @commands.command(name="account")
+    @commands.guild_only()
     async def _acc(self, ctx, user : discord.Member=None):
         """Your/Others Account"""
                     
@@ -73,12 +75,14 @@ class Account(commands.Cog):
             data.add_field(name="Error:warning:",value="{} doesn't have an account at the moment, sorry.".format(user.mention))
             await ctx.send(embed=data)
 
-    @commands.group(name="update", no_pm=True)
+    @commands.group(name="update")
+    @commands.guild_only()
     async def update(self, ctx):
         """Update your TPC"""
         pass
 
-    @update.command(pass_context=True, no_pm=True)
+    @update.command(pass_context=True)
+    @commands.guild_only()
     async def about(self, ctx, *, about):
         """Tell us about yourself"""
         
@@ -97,7 +101,8 @@ class Account(commands.Cog):
             data.add_field(name="Congrats!:sparkles:",value="You have updated your About Me to {}".format(about))
             await ctx.send(embed=data)
 
-    @update.command(pass_context=True, no_pm=True)
+    @update.command(pass_context=True)
+    @commands.guild_only()
     async def website(self, ctx, *, site):
         """Do you have a website?"""
         
@@ -116,7 +121,8 @@ class Account(commands.Cog):
             data.add_field(name="Congrats!:sparkles:",value="You have set your Website to {}".format(site))
             await ctx.send(embed=data)
 
-    @update.command(pass_context=True, no_pm=True)
+    @update.command(pass_context=True)
+    @commands.guild_only()
     async def age(self, ctx, *, age):
         """How old are you?"""
         
@@ -135,7 +141,8 @@ class Account(commands.Cog):
             data.add_field(name="Congrats!:sparkles:",value="You have set your age to {}".format(age))
             await ctx.send(embed=data)
 
-    @update.command(pass_context=True, no_pm=True)
+    @update.command(pass_context=True)
+    @commands.guild_only()
     async def job(self, ctx, *, job):
         """Do you have a job?"""
         
@@ -154,7 +161,8 @@ class Account(commands.Cog):
             data.add_field(name="Congrats!:sparkles:",value="You have set your Job to {}".format(job))
             await ctx.send(embed=data)
     
-    @update.command(pass_context=True, no_pm=True)
+    @update.command(pass_context=True)
+    @commands.guild_only()
     async def gender(self, ctx, *, gender):
         """What's your gender?"""
 
@@ -173,7 +181,8 @@ class Account(commands.Cog):
             data.add_field(name="Congrats!:sparkles:",value="You have set your Gender to {}".format(gender))
             await ctx.send(embed=data)
  
-    @update.command(pass_context=True, no_pm=True)
+    @update.command(pass_context=True)
+    @commands.guild_only()
     async def email(self, ctx, *, email):
         """What's your email address?"""
 
@@ -193,7 +202,8 @@ class Account(commands.Cog):
             data.add_field(name="Congrats!:sparkles:",value="You have set your Email to {}".format(email))
             await ctx.send(embed=data)
 
-    @update.command(pass_context=True, no_pm=True)
+    @update.command(pass_context=True)
+    @commands.guild_only()
     async def other(self, ctx, *, other):
         """Incase you want to add anything else..."""
         
