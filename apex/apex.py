@@ -7,7 +7,7 @@ from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 import asyncio
 import datetime
 from .wraith import Wraith
-from redbot.core import bank
+from redbot import version_info, VersionInfo
 
 class Apex(commands.Cog):
 
@@ -21,7 +21,10 @@ class Apex(commands.Cog):
     async def setapexkey(self, ctx, *, apikey):
         """Set your Apex API key for that cog to work.
         Note that it is safer to use this command in DM."""
-        await self.bot.db.api_tokens.set_raw("apex", value={'api_key': apikey})
+        if version_info >= VersionInfo.from_str("3.2.0"):
+            key = await ctx.bot.set_shared_api_tokens("apex", api_key=apikey)
+        else:
+            await self.bot.db.api_tokens.set_raw("apex", value={'api_key': apikey})
         await ctx.send("Done")
 
     @commands.command()
