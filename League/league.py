@@ -73,7 +73,7 @@ class League(commands.Cog):
         elo = await self.stats.get_elo(region, summoner)
         if not elo:
             return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys()))
-        emb = discord.Embed(title=summoner, description="\n".join(elo)) if type(elo) is List else discord.Embed(title=summoner, description="\n" + elo)
+        emb = discord.Embed(title=summoner, description="\n".join(elo)) if type(elo) is list else discord.Embed(title=summoner, description="\n" + elo)
         emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(region, summoner), inline=True)
         champs = await self.stats.top_champions_masteries(region, summoner)
         await ctx.send(embed=emb)
