@@ -9,6 +9,21 @@ import datetime
 from .wraith import Wraith
 from redbot import version_info, VersionInfo
 
+def apikeyset():
+    async def predicate(ctx):
+        if version_info >= VersionInfo.from_str("3.2.0"):
+            key = await ctx.bot.get_shared_api_tokens("apex")
+        else:
+            key = await ctx.bot.db.api_tokens.get_raw("apex", default=None)
+        try:
+            res = True if key["api_key"] else False
+        except:
+            res = False
+        if not res and ctx.invoked_with in dir(ctx.bot.get_cog('Apex')):
+            raise commands.UserFeedbackCheckFailure(message="You need to set the API key using `[p]set api apex <api_key>` first !")
+        return res
+    return commands.check(predicate)
+
 class Apex(commands.Cog):
 
     def __init__(self, bot):
@@ -20,6 +35,9 @@ class Apex(commands.Cog):
     @commands.command()
     async def setapexkey(self, ctx, *, apikey):
         """Set your Apex API key for that cog to work.
+        You can get one following this link:
+        https://apex.tracker.gg/site-api
+        and clicking "Manage or Create API Keys"
         Note that it is safer to use this command in DM."""
         if version_info >= VersionInfo.from_str("3.2.0"):
             key = await ctx.bot.set_shared_api_tokens("apex", api_key=apikey)
@@ -27,6 +45,7 @@ class Apex(commands.Cog):
             await self.bot.db.api_tokens.set_raw("apex", value={'api_key': apikey})
         await ctx.send("Done")
 
+    @apikeyset()
     @commands.command()
     async def apex(self, ctx, *, username):
         res = await self.api.get_infos(username)
