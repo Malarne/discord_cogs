@@ -27,6 +27,7 @@ def can_vote():
             await ctx.cog.config.member(ctx.author).last_vote.set(datetime.datetime.timestamp(now))
             return True
         lastvote = datetime.datetime.fromtimestamp(ts_lastvote)
+        now = datetime.datetime.now()
         delt = now - lastvote
         if delt.days >= 1:
             await ctx.cog.config.member(ctx.author).last_vote.set(datetime.datetime.timestamp(datetime.datetime.now()))
