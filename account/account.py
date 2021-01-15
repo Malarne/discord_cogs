@@ -18,7 +18,8 @@ class Account(commands.Cog):
             "Gender": None,
             "Job": None,
             "Email": None,
-            "Other": None
+            "Other": None,
+            "Characterpic": None
         }
         default_guild = {
             "db": []
@@ -56,15 +57,19 @@ class Account(commands.Cog):
         db = await self.config.guild(server).db()
         user = user if user else ctx.author
         userdata = await self.config.member(user).all()
+        pic = userdata["Characterpic"]
         
         data = discord.Embed(description="{}".format(server), colour=user.colour)
-        fields = [data.add_field(name=k, value=v) for k,v in userdata.items() if v]
+        fields = [data.add_field(name=k, value=v) for k,v in userdata.items() if v and not k == "Characterpic"] ##let's not add image url to the embed, would look bad
         
-        if user.avatar_url:
+        if user.avatar_url and not pic:
             name = str(user)
             name = " ~ ".join((name, user.nick)) if user.nick else name
             data.set_author(name=name, url=user.avatar_url)
             data.set_thumbnail(url=user.avatar_url)
+        elif pic:
+            data.set_author(name=user.name, url=user.avatar_url)
+            data.set_thumbnail(url=pic)
         else:
             data.set_author(name=user.name)
         
@@ -220,4 +225,25 @@ class Account(commands.Cog):
             await self.config.member(user).Other.set(other)
             data = discord.Embed(colour=user.colour)
             data.add_field(name="Congrats!:sparkles:",value="You have set your Other to {}".format(other))
+            await ctx.send(embed=data)
+            
+    @update.command(pass_context=True)
+    @commands.guild_only()
+    async def characterpic(self, ctx, *, characterpic):
+        """What does your character look like?"""
+        
+        server = ctx.guild
+        user = ctx.author
+        prefix = ctx.prefix
+        db = await self.config.guild(server).db()
+
+        if user.id not in db:
+            data = discord.Embed(colour=user.colour)
+            data.add_field(name="Error:warning:",value="Sadly, this feature is only available for people who had registered for an account. \n\nYou can register for a account today for free. All you have to do is say `{}signup` and you'll be all set.".format(prefix))
+            await ctx.send(embed=data)
+        else:
+            await self.config.member(user).Characterpic.set(characterpic)
+            data = discord.Embed(colour=user.colour)
+            data.add_field(name="Congrats!:sparkles:",value="You have set your characterpic to {}".format(characterpic))
+            data.set_image(url="{}".format(characterpic))
             await ctx.send(embed=data)
