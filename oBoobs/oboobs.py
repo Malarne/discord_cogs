@@ -67,6 +67,7 @@ class Oboobs(commands.Cog):
 
     # Boobs
     @commands.command(no_pm=True)
+    @commands.guild_only()
     async def boobs(self, ctx):
         """Shows some boobs."""
         try:
@@ -84,7 +85,8 @@ class Oboobs(commands.Cog):
             await ctx.send(embed=emb)
 
     # Ass
-    @commands.command(no_pm=False)
+    @commands.command(no_pm=True)
+    @commands.guild_only()
     async def ass(self, ctx):
         """Shows some ass."""
         try:
