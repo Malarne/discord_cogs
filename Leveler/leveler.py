@@ -524,7 +524,7 @@ class Leveler(commands.Cog):
         if not len(channels):
             return await ctx.send(_("No channels configured"))
         emb.add_field(
-            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels if x else await self.profiles._remove_guild_channel(ctx.guild, x)])
+            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels if x else str(await self.profiles._remove_guild_channel(ctx.guild, x))])
         )
         await ctx.send(embed=emb)
 
@@ -575,7 +575,7 @@ class Leveler(commands.Cog):
         if not len(channels):
             return await ctx.send(_("No channels configured"))
         emb.add_field(
-            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels if x else await self.profiles._remove_guild_blacklist(ctx.guild, x)])
+            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels if x else str(await self.profiles._remove_guild_blacklist(ctx.guild, x))])
         )
         await ctx.send(embed=emb)
 
