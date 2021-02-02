@@ -369,7 +369,7 @@ class Leveler(commands.Cog):
                     + " {} | {} XP | {} ".format(cur["lvl"], cur["xp"], cur["today"])
                     + _("Messages Today!")
                 )
-                emb.add_field(name="{}".format(user.display_name), value=txt, inline=false)
+                emb.add_field(name="{}".format(user.display_name), value=txt, inline=False)
         await ctx.send(embed=emb)
 
     @commands.group()
