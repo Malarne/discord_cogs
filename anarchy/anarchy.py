@@ -15,8 +15,9 @@ def anarcheck():
         if perm.kick_members:
             return True
         else:
-            await ctx.send(_("You need to give me permissions to kick members before using this cog."))
-            return False
+            raise commands.UserFeedbackCheckFailure(
+                _("You need to give me permissions to kick members before using this cog.")
+            )
     return commands.check(predicate)
 
 def can_vote():
@@ -33,8 +34,9 @@ def can_vote():
             await ctx.cog.config.member(ctx.author).last_vote.set(datetime.datetime.timestamp(datetime.datetime.now()))
             return True
         else:
-            await ctx.send(_("You can't vote again yet ! Please wait {}.").format(ctx.cog.strfdelta(delt)))
-            return False
+            raise commands.UserFeedbackCheckFailure(
+                _("You can't vote again yet ! Please wait {}.").format(ctx.cog.strfdelta(delt))
+            )
     return commands.check(predicate)
 
 @cog_i18n(_)
