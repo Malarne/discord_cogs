@@ -336,7 +336,7 @@ class Leveler(commands.Cog):
             ):
                 await message.channel.send(
                     _("{} is now level {} !".format(message.author.mention, lvl))
-                , delete_after=10)
+                , delete_after=10) 
             await self.profiles._check_exp(message.author)
             await self.profiles._check_role_member(message.author)
 
