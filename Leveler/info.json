@@ -7,6 +7,6 @@
   "required_cogs": {},
   "requirements": ["Pillow"],
   "short": "Leveler tool, better than MEE6",
-  "tags": ["leveler", "pillow", "fun"]
+  "tags": ["leveler", "pillow", "fun"],
   "end_user_data_statement": "This cog only saves data locally. \nNo data is sent and/or sold or given to third parties."
 }
