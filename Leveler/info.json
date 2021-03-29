@@ -1,5 +1,5 @@
 {
-  "author": ["Malarne (Malarne#1418)"],
+  "author": ["lmaobadatmath (juliuscaesar1597#0007)"],
   "min_bot_version": "3.0.2",
   "description": "A leveler cog for Red V3\nInspired by Stevy's v2 leveler cog\nPlease consult the docs at ayrobot.netlify.com for setup informations.\nThanks for using my cog !\nNB:Channel whitelist is enabled by default, you can manage that under `[p]levelerset channel whitelist` command !",
   "hidden": false,
