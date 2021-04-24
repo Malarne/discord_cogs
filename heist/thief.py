@@ -221,7 +221,7 @@ class Thief:
             msg = ("A {0} is already underway. Wait for the current one to "
                    "end to plan another {0}.".format(t_heist))
             return "Failed", msg
-        elif author.id in crew:
+        elif str(author.id) in crew:
             msg = "You are already in the {}.".format(t_crew)
             return "Failed", msg
         elif await self.get_member_status(author) == "Apprehended":
