@@ -22,6 +22,7 @@ class UserProfile:
         }
         default_member = {
             "exp": 0,
+            "monthlyexp": 0,
             "level": 1,
             "today": 0,
             "lastmessage":0.0,
@@ -36,7 +37,9 @@ class UserProfile:
 
     async def _give_exp(self, member, exp):
         current = await self.data.member(member).exp()
+        currentmonthly = await self.data.member(member).monthlyexp()
         await self.data.member(member).exp.set(current + exp)
+        await self.data.member(member).monthlyexp.set(currentmonthly + exp)
         await self._check_exp(member)
 
     async def _set_exp(self, member, exp):
@@ -213,10 +216,13 @@ class UserProfile:
         datas = await self.data.all_members(guild)
         infos = sorted(datas, key=lambda x: datas[x]["exp"], reverse=True)
         return (infos.index(member.id)+1)
-
-    async def _get_leaderboard(self, guild):
+    
+    async def _get_leaderboard(self, guild, monthly=False):
         datas = await self.data.all_members(guild)
-        infos = sorted(datas, key=lambda x: datas[x]["exp"], reverse=True)
+        if monthly is False:
+            infos = sorted(datas, key=lambda x: datas[x]["exp"], reverse=True)
+        else:
+            infos = sorted(datas, key=lambda x: datas[x]["monthlyexp"], reverse=True)
         res = []
         count = 1
         for i in infos:
@@ -224,6 +230,7 @@ class UserProfile:
             tmp["id"] = i
             cur = datas[i]
             tmp["xp"] = cur["exp"]
+            tmp["monthlyxp"] = cur["monthlyexp"]
             tmp["lvl"] = cur["level"]
             tmp["today"] = cur["today"]
             res.append(tmp)
@@ -231,3 +238,10 @@ class UserProfile:
             if count == 10:
                 break
         return res
+
+    async def _reset_monthly(self):
+        data = await self.data.all_members()
+        for guild in data:
+            for member in data[guild]:
+                await self.data.member_from_ids(int(guild), int(member)).monthlyexp.set(0)
+        return 
