@@ -91,6 +91,15 @@ class Leveler(commands.Cog):
         except:
             pass
 
+    @commands.command()
+    async def monthlyexp(self, ctx, member: discord.Member = None):
+        """Get your monthly exp"""
+        if member is None:
+            member = ctx.member
+        exp = self._get_monthly_exp(member)
+        await ctx.send(f'{member.display_name}\'s monthly xp is: {exp}')
+
+
     @commands.command(hidden=True)
     @checks.is_owner()
     async def testreset(self, ctx):
