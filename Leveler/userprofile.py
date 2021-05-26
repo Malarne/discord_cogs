@@ -168,6 +168,9 @@ class UserProfile:
     async def _get_exp(self, member):
         return await self.data.member(member).exp()
 
+    async def _get_monthly_exp(self, member):
+        return await self.data.member(member).monthlyexp()
+
     async def _get_level(self, member):
         return await self.data.member(member).level()
 
