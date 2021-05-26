@@ -371,6 +371,26 @@ class Leveler(commands.Cog):
                 )
                 emb.add_field(name="{}".format(user.display_name), value=txt)
         await ctx.send(embed=emb)
+    
+    @commands.command()
+    @commands.guild_only()
+    async def toplevelmonthly(self, ctx):
+        """Show the server leaderboard !"""
+        ld = await self.profiles._get_leaderboard(ctx.guild, monthly=True)
+        emb = discord.Embed(title=_("Monthly Ranking"))
+        for i in range(len(ld)):
+            cur = ld[i]
+            user = ctx.guild.get_member(cur["id"])
+            if user is None:
+                await self._reset_member(ctx.guild, cur["id"])
+            else:
+                txt = (
+                    _("Level:")
+                    + " {} | {} XP | {} XP Monthly | {} ".format(cur["lvl"], cur["xp"], cur['monthlyxp'], cur["today"])
+                    + _("Messages Today!")
+                )
+                emb.add_field(name="{}".format(user.display_name), value=txt)
+        await ctx.send(embed=emb)
 
     @commands.group()
     @checks.mod_or_permissions(manage_messages=True)
@@ -378,6 +398,14 @@ class Leveler(commands.Cog):
     async def levelerset(self, ctx):
         """Configuration commands."""
         pass
+
+    @checks.is_owner()
+    @levelerset.command()
+    async def resetmonthly(self, ctx, *, confirm=''):
+        """Reset Monthly Leaderboard. NOTE THIS CANNOT BE UNDONE"""
+        if confirm != 'MONTHLY LEADERBOARD RESET CONFIRM':
+            return await ctx.send("Please run the command `!levelerset resetmonthly MONTHLY LEADERBOARD RESET CONFIRM`")
+        await self._reset_monthly()
 
     @levelerset.group()
     @checks.mod_or_permissions(manage_messages=True)
@@ -524,7 +552,7 @@ class Leveler(commands.Cog):
         if not len(channels):
             return await ctx.send(_("No channels configured"))
         emb.add_field(
-            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels])
+            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention if ctx.guild.get_channel(x) else str(await self.profiles._remove_guild_channel(ctx.guild, x)) for x in channels])
         )
         await ctx.send(embed=emb)
 
@@ -575,7 +603,7 @@ class Leveler(commands.Cog):
         if not len(channels):
             return await ctx.send(_("No channels configured"))
         emb.add_field(
-            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention for x in channels])
+            name="Channels:", value="\n".join([ctx.guild.get_channel(x).mention if ctx.guild.get_channel(x) else str(await self.profiles._remove_guild_blacklist(ctx.guild, x)) for x in channels])
         )
         await ctx.send(embed=emb)
 
