@@ -9,6 +9,8 @@ _ = Translator("Anarchy", __file__)
 
 def anarcheck():
     async def predicate(ctx):
+        if ctx.guild is None:
+            return False
         if ctx.guild.id == 133049272517001216:
             return True ## Let's make an exception for #testing ? :)
         perm = ctx.me.guild_permissions
@@ -22,6 +24,8 @@ def anarcheck():
 
 def can_vote():
     async def predicate(ctx):
+        if ctx.guild is None:
+            return False
         ts_lastvote = await ctx.cog.config.member(ctx.author).last_vote()
         if ts_lastvote is None:
             now = datetime.datetime.now()
@@ -167,6 +171,8 @@ class Anarchy(commands.Cog):
 
     @commands.Cog.listener(name="on_message")
     async def on_message(self, message):
+        if message.guild is None:
+            return
         if await self.config.channel(message.channel).ignored():
             return
         if message.author.bot:
