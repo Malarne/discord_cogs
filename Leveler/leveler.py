@@ -414,7 +414,7 @@ class Leveler(commands.Cog):
         """Reset Monthly Leaderboard. NOTE THIS CANNOT BE UNDONE"""
         if confirm != 'MONTHLY LEADERBOARD RESET CONFIRM':
             return await ctx.send("Please run the command `!levelerset resetmonthly MONTHLY LEADERBOARD RESET CONFIRM`")
-        await self._reset_monthly()
+        await self.profiles._reset_monthly()
 
     @levelerset.group()
     @checks.mod_or_permissions(manage_messages=True)
