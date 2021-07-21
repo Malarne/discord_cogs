@@ -447,7 +447,7 @@ class Leveler(commands.Cog):
             await self.profiles._remove_guild_role(ctx.guild, role)
             await ctx.send(_("Role deleted."))
         else:
-            await ctx.send(_("Remove a role from the list."))
+            await ctx.send(_("Removed a role from the list."))
 
     @roles.command()
     @checks.mod_or_permissions(manage_messages=True)
