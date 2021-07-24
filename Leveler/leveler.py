@@ -136,21 +136,22 @@ class Leveler(commands.Cog):
         return im
 
     def make_full_profile(self, avatar_data, user, xp, nxp, lvl, minone, elo, ldb, desc, bg=None):
-        img = Image.new("RGBA", (340, 390), (17, 17, 17, 255))
+        img_width, img_height = 340, 390
+        img = Image.new("RGBA", (img_width, img_height), (17, 17, 17, 255))
         if bg is not None:
             bg_width, bg_height = bg.size
-            ratio = bg_height / 390
+            ratio = bg_height / img_height
             bg = bg.resize((int(bg_width / (ratio)), int(bg_height / ratio)))
-            if bg.size[0] < 340:
-                ratio = bg_width / 340
+            if bg.size[0] < img_width:
+                ratio = bg_width / img_width
                 bg = bg.resize((int(bg_width / (ratio)), int(bg_height / ratio)))
             bg = bg.convert("RGBA")
             bg.putalpha(128)
             offset = 0
-            if bg.size[0] >= 340:
-                offset = (int((-(bg.size[0] - 340) / 2)), 0)
-            if bg.size[0] < 340:
-                offset = (0, int((-(bg.size[1] - 390) / 2)))
+            if bg.size[0] >= img_width:
+                offset = (int((-(bg.size[0] - img_width) / 2)), 0)
+            if bg.size[0] < img_width:
+                offset = (0, int((-(bg.size[1] - img_height) / 2)))
 
             img.paste(bg, offset, bg)
         img = self.add_corners(img, 10)
@@ -161,7 +162,7 @@ class Leveler(commands.Cog):
         xptot = self.add_corners(Image.new("RGBA", (310, 20), (215, 215, 215, 255)), 10)
         img.paste(aviholder, (10, 10), aviholder)
         img.paste(nameplate, (155, 10), nameplate)
-        img.paste(xptot, (15, 340), xptot)
+        img.paste(xptot, (15, img_width), xptot)
 
         fontpath = str(bundled_data_path(self) / "cambria.ttc")
 
@@ -178,7 +179,7 @@ class Leveler(commands.Cog):
         lprc = ceil(lxp / (lnxp / 100))
         b_offset = floor(lprc * 3.1)
         xpbar = self.add_corners(Image.new("RGBA", (b_offset, 20), usercolor), 10)
-        img.paste(xpbar, (12, 340), xpbar)
+        img.paste(xpbar, (12, img_width), xpbar)
 
         lvl_str = _("Level:")
         ldb_str = _("Ranking:")
