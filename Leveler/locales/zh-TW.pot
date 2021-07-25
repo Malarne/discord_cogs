@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2021-07-21 14:37+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: qenu <eriku850918@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,325 +14,321 @@ msgstr ""
 #: Leveler/leveler.py:26
 #, docstring
 msgid "A leveler cog !"
-msgstr ""
+msgstr "群組等級模組!"
 
 #: Leveler/leveler.py:33 Leveler/leveler.py:233
 msgid "New"
-msgstr ""
+msgstr "新身分"
 
 #: Leveler/leveler.py:98
 msgid "Resets in 30 seconds max"
-msgstr ""
+msgstr "將於30秒內重置"
 
 #: Leveler/leveler.py:183 Leveler/leveler.py:368
 msgid "Level:"
-msgstr ""
+msgstr "等級:"
 
 #: Leveler/leveler.py:184
 msgid "Ranking:"
-msgstr ""
+msgstr "排名:"
 
 #: Leveler/leveler.py:185
 msgid "Role:"
-msgstr ""
+msgstr "身分組:"
 
 #: Leveler/leveler.py:186
 msgid "Progress:"
-msgstr ""
+msgstr "進度:"
 
 #: Leveler/leveler.py:273
 #, docstring
 msgid "Show your leveler progress. Default to yourself."
-msgstr ""
+msgstr "顯示等級 預設自己"
 
 #: Leveler/leveler.py:346
 #, docstring
 msgid "Allow you to start earning experience !"
-msgstr ""
+msgstr "讓你可以開始獲得經驗值"
 
 #: Leveler/leveler.py:348
 msgid "You are already registered !"
-msgstr ""
+msgstr "你已經註冊!"
 
 #: Leveler/leveler.py:352
 msgid "You have been successfully registered !"
-msgstr ""
+msgstr "完成註冊!"
 
 #: Leveler/leveler.py:358
 #, docstring
 msgid "Show the server leaderboard !"
-msgstr ""
+msgstr "顯示群組排名"
 
 #: Leveler/leveler.py:360
 msgid "Ranking"
-msgstr ""
+msgstr "排名"
 
 #: Leveler/leveler.py:370
 msgid "Messages Today!"
-msgstr ""
+msgstr "本日訊息"
 
 #: Leveler/leveler.py:379
 #, docstring
 msgid "Configuration commands."
-msgstr ""
+msgstr "設定指令"
 
 #: Leveler/leveler.py:386
 #, docstring
 msgid "Configure channels whitelist/blacklist."
-msgstr ""
+msgstr "設定白名單/黑名單"
 
 #: Leveler/leveler.py:393
 #, docstring
 msgid "Whitelist configuration."
-msgstr ""
+msgstr "白名單設定"
 
 #: Leveler/leveler.py:400
 #, docstring
 msgid "Blacklist configuration."
-msgstr ""
+msgstr "黑名單設定"
 
 #: Leveler/leveler.py:407
 #, docstring
 msgid "Configuration of roles obtainable from experience."
-msgstr ""
+msgstr "設定可以獲取經驗值的身分組"
 
 #: Leveler/leveler.py:413
 #, docstring
 msgid "Change settings of your profile."
-msgstr ""
+msgstr "更改個人資料"
 
 #: Leveler/leveler.py:419
 #, docstring
 msgid "Change background image of your profile."
-msgstr ""
+msgstr "更改背景圖示"
 
 #: Leveler/leveler.py:421
 msgid "Background image is now:"
-msgstr ""
+msgstr "背景圖示已變更為:"
 
 #: Leveler/leveler.py:426
 #, docstring
 msgid "Change your profile description"
-msgstr ""
+msgstr "更改自我介紹"
 
 #: Leveler/leveler.py:429
 msgid "Cleared profile description!"
-msgstr ""
+msgstr "清空了自我介紹"
 
 #: Leveler/leveler.py:431
 msgid "Profile description set to: "
-msgstr ""
+msgstr "自我介紹已變更為: "
 
 #: Leveler/leveler.py:437
 #, docstring
 msgid "Add a role to be given at chosen level."
-msgstr ""
+msgstr "新增等級可獲得的身分組"
 
 #: Leveler/leveler.py:439
 msgid "Role configured"
-msgstr ""
+msgstr "身分組設定已變更"
 
 #: Leveler/leveler.py:445
 #, docstring
 msgid "Remove a role from the config."
-msgstr ""
+msgstr "從設定中移除了身分組"
 
 #: Leveler/leveler.py:448
 msgid "Role deleted."
-msgstr ""
+msgstr "移除了身分組"
 
 #: Leveler/leveler.py:450
 msgid "Removed a role from the list."
-msgstr ""
+msgstr "身分組已從中移除"
 
 #: Leveler/leveler.py:456
 #, docstring
-msgid ""
-"Show the list of roles in the order which you get them from experience."
-msgstr ""
+msgid "Show the list of roles in the order which you get them from experience."
+msgstr "顯示可獲得的身分組"
 
 #: Leveler/leveler.py:458
 msgid "List of roles configured for this server."
-msgstr ""
+msgstr "群組中設定的身分組"
 
 #: Leveler/leveler.py:459
 msgid "Guaranteed 100% almost no bugs."
-msgstr ""
+msgstr "幾乎100%沒有bug"
 
 #: Leveler/leveler.py:464
 msgid "No roles yet configured for this guild !"
-msgstr ""
+msgstr "群組尚未設定等級身分組"
 
 #: Leveler/leveler.py:484
 #, docstring
 msgid "Add a channel to the whitelist."
-msgstr ""
+msgstr "新增頻道於白名單"
 
 #: Leveler/leveler.py:489
 msgid "Channel added"
-msgstr ""
+msgstr "以新增頻道"
 
 #: Leveler/leveler.py:491
 msgid "Channel already whitelisted"
-msgstr ""
+msgstr "頻道已在白名單內"
 
 #: Leveler/leveler.py:497
 #, docstring
 msgid "Toggle whitelist on/off."
-msgstr ""
+msgstr "開啟/關閉白名單"
 
 #: Leveler/leveler.py:499 Leveler/leveler.py:550
 msgid "activated."
-msgstr ""
+msgstr "已開啟"
 
 #: Leveler/leveler.py:499 Leveler/leveler.py:550
 msgid "deactivated."
-msgstr ""
+msgstr "已關閉"
 
 #: Leveler/leveler.py:500
 msgid "Whitelist is {verb}"
-msgstr ""
+msgstr "白名單"
 
 #: Leveler/leveler.py:506
 #, docstring
 msgid "Delete a channel from the whitelist."
-msgstr ""
+msgstr "從白名單中移除頻道"
 
 #: Leveler/leveler.py:510 Leveler/leveler.py:561
 msgid "This channel isn't whitelisted."
-msgstr ""
+msgstr "此頻道不在白名單內"
 
 #: Leveler/leveler.py:513 Leveler/leveler.py:564
 msgid "Channel deleted"
-msgstr ""
+msgstr "頻道已移除"
 
 #: Leveler/leveler.py:519
 #, docstring
 msgid "Show the list of channels configured to allow earning experience."
-msgstr ""
+msgstr "顯示可以獲得經驗的頻道"
 
 #: Leveler/leveler.py:521
-msgid ""
-"List of channels configured to allow earning experience on this server."
-msgstr ""
+msgid "List of channels configured to allow earning experience on this server."
+msgstr "可以獲得經驗的頻道列表"
 
 #: Leveler/leveler.py:522 Leveler/leveler.py:573
 msgid "More or less, it's not an exact science"
-msgstr ""
+msgstr "或多或少，差不多就好"
 
 #: Leveler/leveler.py:525 Leveler/leveler.py:576
 msgid "No channels configured"
-msgstr ""
+msgstr "黑名單內沒有頻道"
 
 #: Leveler/leveler.py:535
 #, docstring
 msgid "Add a channel to the blacklist."
-msgstr ""
+msgstr "新增頻道到黑名單"
 
 #: Leveler/leveler.py:540
 msgid "Channel blacklisted"
-msgstr ""
+msgstr "頻道加入了黑名單"
 
 #: Leveler/leveler.py:542
 msgid "Channel already blacklisted"
-msgstr ""
+msgstr "頻道已於黑名單內"
 
 #: Leveler/leveler.py:548
 #, docstring
 msgid "Toggle blacklist on/off."
-msgstr ""
+msgstr "開啟/關閉黑名單"
 
 #: Leveler/leveler.py:551
 msgid "Blacklist is {verb}"
-msgstr ""
+msgstr "黑名單"
 
 #: Leveler/leveler.py:557
 #, docstring
 msgid "Remove a channel from the blacklist."
-msgstr ""
+msgstr "從黑名單中移除頻道"
 
 #: Leveler/leveler.py:570
 #, docstring
 msgid "Show the list of blacklisted channels."
-msgstr ""
+msgstr "顯示黑名單內的頻道"
 
 #: Leveler/leveler.py:572
 msgid "List of blacklisted channels on this server."
-msgstr ""
+msgstr "已被黑名單的頻道"
 
 #: Leveler/leveler.py:585
 #, docstring
 msgid "Toggle auto register of users"
-msgstr ""
+msgstr "開啟/關閉 自動啟動等級"
 
 #: Leveler/leveler.py:588
 msgid "Auto register turned off"
-msgstr ""
+msgstr "關閉 自動啟動等級"
 
 #: Leveler/leveler.py:591
 msgid "Auto register turned on"
-msgstr ""
+msgstr "開啟 自動啟動等級"
 
 #: Leveler/leveler.py:596
 #, docstring
 msgid "Modify the cooldown of xp gain, default to 60 seconds"
-msgstr ""
+msgstr "經驗值獲得冷卻，預設冷卻時間60秒"
 
 #: Leveler/leveler.py:598
 msgid "Cooldown is now: "
-msgstr ""
+msgstr "目前冷卻時間為:"
 
 #: Leveler/leveler.py:604
 #, docstring
 msgid "Modify an user's level"
-msgstr ""
+msgstr "設定使用者等級:"
 
 #: Leveler/leveler.py:610 Leveler/leveler.py:623
 msgid "That user is not registered."
-msgstr ""
+msgstr "此使用者尚未註冊"
 
 #: Leveler/leveler.py:611
 msgid " Level set to "
-msgstr ""
+msgstr "等級設定為 "
 
 #: Leveler/leveler.py:617
 #, docstring
 msgid "Modify an user's xp."
-msgstr ""
+msgstr "更改使用者經驗值"
 
 #: Leveler/leveler.py:624
 msgid "'s XP set to "
-msgstr ""
+msgstr "的經驗值被設定為"
 
 #: Leveler/leveler.py:630
 #, docstring
 msgid "Allow you to set a default background for your server members."
-msgstr ""
+msgstr "用於設定使用者預設背景圖示"
 
 #: Leveler/leveler.py:633
 msgid "Please give a direct link to an image on format png, jpg or gif !"
-msgstr ""
+msgstr "請提供圖片超連結，支援格式為 png, jpg, gif!"
 
 #: Leveler/leveler.py:643
 #, docstring
 msgid "Allow you to rename default role for your guild."
-msgstr ""
+msgstr "更改預設身分組"
 
 #: Leveler/leveler.py:651
 #, docstring
-msgid ""
-"Toggle whether the bot will announce levelups.\n"
-"        args are True/False."
-msgstr ""
+msgid "Toggle whether the bot will announce levelups.\nargs are True/False."
+msgstr "開啟/關閉 等級提升通知 參數為 True/False"
 
 #: Leveler/leveler.py:655
 msgid "Levelup announce is now {}."
-msgstr ""
+msgstr "等級提升通知更改為 {}"
 
 #: Leveler/leveler.py:655
 msgid "enabled"
-msgstr ""
+msgstr "開啟"
 
 #: Leveler/leveler.py:655
 msgid "disabled"
-msgstr ""
+msgstr "關閉"
